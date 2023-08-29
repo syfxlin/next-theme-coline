@@ -7,7 +7,7 @@ import { useIntersectionObserver } from "../../../hooks/use-intersection-observe
 import { TocData } from "../../../contents/types";
 
 export type TocProps = {
-  data: Array<TocData>;
+  data: ReadonlyArray<TocData>;
 };
 
 const Item: React.FC<TocProps & { active: string }> = ({ data, active }) => {

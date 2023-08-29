@@ -11,16 +11,7 @@ export type HeroProps = {
 export const Hero: React.FC<HeroProps> = (props) => {
   return (
     <section className={styles.section}>
-      <Image
-        className={styles.avatar}
-        alt="头像"
-        src={props.author.avatar.src}
-        width={props.author.avatar.width}
-        height={props.author.avatar.height}
-        blurDataURL={props.author.avatar.blurDataURL}
-        blurWidth={props.author.avatar.blurWidth}
-        blurHeight={props.author.avatar.blurHeight}
-      />
+      <Image className={styles.avatar} src={props.author.avatar} alt="头像" />
       <h1 className={styles.author}>{props.author.fullname}</h1>
       <p className={styles.description}>{props.author.description}</p>
     </section>

@@ -25,16 +25,7 @@ export const ClientHeader: React.FC<ClientHeaderProps> = (props) => {
     <>
       <header className={container}>
         <LinkButton className={left} aria-label="首页" href="/">
-          <Image
-            className={logo}
-            src={props.seo.logo.src}
-            alt={props.seo.logo.alt}
-            width={props.seo.logo.width}
-            height={props.seo.logo.height}
-            blurDataURL={props.seo.logo.blurDataURL}
-            blurWidth={props.seo.logo.blurWidth}
-            blurHeight={props.seo.logo.blurHeight}
-          />
+          <Image className={logo} src={props.seo.logo} alt="站点图标" />
         </LinkButton>
         <div className={right}>
           {props.header.main.map((item) => {

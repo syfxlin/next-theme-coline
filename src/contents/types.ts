@@ -2,17 +2,20 @@ export interface GroupData<V> {
   name: string;
   slug: string;
   link: string;
-  items: Array<V>;
+  items: ReadonlyArray<V>;
 }
 
-export interface ImageData {
-  src: string;
-  alt: string;
-  width: number | string;
-  height: number | string;
-  blurDataURL?: string;
-  blurWidth?: number | string;
-  blurHeight?: number | string;
+export interface PageData<V> {
+  page: (index: number) => ReadonlyArray<V>;
+  pages: number;
+  total: number;
+  items: ReadonlyArray<ReadonlyArray<V>>;
+}
+
+export interface GroupPageData<V> extends PageData<V> {
+  name: string;
+  slug: string;
+  link: string;
 }
 
 export interface TocData {
@@ -20,22 +23,22 @@ export interface TocData {
   slug: string;
   link: string;
   level: number;
-  children: Array<TocData>;
+  children: ReadonlyArray<TocData>;
 }
 
 export interface SeoData {
   language: string;
   link: string;
-  logo: ImageData;
+  logo: string;
   title: string;
   subtitle: string;
   description: string;
   birthday: Date;
-  keywords?: string[];
+  keywords?: ReadonlyArray<string>;
 }
 
 export interface HeaderData {
-  main: Array<{
+  main: ReadonlyArray<{
     title: string;
     link: string;
     icon: string;
@@ -44,7 +47,7 @@ export interface HeaderData {
 }
 
 export interface FooterData {
-  main: Array<{
+  main: ReadonlyArray<{
     title: string;
     link: string;
   }>;
@@ -55,7 +58,7 @@ export interface AuthorData {
   username: string;
   firstname: string;
   lastname: string;
-  avatar: ImageData;
+  avatar: string;
   description: string;
 }
 
@@ -64,15 +67,15 @@ export interface LicenseData {
   link: string;
 }
 
-export interface LinkData {
-  links: Array<{
+export interface FriendsData {
+  links: ReadonlyArray<{
     name: string;
     link: string;
-    avatar: ImageData;
+    avatar: string;
     author?: string;
     description?: string;
   }>;
-  lost_links: Array<{
+  lost_links: ReadonlyArray<{
     name: string;
     link: string;
   }>;
@@ -86,19 +89,21 @@ export interface ArticleList {
   status: "draft" | "publish" | "archive";
   published: Date;
   modified: Date;
-  excerpt: string;
-  thumbnail?: ImageData;
+  thumbnail?: string;
+  body: {
+    excerpts: string;
+  };
   archives: {
     name: string;
     slug: string;
     link: string;
   };
-  categories?: Array<{
+  categories?: ReadonlyArray<{
     name: string;
     slug: string;
     link: string;
   }>;
-  tags?: Array<{
+  tags?: ReadonlyArray<{
     name: string;
     slug: string;
     link: string;
@@ -106,10 +111,14 @@ export interface ArticleList {
 }
 
 export interface ArticleData extends ArticleList {
-  headings: Array<TocData>;
   body: {
-    raw: string;
-    code: string;
-    text: string;
+    document: Array<any>;
+    headings: Array<TocData>;
+    contents: string;
+    excerpts: string;
   };
 }
+
+export type SingletonResult<T> = Promise<T>;
+
+export type CollectionResult<T, P> = Promise<{ items: Array<T>; pages: P }>;

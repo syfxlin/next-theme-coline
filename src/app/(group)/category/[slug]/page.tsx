@@ -2,7 +2,7 @@ import React from "react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { metadataGroup, TemplateGroup } from "../../../../layouts/template-group";
-import { paginationCategories } from "../../../../contents";
+import { fetcher, slugger } from "../../../../contents";
 
 type Props = {
   params: {
@@ -11,11 +11,12 @@ type Props = {
   };
 };
 
-const query = ({ params }: Props) => {
+const query = async ({ params }: Props) => {
   try {
-    const slug = params.slug;
+    const query = await fetcher.categories();
+    const slug = slugger(params.slug);
     const index = params.index ? parseInt(params.index) : 1;
-    const value = paginationCategories.find((i) => i.slug.toLowerCase() === decodeURIComponent(slug).toLowerCase());
+    const value = query.pages.find((i) => i.slug === slug);
     if (!value || value.pages < index) {
       return undefined;
     }
@@ -34,7 +35,7 @@ const query = ({ params }: Props) => {
 };
 
 export const generateMetadata = async (props: Props): Promise<Metadata> => {
-  const data = query(props);
+  const data = await query(props);
   if (!data) {
     return notFound();
   }
@@ -48,8 +49,8 @@ export const generateMetadata = async (props: Props): Promise<Metadata> => {
   });
 };
 
-const CategoryPage: React.FC<Props> = (props) => {
-  const data = query(props);
+const CategoryPage: React.FC<Props> = async (props) => {
+  const data = await query(props);
   if (!data) {
     return notFound();
   }

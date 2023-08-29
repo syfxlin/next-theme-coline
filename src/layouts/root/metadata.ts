@@ -1,6 +1,6 @@
 import { Metadata } from "next";
-import { author, seo } from "../../contents";
 import { image, resolve } from "../../utils/vender";
+import { fetcher } from "../../contents";
 
 export type MetadataProps = {
   link?: string;
@@ -9,13 +9,14 @@ export type MetadataProps = {
   thumbnail?: string;
 };
 
-export const metadata = (props?: MetadataProps): Metadata => {
+export const metadata = async (props?: MetadataProps): Promise<Metadata> => {
+  const [seo, author] = await Promise.all([fetcher.seo(), fetcher.author()]);
   return {
     metadataBase: new URL(seo.link),
     applicationName: seo.title,
     title: props?.title ? `${props?.title} | ${seo.title}` : `${seo.title} - ${seo.subtitle}`,
     description: props?.description ?? seo.description,
-    keywords: seo.keywords ?? [],
+    keywords: (seo.keywords as string[] | undefined) ?? [],
     authors: {
       url: resolve(seo.link),
       name: author.fullname,
@@ -39,7 +40,7 @@ export const metadata = (props?: MetadataProps): Metadata => {
       url: resolve(seo.link, props?.link),
       title: props?.title ? `${props?.title} | ${seo.title}` : `${seo.title} - ${seo.subtitle}`,
       description: props?.description ?? seo.description,
-      images: resolve(seo.link, props?.thumbnail ?? seo.logo.src),
+      images: resolve(seo.link, props?.thumbnail ?? seo.logo),
     },
     twitter: {
       card: "summary_large_image",
@@ -47,7 +48,7 @@ export const metadata = (props?: MetadataProps): Metadata => {
       site: seo.title,
       title: props?.title ? `${props?.title} | ${seo.title}` : `${seo.title} - ${seo.subtitle}`,
       description: props?.description ?? seo.description,
-      images: resolve(seo.link, props?.thumbnail ?? seo.logo.src),
+      images: resolve(seo.link, props?.thumbnail ?? seo.logo),
     },
     themeColor: [
       { media: "(prefers-color-scheme: dark)", color: "#000212" },
@@ -55,31 +56,31 @@ export const metadata = (props?: MetadataProps): Metadata => {
     ],
     icons: [
       {
-        url: image(seo.logo.src, 16),
+        url: image(seo.logo, 16),
         sizes: "16x16",
       },
       {
-        url: image(seo.logo.src, 32),
+        url: image(seo.logo, 32),
         sizes: "32x32",
       },
       {
-        url: image(seo.logo.src, 48),
+        url: image(seo.logo, 48),
         sizes: "48x48",
       },
       {
-        url: image(seo.logo.src, 64),
+        url: image(seo.logo, 64),
         sizes: "64x64",
       },
       {
-        url: image(seo.logo.src, 96),
+        url: image(seo.logo, 96),
         sizes: "96x96",
       },
       {
-        url: image(seo.logo.src, 128),
+        url: image(seo.logo, 128),
         sizes: "128x128",
       },
       {
-        url: image(seo.logo.src, 256),
+        url: image(seo.logo, 256),
         sizes: "256x256",
       },
     ],

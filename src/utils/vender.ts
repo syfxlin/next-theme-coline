@@ -11,7 +11,8 @@ export const random = (start: number, end: number) => {
   return Math.random() * (end - start) + start;
 };
 
-export const shuffle = <T>(a: T[]): T[] => {
+export const shuffle = <T>(array: ReadonlyArray<T>): ReadonlyArray<T> => {
+  const a = [...array];
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     const x = a[i];
@@ -42,7 +43,7 @@ export const resolve = (...paths: (string | number | undefined | null)[]) => {
   }
 };
 
-export const pagination = <T = any>(size: number, elements: T[]) => {
+export const pagination = <T = any>(size: number, elements: ReadonlyArray<T>) => {
   if (size <= 0) {
     throw new Error(`size must be greater than zero.`);
   }

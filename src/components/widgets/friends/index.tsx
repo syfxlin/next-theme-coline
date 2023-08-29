@@ -2,13 +2,13 @@
 import * as styles from "./index.css";
 import React, { useMemo } from "react";
 import Tippy from "@tippyjs/react";
-import { LinkData } from "../../../contents/types";
+import { FriendsData } from "../../../contents/types";
 import { shuffle } from "../../../utils/vender";
 import { LinkButton } from "../../ui/button";
 import { Image } from "../../ui/image";
 
 export type FriendsProps = {
-  data: LinkData;
+  data: FriendsData;
 };
 
 export const Friends: React.FC<FriendsProps> = ({ data }) => {
@@ -24,7 +24,7 @@ export const Friends: React.FC<FriendsProps> = ({ data }) => {
           target="_blank"
           rel="nofollow noopener noreferrer"
         >
-          <Image {...i.avatar} alt={i.name} className={styles.avatar} />
+          <Image src={i.avatar} alt={i.name} className={styles.avatar} />
           <div className={styles.section}>
             <span className={styles.name}>{i.name}</span>
             <span className={styles.text}>{i.author ?? <span className={styles.text}>&nbsp;</span>}</span>

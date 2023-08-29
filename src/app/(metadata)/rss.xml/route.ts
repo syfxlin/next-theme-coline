@@ -1,9 +1,11 @@
 import RSS from "rss";
-import { allPosts, author, seo } from "../../../contents";
+import { fetcher } from "../../../contents";
 import { NextResponse } from "next/server";
 import { resolve } from "../../../utils/vender";
 
 export const GET = async () => {
+  const [seo, author, posts] = await Promise.all([fetcher.seo(), fetcher.author(), fetcher.posts()]);
+
   const rss = new RSS({
     title: seo.title,
     description: seo.description,
@@ -14,16 +16,16 @@ export const GET = async () => {
     generator: "Next.PHP",
   });
 
-  for (const post of allPosts) {
+  for (const post of posts.items) {
     rss.item({
       title: post.title,
-      description: post.excerpt,
+      description: post.body.excerpts,
       guid: post.slug,
       url: resolve(seo.link, post.link),
       date: post.published,
       author: author.fullname,
       categories: post.categories?.map((i) => i.name),
-      enclosure: post.thumbnail ? { url: resolve(seo.link, post.thumbnail.src) } : undefined,
+      enclosure: post.thumbnail ? { url: resolve(seo.link, post.thumbnail) } : undefined,
     });
   }
 

@@ -40,7 +40,7 @@ export type TemplateArchivesProps = {
   }>;
 };
 
-export const metadataArchives = (): Metadata => {
+export const metadataArchives = async (): Promise<Metadata> => {
   return generateMetadata({
     title: "归档",
     link: "/archives",

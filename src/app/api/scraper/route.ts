@@ -1,7 +1,9 @@
 import ogs from "open-graph-scraper";
 import { NextRequest, NextResponse } from "next/server";
-import { allPosts, seo } from "../../../contents";
-import { caches } from "../../../services/caches";
+import { fetcher } from "../../../contents";
+import React from "react";
+
+const scraper = React.cache((link: string) => ogs({ url: link }));
 
 export type ScraperResponse = {
   link: string;
@@ -18,15 +20,10 @@ export const GET = async (request: NextRequest) => {
     return NextResponse.json({ code: 400, message: "Illegal parameters." }, { status: 400 });
   }
 
-  const cache = await caches.get<ScraperResponse>(`scraper:${link}`);
-  if (cache) {
-    return NextResponse.json(cache);
-  }
-
   try {
     const results: ScraperResponse = { link };
     if (/^(https?:)?\/\//i.test(link)) {
-      const query = await ogs({ url: link });
+      const query = await scraper(link);
       if (!query.error) {
         results.site = query.result.ogSiteName;
         results.title = query.result.ogTitle;
@@ -34,15 +31,15 @@ export const GET = async (request: NextRequest) => {
         results.thumbnail = query.result.ogImage?.[0]?.url;
       }
     } else {
-      const query = allPosts.find((i) => [i.slug.toLowerCase(), i.link.toLowerCase()].includes(link.toLowerCase()));
-      if (query) {
+      const [seo, posts] = await Promise.all([fetcher.seo(), fetcher.posts()]);
+      const value = posts.items.find((i) => [i.slug, i.link].includes(link));
+      if (value) {
         results.site = seo.title;
-        results.title = query.title;
-        results.excerpt = query.excerpt.substring(0, 100) + "...";
-        results.thumbnail = query.thumbnail?.src;
+        results.title = value.title;
+        results.excerpt = value.body.excerpts;
+        results.thumbnail = value.thumbnail;
       }
     }
-    await caches.set(`scraper:${link}`, results);
     return NextResponse.json(results);
   } catch (e) {
     return NextResponse.json({ code: 502, message: "Fetch open graph information failed." }, { status: 502 });

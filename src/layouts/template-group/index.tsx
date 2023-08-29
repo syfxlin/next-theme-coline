@@ -26,10 +26,10 @@ export type TemplateGroupComponentProps = {
   index: number;
   pages: number;
   total: number;
-  items: Array<ArticleList>;
+  items: ReadonlyArray<ArticleList>;
 };
 
-export const metadataGroup = (props: TemplateGroupMetadataProps): Metadata => {
+export const metadataGroup = async (props: TemplateGroupMetadataProps): Promise<Metadata> => {
   return generateMetadata({
     title: `${props.type}：${props.name}${props.index === 1 ? `` : ` - 第 ${props.index} 页`}`,
     link: props.index === 1 ? props.link : resolve(props.link, "page", props.index),

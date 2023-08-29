@@ -1,8 +1,9 @@
 import { MetadataRoute } from "next";
-import { seo } from "../../contents";
+import { fetcher } from "../../contents";
 import { resolve } from "../../utils/vender";
 
-const Robots = (): MetadataRoute.Robots => {
+const Robots = async (): Promise<MetadataRoute.Robots> => {
+  const seo = await fetcher.seo();
   return {
     host: resolve(seo.link),
     sitemap: resolve(seo.link, "sitemap.xml"),

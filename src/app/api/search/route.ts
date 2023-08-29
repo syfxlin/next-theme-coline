@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ArticleList, searchEngines } from "../../../contents";
+import { ArticleList } from "../../../contents/types";
+import { fetcher } from "../../../contents";
 
 export type SearchResponse = {
   total: number;
@@ -33,7 +34,7 @@ export const GET = async (request: NextRequest) => {
     return NextResponse.json({ code: 400, message: "Illegal parameters." }, { status: 400 });
   }
 
-  const items = searchEngines.search(query);
+  const items = (await fetcher.search()).search(query);
 
   const results: SearchResponse = {
     total: items.length,
@@ -45,11 +46,13 @@ export const GET = async (request: NextRequest) => {
       status: item.status,
       published: item.published,
       modified: item.modified,
-      excerpt: item.excerpt,
       thumbnail: item.thumbnail,
       archives: item.archives,
       categories: item.categories,
       tags: item.tags,
+      body: {
+        excerpts: item.body.excerpts,
+      },
     })),
   };
   return NextResponse.json(results);

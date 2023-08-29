@@ -1,5 +1,5 @@
 import React from "react";
-import { paginationPosts } from "../../contents";
+import { fetcher } from "../../contents";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { metadataArticles, TemplateArticles } from "../../layouts/template-articles";
@@ -10,10 +10,11 @@ type Props = {
   };
 };
 
-const query = ({ params }: Props) => {
+const query = async ({ params }: Props) => {
   try {
+    const query = await fetcher.posts();
     const index = params.index ? parseInt(params.index) : 1;
-    const value = paginationPosts;
+    const value = query.pages;
     if (!value || value.pages < index) {
       return undefined;
     }
@@ -29,7 +30,7 @@ const query = ({ params }: Props) => {
 };
 
 export const generateMetadata = async (props: Props): Promise<Metadata> => {
-  const result = query(props);
+  const result = await query(props);
   if (!result) {
     return notFound();
   }
@@ -40,8 +41,8 @@ export const generateMetadata = async (props: Props): Promise<Metadata> => {
   });
 };
 
-const ArticlesPage: React.FC<Props> = (props) => {
-  const result = query(props);
+const ArticlesPage: React.FC<Props> = async (props) => {
+  const result = await query(props);
   if (!result) {
     return notFound();
   }

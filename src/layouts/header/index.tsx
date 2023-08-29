@@ -1,5 +1,8 @@
 import React from "react";
 import { ClientHeader } from "../../components/layout/header";
-import { header, seo } from "../../contents";
+import { fetcher } from "../../contents";
 
-export const Header: React.FC = () => <ClientHeader seo={seo} header={header} />;
+export const Header: React.FC = async () => {
+  const [seo, header] = await Promise.all([fetcher.seo(), fetcher.header()]);
+  return <ClientHeader seo={seo} header={header} />;
+};

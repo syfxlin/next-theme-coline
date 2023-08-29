@@ -18,21 +18,10 @@ export const ArticleInfo: React.FC<ArticleInfoProps> = ({ data }) => {
         <Link href={data.link} aria-label={data.title} className={styles.title}>
           {data.title}
         </Link>
-        <p className={styles.excerpt}>{data.excerpt}</p>
+        <p className={styles.excerpt}>{data.body.excerpts}</p>
         <MetaInfo data={data} />
       </section>
-      {data.thumbnail && (
-        <Image
-          className={styles.thumbnail}
-          src={data.thumbnail.src}
-          alt={data.thumbnail.alt}
-          width={data.thumbnail.width}
-          height={data.thumbnail.height}
-          blurDataURL={data.thumbnail.blurDataURL}
-          blurWidth={data.thumbnail.blurWidth}
-          blurHeight={data.thumbnail.blurHeight}
-        />
-      )}
+      {data.thumbnail && <Image className={styles.thumbnail} src={data.thumbnail} alt={`缩略图：${data.title}`} />}
       <LinkButton href={data.link} aria-hidden={true} className={styles.link} />
     </article>
   );

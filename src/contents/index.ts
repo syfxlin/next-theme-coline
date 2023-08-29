@@ -1,254 +1,408 @@
-// noinspection JSUnusedGlobalSymbols
-import * as c from "contentlayer/generated";
+import React from "react";
+import config from "../keystatic.config";
 import Fuse from "fuse.js";
+import GithubSlugger, { slug } from "github-slugger";
+import { createReader } from "@keystatic/core/reader";
 import { pagination, resolve } from "../utils/vender";
-import { ArticleData, AuthorData, FooterData, GroupData, HeaderData, LicenseData, LinkData, SeoData } from "./types";
+import {
+  ArticleData,
+  AuthorData,
+  CollectionResult,
+  FooterData,
+  FriendsData,
+  GroupData,
+  GroupPageData,
+  HeaderData,
+  LicenseData,
+  PageData,
+  SeoData,
+  SingletonResult,
+} from "./types";
 
-export const seo: SeoData = {
-  language: c.seo.language,
-  link: c.seo.link,
-  logo: c.seo._images[c.seo.logo.filePath],
-  title: c.seo.title,
-  subtitle: c.seo.subtitle,
-  description: c.seo.description,
-  birthday: new Date(c.seo.birthday),
-  keywords: c.seo.keywords,
+export const slugger = (value: string) => {
+  return slug(decodeURIComponent(value.trim().toLowerCase()));
 };
 
-export const header: HeaderData = {
-  main: c.header.main,
+export const reader = createReader(process.cwd(), config);
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const document = (body: Array<any>) => {
+  const slugs = new GithubSlugger();
+
+  const visit = (items: Array<any>) => {
+    const headings: Array<any> = [];
+    const contents: Array<string> = [];
+    for (const item of items) {
+      if (item.text) {
+        contents.push(item.text as string);
+      } else if (item.type === "heading") {
+        const results = visit(item.children as Array<any>);
+        const name = results.contents.join("");
+        const slug = slugs.slug(name);
+        const link = `#${name}`;
+        const level = item.level;
+        headings.push({ name, slug, link, level });
+        headings.push(...results.headings);
+        contents.push(...results.contents);
+      } else if (item.children) {
+        const results = visit(item.children as Array<any>);
+        headings.push(...results.headings);
+        contents.push(...results.contents);
+      }
+    }
+    return { headings, contents };
+  };
+
+  const build = (headings: any[], parent: any = { level: 0, children: [] }) => {
+    parent.children = parent.children ?? [];
+    while (headings.length) {
+      const heading = headings.shift();
+      if (heading.level > parent.level) {
+        parent.children.push(build(headings, heading));
+      } else {
+        headings.unshift(heading);
+        return parent;
+      }
+    }
+    return parent;
+  };
+
+  const results = visit(body);
+
+  const document = body;
+  const headings = build(results.headings).children;
+  const contents = results.contents.join(" ");
+  const excerpts = contents.length <= 140 ? contents : contents.substring(0, 140) + "...";
+
+  return { document, headings, contents, excerpts };
 };
 
-export const footer: FooterData = {
-  main: c.footer.main,
-};
+const seo: () => SingletonResult<SeoData> = React.cache(async () => {
+  const info = await reader.singletons.seo.read();
+  if (!info) {
+    throw new TypeError("No seo data configured.");
+  }
+  return {
+    language: info.language,
+    link: info.link,
+    logo: info.logo,
+    title: info.title,
+    subtitle: info.subtitle,
+    description: info.description,
+    birthday: new Date(info.birthday as string),
+    keywords: info.keywords,
+  };
+});
 
-export const author: AuthorData = {
-  fullname: `${c.author.firstname} ${c.author.lastname}`,
-  username: c.author.username,
-  firstname: c.author.firstname,
-  lastname: c.author.lastname,
-  avatar: c.author._images[c.author.avatar.filePath],
-  description: c.author.description,
-};
+const author: () => SingletonResult<AuthorData> = React.cache(async () => {
+  const info = await reader.singletons.author.read();
+  if (!info) {
+    throw new TypeError("No author data configured.");
+  }
+  return {
+    fullname: `${info.firstname} ${info.lastname}`,
+    username: info.username,
+    firstname: info.firstname,
+    lastname: info.lastname,
+    avatar: info.avatar,
+    description: info.description,
+  };
+});
 
-export const license: LicenseData = {
-  name: c.license.name,
-  link: c.license.link,
-};
+const header: () => SingletonResult<HeaderData> = React.cache(async () => {
+  const info = await reader.singletons.header.read();
+  if (!info) {
+    throw new TypeError("No header data configured.");
+  }
+  return info as HeaderData;
+});
 
-export const link: LinkData = {
-  links: c.link.links.map((i) => ({
-    name: i.name,
-    link: i.link,
-    avatar: c.link._images[i.avatar.filePath],
-    author: i.author,
-    description: i.description,
-  })),
-  lost_links: c.link.lost_links.map((i) => ({
-    name: i.name,
-    link: i.link,
-  })),
-};
+const footer: () => SingletonResult<FooterData> = React.cache(async () => {
+  const info = await reader.singletons.footer.read();
+  if (!info) {
+    throw new TypeError("No footer data configured.");
+  }
+  return info as FooterData;
+});
 
-export const allPages: Array<ArticleData> = [...c.allPages]
-  .sort((a, b) => new Date(b.published_time).getTime() - new Date(a.published_time).getTime())
-  .map((doc) => {
-    const raw = doc._raw as any;
-    const slug = doc.slug.toLowerCase();
-    const year = String(new Date(doc.published_time).getFullYear());
-    return {
-      title: doc.title,
-      slug: slug,
-      link: resolve(slug),
-      layout: doc.layout,
-      status: doc.status,
-      published: new Date(doc.published_time),
-      modified: new Date(doc.modified_time),
-      excerpt: raw.contents.substring(0, 140) + "...",
-      headings: raw.headings,
-      thumbnail: doc.thumbnail && doc._images[doc.thumbnail.filePath],
+const license: () => SingletonResult<LicenseData> = React.cache(async () => {
+  const info = await reader.singletons.license.read();
+  if (!info) {
+    throw new TypeError("No license data configured.");
+  }
+  return info as LicenseData;
+});
+
+const friends: () => SingletonResult<FriendsData> = React.cache(async () => {
+  const info = await reader.singletons.friends.read();
+  if (!info) {
+    throw new TypeError("No friends data configured.");
+  }
+  return {
+    links: info.links.map((i) => ({
+      name: i.name,
+      link: i.link,
+      avatar: i.avatar,
+      author: i.author,
+      description: i.description,
+    })),
+    lost_links: info.lost_links.map((i) => ({
+      name: i.name,
+      link: i.link,
+    })),
+  };
+});
+
+const pages: () => CollectionResult<ArticleData, PageData<ArticleData>> = React.cache(async () => {
+  const results: Array<ArticleData> = [];
+
+  for (const info of await reader.collections.pages.all()) {
+    const entry = info.entry as Record<string, any>;
+    const year = String(new Date(entry.published_time).getFullYear());
+    const body = document(await entry.body());
+    results.push({
+      title: entry.title,
+      slug: info.slug.toLowerCase(),
+      link: resolve(info.slug.toLowerCase()),
+      layout: entry.layout,
+      status: entry.status,
+      published: new Date(entry.published_time),
+      modified: new Date(entry.modified_time),
+      thumbnail: entry.thumbnail,
       body: {
-        raw: doc.body.raw,
-        code: doc.body.code,
-        text: raw.contents,
+        document: body.document,
+        headings: body.headings,
+        contents: body.contents,
+        excerpts: body.excerpts,
       },
       archives: {
         name: year,
         slug: year,
         link: resolve("archive", year),
       },
-    };
-  });
+    });
+  }
 
-export const allPosts: Array<ArticleData> = [...c.allPosts]
-  .sort((a, b) => new Date(b.published_time).getTime() - new Date(a.published_time).getTime())
-  .map((doc) => {
-    const raw = doc._raw as any;
-    const slug = doc.slug.toLowerCase();
-    const year = String(new Date(doc.published_time).getFullYear());
-    return {
-      title: doc.title,
-      slug: slug,
-      link: resolve("post", slug),
-      layout: doc.layout,
-      status: doc.status,
-      published: new Date(doc.published_time),
-      modified: new Date(doc.modified_time),
-      excerpt: raw.contents.substring(0, 140) + "...",
-      headings: raw.headings,
-      thumbnail: doc.thumbnail && doc._images[doc.thumbnail.filePath],
+  const items = results.sort((a, b) => b.published.getTime() - a.published.getTime());
+  const pages = pagination(10, items);
+
+  return {
+    items,
+    pages: {
+      page: (index: number) => pages[index - 1],
+      items: pages,
+      pages: pages.length,
+      total: items.length,
+    },
+  };
+});
+
+const posts: () => CollectionResult<ArticleData, PageData<ArticleData>> = React.cache(async () => {
+  const results: Array<ArticleData> = [];
+
+  for (const info of await reader.collections.posts.all()) {
+    const entry = info.entry as Record<string, any>;
+    const year = String(new Date(entry.published_time).getFullYear());
+    const body = document(await entry.body());
+    results.push({
+      title: entry.title,
+      slug: info.slug.toLowerCase(),
+      link: resolve(info.slug.toLowerCase()),
+      layout: entry.layout,
+      status: entry.status,
+      published: new Date(entry.published_time),
+      modified: new Date(entry.modified_time),
+      thumbnail: entry.thumbnail,
       body: {
-        raw: doc.body.raw,
-        code: doc.body.code,
-        text: raw.contents,
+        document: body.document,
+        headings: body.headings,
+        contents: body.contents,
+        excerpts: body.excerpts,
       },
       archives: {
         name: year,
         slug: year,
         link: resolve("archive", year),
       },
-      categories: doc.categories?.map((name) => ({
-        name: name.trim(),
-        slug: name.trim().toLowerCase(),
-        link: resolve("category", name),
-      })),
-      tags: doc.tags?.map((name) => ({
-        name: name.trim(),
-        slug: name.trim().toLowerCase(),
-        link: resolve("tag", name),
-      })),
-    };
+      categories: entry.categories?.map((name: string) => {
+        const n = name.trim();
+        const s = slugger(n);
+        const k = resolve("category", s);
+        return { name: n, slug: s, link: k };
+      }),
+      tags: entry.tags?.map((name: string) => {
+        const n = name.trim();
+        const s = slugger(n);
+        const k = resolve("tag", s);
+        return { name: n, slug: s, link: k };
+      }),
+    });
+  }
+
+  const items = results.sort((a, b) => b.published.getTime() - a.published.getTime());
+  const pages = pagination(10, items);
+
+  return {
+    items,
+    pages: {
+      page: (index: number) => pages[index - 1],
+      items: pages,
+      pages: pages.length,
+      total: items.length,
+    },
+  };
+});
+
+// prettier-ignore
+const categories: () => CollectionResult<GroupData<ArticleData>, Array<GroupPageData<ArticleData>>> = React.cache(async () => {
+  const query = await posts();
+
+  const mapping: Record<string, Array<ArticleData>> = {};
+  for (const item of query.items) {
+    for (const category of item.categories ?? []) {
+      mapping[category.name] = mapping[category.name] ?? [];
+      mapping[category.name].push(item);
+    }
+  }
+
+  const items: Array<GroupData<ArticleData>> = [];
+  for (const entry of Object.entries(mapping).sort((a, b) => a[0].localeCompare(b[0]))) {
+    const n = entry[0];
+    const s = slugger(n);
+    const k = resolve("category", s);
+    const i = entry[1].sort((a, b) => b.published.getTime() - a.published.getTime());
+    items.push({ name: n, slug: s, link: k, items: i });
+  }
+
+  const pages: Array<GroupPageData<ArticleData>> = [];
+  for (const item of items) {
+    const data = pagination(10, item.items);
+    pages.push({
+      name: item.name,
+      slug: item.slug,
+      link: item.link,
+      page: (index) => data[index - 1],
+      items: data,
+      pages: data.length,
+      total: item.items.length,
+    });
+  }
+
+  return {
+    items,
+    pages,
+  };
+});
+
+// prettier-ignore
+const tags: () => CollectionResult<GroupData<ArticleData>, Array<GroupPageData<ArticleData>>> = React.cache(async () => {
+  const query = await posts();
+
+  const mapping: Record<string, Array<ArticleData>> = {};
+  for (const item of query.items) {
+    for (const tag of item.tags ?? []) {
+      mapping[tag.name] = mapping[tag.name] ?? [];
+      mapping[tag.name].push(item);
+    }
+  }
+
+  const items: Array<GroupData<ArticleData>> = [];
+  for (const entry of Object.entries(mapping).sort((a, b) => a[0].localeCompare(b[0]))) {
+    const n = entry[0];
+    const s = slugger(n);
+    const k = resolve("tag", s);
+    const i = entry[1].sort((a, b) => b.published.getTime() - a.published.getTime());
+    items.push({ name: n, slug: s, link: k, items: i });
+  }
+
+  const pages: Array<GroupPageData<ArticleData>> = [];
+  for (const item of items) {
+    const data = pagination(10, item.items);
+    pages.push({
+      name: item.name,
+      slug: item.slug,
+      link: item.link,
+      page: (index) => data[index - 1],
+      items: data,
+      pages: data.length,
+      total: item.items.length,
+    });
+  }
+
+  return {
+    items,
+    pages,
+  };
+});
+
+// prettier-ignore
+const archives: () => CollectionResult<GroupData<ArticleData>, Array<GroupPageData<ArticleData>>> = React.cache(async () => {
+  const query = await posts();
+
+  const mapping: Record<string, Array<ArticleData>> = {};
+  for (const item of query.items) {
+    mapping[item.archives.name] = mapping[item.archives.name] ?? [];
+    mapping[item.archives.name].push(item);
+  }
+
+  const items: Array<GroupData<ArticleData>> = [];
+  for (const entry of Object.entries(mapping).sort((a, b) => a[0].localeCompare(b[0]))) {
+    const n = entry[0];
+    const s = slugger(n);
+    const k = resolve("archive", s);
+    const i = entry[1].sort((a, b) => b.published.getTime() - a.published.getTime());
+    items.push({ name: n, slug: s, link: k, items: i });
+  }
+
+  const pages: Array<GroupPageData<ArticleData>> = [];
+  for (const item of items) {
+    const data = pagination(10, item.items);
+    pages.push({
+      name: item.name,
+      slug: item.slug,
+      link: item.link,
+      page: (index) => data[index - 1],
+      items: data,
+      pages: data.length,
+      total: item.items.length,
+    });
+  }
+
+  return {
+    items,
+    pages,
+  };
+});
+
+const search: () => Promise<Fuse<ArticleData>> = React.cache(async () => {
+  const query = await posts();
+  return new Fuse(query.items, {
+    includeScore: true,
+    useExtendedSearch: true,
+    keys: [
+      { name: "title", weight: 5 },
+      { name: "body.excerpts", weight: 4 },
+      { name: "body.contents", weight: 3 },
+      { name: "categories", weight: 3 },
+      { name: "tags", weight: 3 },
+      { name: "link", weight: 2 },
+      { name: "published", weight: 2 },
+      { name: "modified", weight: 2 },
+    ],
   });
-
-export const allCategories: Array<GroupData<ArticleData>> = (() => {
-  const mapping: Record<string, Array<ArticleData>> = {};
-  for (const post of allPosts) {
-    for (const item of post.categories ?? []) {
-      mapping[item.name] = mapping[item.name] ?? [];
-      mapping[item.name].push(post);
-    }
-  }
-  const results: Array<GroupData<ArticleData>> = [];
-  for (const key of Object.keys(mapping).sort((a, b) => a.localeCompare(b))) {
-    results.push({
-      name: key,
-      slug: key.toLowerCase(),
-      link: resolve("category", key),
-      items: [...mapping[key]].sort((a, b) => new Date(b.published).getTime() - new Date(a.published).getTime()),
-    });
-  }
-  return results;
-})();
-
-export const allTags: Array<GroupData<ArticleData>> = (() => {
-  const mapping: Record<string, Array<ArticleData>> = {};
-  for (const post of allPosts) {
-    for (const item of post.tags ?? []) {
-      mapping[item.name] = mapping[item.name] ?? [];
-      mapping[item.name].push(post);
-    }
-  }
-  const results: Array<GroupData<ArticleData>> = [];
-  for (const key of Object.keys(mapping).sort((a, b) => a.localeCompare(b))) {
-    results.push({
-      name: key,
-      slug: key.toLowerCase(),
-      link: resolve("tag", key),
-      items: [...mapping[key]].sort((a, b) => new Date(b.published).getTime() - new Date(a.published).getTime()),
-    });
-  }
-  return results;
-})();
-
-export const allArchives: Array<GroupData<ArticleData>> = (() => {
-  const mapping: Record<string, Array<ArticleData>> = {};
-  for (const post of allPosts) {
-    mapping[post.archives.name] = mapping[post.archives.name] ?? [];
-    mapping[post.archives.name].push(post);
-  }
-  const results: Array<GroupData<ArticleData>> = [];
-  for (const key of Object.keys(mapping).sort((a, b) => a.localeCompare(b))) {
-    results.push({
-      name: key,
-      slug: key.toLowerCase(),
-      link: resolve("archive", key),
-      items: [...mapping[key]].sort((a, b) => new Date(b.published).getTime() - new Date(a.published).getTime()),
-    });
-  }
-  return results;
-})();
-
-export const paginationPages = (() => {
-  const items = pagination(10, allPages);
-  return {
-    page: (index: number) => items[index - 1],
-    items: items,
-    pages: items.length,
-    total: allPages.length,
-  };
-})();
-
-export const paginationPosts = (() => {
-  const items = pagination(10, allPosts);
-  return {
-    page: (index: number) => items[index - 1],
-    items: items,
-    pages: items.length,
-    total: allPosts.length,
-  };
-})();
-
-export const paginationCategories = allCategories.map((i) => {
-  const items = pagination(10, i.items);
-  return {
-    name: i.name,
-    slug: i.name.toLowerCase(),
-    link: resolve("category", i.name),
-    page: (index: number) => items[index - 1],
-    items: items,
-    pages: items.length,
-    total: i.items.length,
-  };
 });
 
-export const paginationTags = allTags.map((i) => {
-  const items = pagination(10, i.items);
-  return {
-    name: i.name,
-    slug: i.name.toLowerCase(),
-    link: resolve("tag", i.name),
-    page: (index: number) => items[index - 1],
-    items: items,
-    pages: items.length,
-    total: i.items.length,
-  };
-});
-
-export const paginationArchives = allArchives.map((i) => {
-  const items = pagination(10, i.items);
-  return {
-    name: i.name,
-    slug: i.name.toLowerCase(),
-    link: resolve("archive", i.name),
-    page: (index: number) => items[index - 1],
-    items: items,
-    pages: items.length,
-    total: i.items.length,
-  };
-});
-
-export const searchEngines = new Fuse(allPosts, {
-  includeScore: true,
-  useExtendedSearch: true,
-  keys: [
-    { name: "title", weight: 5 },
-    { name: "excerpt", weight: 4 },
-    { name: "_raw.contents", weight: 3 },
-    { name: "categories", weight: 3 },
-    { name: "tags", weight: 3 },
-    { name: "link", weight: 2 },
-    { name: "published_time", weight: 2 },
-    { name: "modified_time", weight: 2 },
-  ],
-});
+export const fetcher = {
+  seo,
+  author,
+  header,
+  footer,
+  license,
+  friends,
+  pages,
+  posts,
+  categories,
+  tags,
+  archives,
+  search,
+};
