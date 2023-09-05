@@ -29,11 +29,12 @@ export const render = (canvas: HTMLCanvasElement, width: number, height: number,
   ctx.clearRect(0, 0, width, height);
   ctx.lineWidth = weight;
 
-  let i = 0;
+  let count = 0;
   const step = () => {
-    if (i < points.length) {
-      for (let j = i + 1; j < points.length; j++) {
-        const [x1, y1] = points[i];
+    const index = count % 3 === 0 ? count / 3 : -1;
+    if (index !== -1 && index < points.length) {
+      for (let j = index + 1; j < points.length; j++) {
+        const [x1, y1] = points[index];
         const [x2, y2] = points[j];
 
         if (Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2) < length && random(0, 1) > 0.5) {
@@ -45,7 +46,9 @@ export const render = (canvas: HTMLCanvasElement, width: number, height: number,
           ctx.stroke();
         }
       }
-      i++;
+    }
+    count++;
+    if (index < points.length) {
       requestAnimationFrame(step);
     }
   };

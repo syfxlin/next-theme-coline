@@ -96,9 +96,3 @@ export const section = styled.css`
   overflow-y: auto;
   pointer-events: auto;
 `;
-
-export const loading = styled.css`
-  display: flex;
-  justify-content: center;
-  padding: ${theme.spacing.calc(2)};
-`;
