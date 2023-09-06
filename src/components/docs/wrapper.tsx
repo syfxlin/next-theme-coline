@@ -1,8 +1,8 @@
 "use client";
+import React from "react";
 import * as styles from "./wrapper.css";
-import React, { JSX } from "react";
 import { cx } from "@syfxlin/reve";
 
-export const Wrapper = (props: any): JSX.Element => {
+export const Wrapper: React.FC<any> = (props) => {
   return <section className={cx("han-init-context", styles.container, props.className)}>{props.children}</section>;
 };
