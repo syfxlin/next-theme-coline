@@ -19,7 +19,7 @@ export type ArticleProps = {
   title?: string;
 };
 
-export const Article: React.FC<ArticleProps> = (props) => {
+export const Article: React.FC<ArticleProps> = React.memo((props) => {
   const query = useSWR(["/api/scraper", props.link], fetcher);
   return (
     <div className={container}>
@@ -39,4 +39,4 @@ export const Article: React.FC<ArticleProps> = (props) => {
       )}
     </div>
   );
-};
+});

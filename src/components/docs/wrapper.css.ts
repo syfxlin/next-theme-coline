@@ -150,8 +150,8 @@ export const container = styled.css`
   }
 
   pre {
-    background: ${theme.color.background.x2} !important;
-    border-radius: 0 !important;
+    border-radius: 0;
+    background-color: ${theme.color.background.x2};
     font-size: ${theme.fontSize.calc(0.9)};
     font-weight: ${theme.fontWeight.default};
     line-height: ${theme.lineHeight.none};
@@ -160,7 +160,7 @@ export const container = styled.css`
     max-height: 80vh;
   }
 
-  code:not([class]) {
+  code {
     color: ${theme.color.code.text};
     background-color: ${theme.color.code.background};
     font-size: ${theme.fontSize.calc(0.86)};

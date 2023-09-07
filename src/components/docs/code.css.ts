@@ -1,7 +1,7 @@
 import { styled } from "@syfxlin/reve";
 import { theme } from "../../theme/theme.css";
 
-export const pre = styled.css`
+export const container = styled.css`
   position: relative;
   font-size: ${theme.fontSize.calc(0.9)} !important;
   padding: 0 !important;
@@ -25,18 +25,35 @@ export const pre = styled.css`
   &:hover::before {
     opacity: 0;
   }
-`;
 
-export const code = styled.css`
-  max-height: 50em;
-  overflow: auto;
-  padding: ${theme.fontSize.calc(0.9)} 0 !important;
-  margin: 0 !important;
+  .shiki {
+    background: unset !important;
+    max-height: 50em;
+    overflow: auto;
+    margin: 0;
+    padding: ${theme.fontSize.calc(1)} ${theme.fontSize.calc(1.2)};
+    font-family: "Fira Code", "Fira Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
 
-  .linenumber {
-    border-right: 1px solid ${theme.color.border.underline};
-    padding-right: ${theme.spacing.calc(2)} !important;
-    margin-right: ${theme.spacing.calc(2)};
-    min-width: ${theme.fontSize.calc(2.7)} !important;
+    code {
+      color: unset;
+      background-color: unset;
+      font-size: unset;
+      padding: unset;
+      border-radius: unset;
+      word-break: unset;
+      font-family: inherit;
+    }
+  }
+
+  [data-theme="light"] & {
+    .shiki.vitesse-dark {
+      display: none;
+    }
+  }
+
+  [data-theme="dark"] & {
+    .shiki.vitesse-light {
+      display: none;
+    }
   }
 `;

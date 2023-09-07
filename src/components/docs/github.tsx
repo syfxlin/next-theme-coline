@@ -17,7 +17,7 @@ export type GithubProps = {
   repo: string;
 };
 
-export const Github: React.FC<GithubProps> = ({ repo }) => {
+export const Github: React.FC<GithubProps> = React.memo(({ repo }) => {
   const query = useSWR(["/api/github", repo], fetcher);
   return (
     <div className={container}>
@@ -61,4 +61,4 @@ export const Github: React.FC<GithubProps> = ({ repo }) => {
       )}
     </div>
   );
-};
+});

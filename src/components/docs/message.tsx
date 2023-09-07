@@ -9,6 +9,6 @@ export type MessageProps = {
   children?: ReactNode;
 };
 
-export const Message: React.FC<MessageProps> = ({ type, children }) => {
+export const Message: React.FC<MessageProps> = React.memo(({ type, children }) => {
   return <div className={mapping[type ?? "success"]}>{children}</div>;
-};
+});

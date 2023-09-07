@@ -1,5 +1,4 @@
-"use client";
-import React, { isValidElement, JSX, ReactNode, useMemo } from "react";
+import React, { isValidElement, JSX, ReactNode } from "react";
 
 const visit = (node: any): string => {
   if (node.text) {
@@ -36,8 +35,8 @@ export type HeadingProps = {
   children: ReactNode;
 };
 
-export const Heading: React.FC<HeadingProps> = (props) => {
-  const id = useMemo(() => parse(props.children), [props.children]);
+export const Heading: React.FC<HeadingProps> = React.memo((props) => {
+  const id = parse(props.children);
   const Component: keyof JSX.IntrinsicElements = `h${props.level}`;
   return (
     <Component id={id}>
@@ -45,4 +44,4 @@ export const Heading: React.FC<HeadingProps> = (props) => {
       {props.children}
     </Component>
   );
-};
+});

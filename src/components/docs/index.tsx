@@ -27,10 +27,10 @@ export const components: DocumentRendererProps["componentBlocks"] = {
   message: Message,
 };
 
-export const Renderer: React.FC<{ document: any[] }> = ({ document }) => {
+export const Renderer: React.FC<{ document: any[] }> = React.memo(({ document }) => {
   return (
     <Wrapper>
       <DocumentRenderer document={document} renderers={renderers} componentBlocks={components} />
     </Wrapper>
   );
-};
+});

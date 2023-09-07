@@ -1,30 +1,26 @@
-"use client";
 import React from "react";
-import * as styles from "./code.css";
-import { useTheme } from "next-themes";
-import { PrismAsyncLight } from "react-syntax-highlighter";
-import { okaidia, prism } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { getHighlighter } from "shiki";
+import { container } from "./code.css";
 
-const PreTag: React.FC = (props) => <div {...props} className={styles.pre} />;
-const CodeTag: React.FC = (props) => <pre {...props} className={styles.code} />;
+const highlighter = await getHighlighter({
+  themes: ["vitesse-light", "vitesse-dark"],
+});
+
+const parse = (theme: "light" | "dark", code: string, lang?: string) => {
+  return highlighter.codeToHtml(code, {
+    lang: lang ?? "markdown",
+    theme: theme === "light" ? "vitesse-light" : "vitesse-dark",
+  });
+};
 
 export type CodeProps = {
-  children: string;
   language?: string;
+  children: string;
 };
 
-export const Code: React.FC<CodeProps> = ({ language, children }) => {
-  const { resolvedTheme } = useTheme();
+export const Code: React.FC<CodeProps> = React.memo(async ({ language, children }) => {
+  const html = parse("light", children, language) + parse("dark", children, language);
   return (
-    <PrismAsyncLight
-      data-language={language?.toUpperCase()}
-      language={language || "markup"}
-      style={resolvedTheme === "light" ? prism : okaidia}
-      showLineNumbers
-      PreTag={PreTag}
-      CodeTag={CodeTag}
-    >
-      {children}
-    </PrismAsyncLight>
+    <div className={container} data-language={language?.toUpperCase()} dangerouslySetInnerHTML={{ __html: html }} />
   );
-};
+});

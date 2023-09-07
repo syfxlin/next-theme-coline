@@ -9,6 +9,7 @@ import { ProgressBar } from "../../components/root/progress-bar";
 
 // styles
 import "../../theme/global.css";
+import "../../theme/styles.css";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/shift-away.css";
 import "katex/dist/katex.css";
