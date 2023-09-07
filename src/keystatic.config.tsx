@@ -1,6 +1,6 @@
 import { collection, component, config, singleton } from "@keystatic/core";
 import { fields } from "./contents/fields";
-import { Article, Github, Katex, Message } from "./components/docs";
+import { Article, Github, Katex, Message } from "./components/docs/dynamic";
 
 export default config({
   locale: "zh-CN",
