@@ -4,5 +4,5 @@ import { AppProgressBar } from "next-nprogress-bar";
 import { color } from "./index.css";
 
 export const ProgressBar: React.FC = () => {
-  return <AppProgressBar color={color} />;
+  return <AppProgressBar color={color} shallowRouting />;
 };

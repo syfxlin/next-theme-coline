@@ -9,16 +9,13 @@ import { ArticleList } from "../../../contents/types";
 import { cx } from "@syfxlin/reve";
 
 export type ArticleInfoProps = {
-  step?: number;
+  step: number;
   data: ArticleList;
 };
 
 export const ArticleInfo: React.FC<ArticleInfoProps> = ({ step, data }) => {
   return (
-    <article
-      className={cx(step !== undefined && "slide-enter", styles.article)}
-      style={step !== undefined ? ({ "--enter-step": step } as any) : {}}
-    >
+    <article className={cx("slide-enter", styles.article)} style={{ "--enter-step": step } as any}>
       <section className={styles.section}>
         <Link href={data.link} aria-label={data.title} className={styles.title}>
           {data.title}

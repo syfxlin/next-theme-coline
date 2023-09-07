@@ -22,6 +22,7 @@ export interface TocData {
   name: string;
   slug: string;
   link: string;
+  step: number;
   level: number;
   children: ReadonlyArray<TocData>;
 }

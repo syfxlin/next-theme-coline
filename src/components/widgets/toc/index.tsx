@@ -18,7 +18,12 @@ const Item: React.FC<TocProps & { active: string }> = ({ data, active }) => {
   return (
     <ul className={list}>
       {data.map((i) => (
-        <li key={`toc-${i.slug}`} id={`toc-${i.slug}`} className={item}>
+        <li
+          key={`toc-${i.slug}`}
+          id={`toc-${i.slug}`}
+          className={cx("slide-enter", item)}
+          style={{ "--enter-step": i.step } as any}
+        >
           <LinkButton tippy className={cx(i.slug === active && "active")} href={`#${i.slug}`} aria-label={i.name}>
             {i.name}
           </LinkButton>

@@ -1,7 +1,7 @@
 import React from "react";
 import config from "../keystatic.config";
 import Fuse from "fuse.js";
-import GithubSlugger, { slug } from "github-slugger";
+import { slug } from "github-slugger";
 import { createReader } from "@keystatic/core/reader";
 import { pagination, resolve } from "../utils/vender";
 import {
@@ -27,8 +27,6 @@ export const reader = createReader(process.cwd(), config);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const document = (body: Array<any>) => {
-  const slugs = new GithubSlugger();
-
   const visit = (items: Array<any>) => {
     const headings: Array<any> = [];
     const contents: Array<string> = [];
@@ -38,8 +36,8 @@ const document = (body: Array<any>) => {
       } else if (item.type === "heading") {
         const results = visit(item.children as Array<any>);
         const name = results.contents.join("");
-        const slug = slugs.slug(name);
-        const link = `#${name}`;
+        const slug = name;
+        const link = `#${encodeURIComponent(name)}`;
         const level = item.level;
         headings.push({ name, slug, link, level });
         headings.push(...results.headings);
@@ -70,7 +68,7 @@ const document = (body: Array<any>) => {
   const results = visit(body);
 
   const document = body;
-  const headings = build(results.headings).children;
+  const headings = build(results.headings.map((h, i) => ({ ...h, step: i }))).children;
   const contents = results.contents.join(" ");
   const excerpts = contents.length <= 140 ? contents : contents.substring(0, 140) + "...";
 
