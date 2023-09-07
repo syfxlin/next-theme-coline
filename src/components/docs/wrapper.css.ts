@@ -112,7 +112,15 @@ export const container = styled.css`
     border-left: ${theme.borderWidth.calc(3)} ${theme.borderStyle.default} ${theme.color.primary.text};
     margin-left: ${theme.fontSize.unit};
     padding-left: ${theme.fontSize.unit};
+    padding-top: ${theme.spacing.calc(2)};
+    padding-bottom: ${theme.spacing.calc(2)};
     box-sizing: border-box;
+
+    > *:first-child,
+    > *:last-child {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
   }
 
   ul,

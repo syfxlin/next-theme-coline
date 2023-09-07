@@ -207,7 +207,7 @@ const posts: () => CollectionResult<ArticleData, PageData<ArticleData>> = React.
     results.push({
       title: entry.title,
       slug: info.slug.toLowerCase(),
-      link: resolve(info.slug.toLowerCase()),
+      link: resolve("post", info.slug.toLowerCase()),
       layout: entry.layout,
       status: entry.status,
       published: new Date(entry.published_time),

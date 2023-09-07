@@ -39,8 +39,8 @@ export const TemplateArticles: React.FC<TemplateArticlesComponentProps> = async 
       <Main>
         <Hero author={author} />
         <section>
-          {props.items.map((item) => (
-            <ArticleInfo key={`article-${item.link}`} data={item} />
+          {props.items.map((item, index) => (
+            <ArticleInfo key={`article-${item.link}`} data={item} step={index} />
           ))}
         </section>
         <Pagination links="/" index={props.index} pages={props.pages} />

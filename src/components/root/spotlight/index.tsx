@@ -56,7 +56,9 @@ export const Spotlight: React.FC<SpotlightProps> = (props) => {
         {(query.isLoading || query.data) && (
           <div className={section}>
             {query.isLoading && <Loading />}
-            {query.data?.items.map((item) => <ArticleInfo key={`search-${item.link}`} data={item} />)}
+            {query.data?.items.map((item, index) => (
+              <ArticleInfo key={`search-${item.link}`} data={item} step={index} />
+            ))}
             {query.data && (
               <Pagination index={page} pages={Math.ceil(query.data.total / 10)} onPage={(page) => setPage(page)} />
             )}

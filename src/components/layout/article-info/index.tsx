@@ -6,14 +6,19 @@ import { MetaInfo } from "../meta-info";
 import { Image } from "../../ui/image";
 import { LinkButton } from "../../ui/button";
 import { ArticleList } from "../../../contents/types";
+import { cx } from "@syfxlin/reve";
 
 export type ArticleInfoProps = {
+  step?: number;
   data: ArticleList;
 };
 
-export const ArticleInfo: React.FC<ArticleInfoProps> = ({ data }) => {
+export const ArticleInfo: React.FC<ArticleInfoProps> = ({ step, data }) => {
   return (
-    <article className={styles.article}>
+    <article
+      className={cx(step !== undefined && "slide-enter", styles.article)}
+      style={step !== undefined ? ({ "--enter-step": step } as any) : {}}
+    >
       <section className={styles.section}>
         <Link href={data.link} aria-label={data.title} className={styles.title}>
           {data.title}

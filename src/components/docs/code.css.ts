@@ -32,7 +32,8 @@ export const container = styled.css`
     overflow: auto;
     margin: 0;
     padding: ${theme.fontSize.calc(1)} ${theme.fontSize.calc(1.2)};
-    font-family: "Fira Code", "Fira Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+    font-family: ${theme.fontFamily.mono};
+    line-height: ${theme.lineHeight.default};
 
     code {
       color: unset;
