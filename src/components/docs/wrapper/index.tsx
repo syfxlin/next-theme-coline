@@ -1,5 +1,5 @@
 import React from "react";
-import * as styles from "./wrapper.css";
+import * as styles from "./styles.css";
 import { cx } from "@syfxlin/reve";
 
 export const Wrapper: React.FC<any> = React.memo((props) => {

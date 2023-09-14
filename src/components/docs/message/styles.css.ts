@@ -1,5 +1,5 @@
 import { cx, styled } from "@syfxlin/reve";
-import { theme } from "../../theme/theme.css";
+import { theme } from "../../../theme/theme.css";
 
 export const base = styled.css`
   font-size: ${theme.fontSize.calc(0.9)};

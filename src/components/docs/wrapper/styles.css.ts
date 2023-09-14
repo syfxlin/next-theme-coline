@@ -1,5 +1,5 @@
 import { styled } from "@syfxlin/reve";
-import { theme } from "../../theme/theme.css";
+import { theme } from "../../../theme/theme.css";
 
 export const container = styled.css`
   h1,

@@ -3,11 +3,14 @@ import React from "react";
 import { Code } from "./code";
 import { Link } from "../ui/link";
 import { Image } from "../ui/image";
+import { Katex } from "./katex";
+import { Github } from "./github";
+import { Article } from "./article";
+import { Message } from "./message";
 import { Wrapper } from "./wrapper";
 import { Heading } from "./heading";
 import { DocumentRenderer } from "@keystatic/core/renderer";
 import { DocumentRendererProps } from "@keystatic/core/dist/declarations/src/renderer";
-import { Article, Github, Katex, Message } from "./dynamic";
 
 export const renderers: DocumentRendererProps["renderers"] = {
   inline: {
