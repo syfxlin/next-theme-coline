@@ -3,13 +3,12 @@ import { fields } from "./contents/fields";
 import { Article, Github, Katex, Message } from "./components/docs/dynamic";
 
 export default config({
-  locale: "zh-CN",
   storage: {
     kind: "local",
     // kind: "github",
     // repo: {
     //   owner: "syfxlin",
-    //   name: "keystatic",
+    //   name: "next-theme-coline",
     // },
   },
   collections: {
