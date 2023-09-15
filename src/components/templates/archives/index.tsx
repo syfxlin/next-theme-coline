@@ -52,14 +52,13 @@ export const TemplateArchives: React.FC<TemplateArchivesProps> = (props) => {
     <>
       <Header />
       <Main>
-        {/*prettier-ignore*/}
         {/* eslint-disable-next-line react/jsx-no-undef */}
+        {/*prettier-ignore*/}
         <Title title="归档">
-          {props.archives.length} 归档 × {props.categories.length} 分类 × {props.tags.length} 标签 ×{" "}
-          {props.articles.length} 文章 × {props.pages.length} 页面
+          {props.archives.length} 归档 × {props.categories.length} 分类 × {props.tags.length} 标签 × {props.articles.length} 文章 × {props.pages.length} 页面
         </Title>
         <article>
-          <section>
+          <section className="slide-enter" style={{ "--enter-step": 0 } as any}>
             <Heading level={2}>分类</Heading>
             <List type="ul">
               {[...props.categories]
@@ -73,7 +72,7 @@ export const TemplateArchives: React.FC<TemplateArchivesProps> = (props) => {
                 ))}
             </List>
           </section>
-          <section>
+          <section className="slide-enter" style={{ "--enter-step": 1 } as any}>
             <Heading level={2}>归档</Heading>
             <List type="ul">
               {[...props.archives]
@@ -87,7 +86,7 @@ export const TemplateArchives: React.FC<TemplateArchivesProps> = (props) => {
                 ))}
             </List>
           </section>
-          <section>
+          <section className="slide-enter" style={{ "--enter-step": 2 } as any}>
             <Heading level={2}>标签</Heading>
             <List type="ul" style={{ flexDirection: "row" }}>
               {[...props.tags]
