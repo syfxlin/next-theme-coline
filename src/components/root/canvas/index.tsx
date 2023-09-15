@@ -1,5 +1,5 @@
 "use client";
-import * as styles from "./index.css";
+import * as styles from "./styles.css";
 import React, { useEffect, useRef } from "react";
 import { render } from "../../../utils/canvas";
 import { useTheme } from "next-themes";

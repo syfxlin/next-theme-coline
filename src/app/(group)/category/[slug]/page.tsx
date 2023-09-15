@@ -1,7 +1,7 @@
 import React from "react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { metadataGroup, TemplateGroup } from "../../../../layouts/template-group";
+import { metadataGroup, TemplateGroup } from "../../../../components/templates/group";
 import { fetcher, slugger } from "../../../../contents";
 
 type Props = {

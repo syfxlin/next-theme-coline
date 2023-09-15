@@ -1,6 +1,6 @@
 import React from "react";
 import { Metadata } from "next";
-import { metadataArchives, TemplateArchives } from "../../../layouts/template-archives";
+import { metadataArchives, TemplateArchives } from "../../../components/templates/archives";
 import { fetcher } from "../../../contents";
 
 const query = async () => {

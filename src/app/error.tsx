@@ -1,6 +1,6 @@
 "use client";
 import React, { useMemo } from "react";
-import { ErrorFound } from "../components/layout/error-found";
+import { ErrorFound } from "../components/layouts/error-found";
 import { Link } from "../components/ui/link";
 
 export type ErrorPageProps = {

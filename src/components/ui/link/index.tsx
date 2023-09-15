@@ -1,5 +1,5 @@
 "use client";
-import * as styles from "./index.css";
+import * as styles from "./styles.css";
 import React, { AnchorHTMLAttributes, forwardRef } from "react";
 import Tippy, { TippyProps } from "@tippyjs/react";
 import NLink, { LinkProps as NLinkProps } from "next/link";

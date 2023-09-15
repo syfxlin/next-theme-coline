@@ -1,5 +1,5 @@
 import React from "react";
-import { ScraperAdapter, ScraperRequest } from "../../../adapters/scraper";
+import { ScraperAdapter, ScraperRequest } from "../../../adapters/scraper-adapter";
 import { ArticleInner } from "./inner";
 
 const adapter = new ScraperAdapter();

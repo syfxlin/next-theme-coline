@@ -1,12 +1,12 @@
 "use client";
+import * as styles from "./styles.css";
 import React, { useState } from "react";
 import useSWR from "swr";
-import { background, container, header, icon, input, root, section } from "./index.css";
 import { Close, Search } from "@icon-park/react";
 import { Button } from "../../ui/button";
 import { useDebounce } from "react-use";
 import { Loading } from "../../ui/loading";
-import { ArticleInfo } from "../../layout/article-info";
+import { ArticleInfo } from "../../layouts/article-info";
 import { Pagination } from "../../ui/pagination";
 import { SearchResponse } from "../../../app/api/search/route";
 
@@ -37,13 +37,17 @@ export const Spotlight: React.FC<SpotlightProps> = (props) => {
   const query = useSWR(debounce ? ["/api/search", page, debounce] : null, fetcher);
 
   return (
-    <section className={root} style={{ visibility: props.active ? "visible" : "hidden" }}>
-      <div className={background} style={{ opacity: props.active ? 1 : 0 }} onClick={() => props.setActive(false)} />
-      <div className={container} style={{ opacity: props.active ? 1 : 0 }}>
-        <div className={header}>
-          <Search className={icon} />
+    <section className={styles.root} style={{ visibility: props.active ? "visible" : "hidden" }}>
+      <div
+        className={styles.background}
+        style={{ opacity: props.active ? 1 : 0 }}
+        onClick={() => props.setActive(false)}
+      />
+      <div className={styles.container} style={{ opacity: props.active ? 1 : 0 }}>
+        <div className={styles.header}>
+          <Search className={styles.icon} />
           <input
-            className={input}
+            className={styles.input}
             type="text"
             placeholder="搜索..."
             value={search}
@@ -54,7 +58,7 @@ export const Spotlight: React.FC<SpotlightProps> = (props) => {
           </Button>
         </div>
         {(query.isLoading || query.data) && (
-          <div className={section}>
+          <div className={styles.section}>
             {query.isLoading && <Loading />}
             {query.data?.items.map((item, index) => (
               <ArticleInfo key={`search-${item.link}`} data={item} step={index} />

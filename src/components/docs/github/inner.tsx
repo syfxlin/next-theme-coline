@@ -1,6 +1,6 @@
 import React from "react";
 import { AdapterResponse } from "../../../adapters/adapter";
-import { GithubRequest, GithubResponse } from "../../../adapters/github";
+import { GithubRequest, GithubResponse } from "../../../adapters/github-adapter";
 import * as styles from "./styles.css";
 import { Link } from "../../ui/link";
 

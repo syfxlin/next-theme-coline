@@ -1,5 +1,5 @@
 "use client";
-import * as styles from "./index.css";
+import * as styles from "./styles.css";
 import React from "react";
 
 export type DividerProps = {

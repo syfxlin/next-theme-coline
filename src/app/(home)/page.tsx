@@ -2,7 +2,7 @@ import React from "react";
 import { fetcher } from "../../contents";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { metadataArticles, TemplateArticles } from "../../layouts/template-articles";
+import { metadataArticles, TemplateArticles } from "../../components/templates/articles";
 
 type Props = {
   params: {

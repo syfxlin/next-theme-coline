@@ -1,7 +1,7 @@
 "use client";
+import * as styles from "./styles.css";
 import React, { ElementType, forwardRef, HTMLAttributes, PropsWithChildren } from "react";
 import { cx } from "@syfxlin/reve";
-import { container } from "./index.css";
 
 export type ListProps = PropsWithChildren<
   HTMLAttributes<HTMLUListElement | HTMLOListElement> & {
@@ -13,7 +13,7 @@ export const List = forwardRef<HTMLUListElement | HTMLOListElement, ListProps>((
   const Component: ElementType = type;
   return (
     // @ts-ignore
-    <Component {...props} className={cx(props.className, container)} ref={ref}>
+    <Component {...props} className={cx(props.className, styles.container)} ref={ref}>
       {props.children}
     </Component>
   );

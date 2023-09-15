@@ -1,25 +1,24 @@
 "use client";
-import * as styles from "./index.css";
-import React, { SVGAttributes } from "react";
+import * as styles from "./styles.css";
+import React, { forwardRef, HTMLAttributes } from "react";
 import { cx } from "@syfxlin/reve";
 
-export type IconProps = SVGAttributes<SVGElement> & {
+export type IconProps = HTMLAttributes<HTMLSpanElement> & {
   data: string;
 };
 
-export const Icon: React.FC<IconProps> = ({ data, ...props }) => {
+export const Icon = forwardRef<HTMLSpanElement, IconProps>(({ data, ...props }, ref) => {
   return (
-    <span className={cx("i-icon", styles.container)}>
+    <span {...props} className={cx("i-icon", styles.container, props.className)} ref={ref}>
       <svg
         width="1em"
         height="1em"
         viewBox="0 0 48 48"
         fill="none"
-        {...props}
         dangerouslySetInnerHTML={{
           __html: data,
         }}
       />
     </span>
   );
-};
+});

@@ -1,5 +1,5 @@
 "use client";
-import * as styles from "./index.css";
+import * as styles from "./styles.css";
 import React, { forwardRef, HTMLAttributes, useMemo } from "react";
 import NImage from "next/image";
 import { cx, sx } from "@syfxlin/reve";

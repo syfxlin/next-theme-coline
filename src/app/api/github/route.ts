@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { GithubAdapter } from "../../../adapters/github";
+import { GithubAdapter } from "../../../adapters/github-adapter";
 
 const adapter = new GithubAdapter();
 

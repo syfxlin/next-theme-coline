@@ -1,6 +1,6 @@
 import React from "react";
 import { AdapterResponse } from "../../../adapters/adapter";
-import { ScraperRequest, ScraperResponse } from "../../../adapters/scraper";
+import { ScraperRequest, ScraperResponse } from "../../../adapters/scraper-adapter";
 import * as styles from "./styles.css";
 import { Link } from "../../ui/link";
 import { AspectRatio } from "../../ui/aspect-ratio";

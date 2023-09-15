@@ -2,7 +2,7 @@ import { fetcher } from "../../../contents";
 import React from "react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { layouts, metadataPage } from "../../../layouts/template-page";
+import { layouts, metadataPage } from "../../../components/templates/page";
 
 type Props = {
   params: {

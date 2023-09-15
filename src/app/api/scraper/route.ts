@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { ScraperAdapter } from "../../../adapters/scraper";
+import { ScraperAdapter } from "../../../adapters/scraper-adapter";
 
 const adapter = new ScraperAdapter();
 

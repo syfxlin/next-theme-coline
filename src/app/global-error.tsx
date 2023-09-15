@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ClientRoot } from "../layouts/root/client";
+import { ClientRoot } from "../components/layouts/root/client";
 import { ErrorPage, ErrorPageProps } from "./error";
 
 export default function GlobalErrorPage(props: ErrorPageProps) {

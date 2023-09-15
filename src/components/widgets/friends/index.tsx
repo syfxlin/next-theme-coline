@@ -1,5 +1,5 @@
 "use client";
-import * as styles from "./index.css";
+import * as styles from "./styles.css";
 import React, { useMemo } from "react";
 import Tippy from "@tippyjs/react";
 import { FriendsData } from "../../../contents/types";
