@@ -1,6 +1,4 @@
 // noinspection JSUnusedGlobalSymbols
-declare module "@fec/remark-a11y-emoji" {}
-declare module "@akebifiky/remark-simple-plantuml" {}
 
 declare global {
   namespace NodeJS {
