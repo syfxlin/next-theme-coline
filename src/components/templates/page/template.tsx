@@ -1,5 +1,4 @@
 import React, { PropsWithChildren } from "react";
-import { fetcher } from "../../../contents";
 import { Header } from "../../layouts/header";
 import { Main } from "../../layouts/main";
 import { AspectRatio } from "../../ui/aspect-ratio";
@@ -26,7 +25,6 @@ export type TemplatePageProps = PropsWithChildren<{
 }>;
 
 export const TemplatePage: React.FC<TemplatePageProps> = async ({ data, prev, next, children }) => {
-  const [seo, author, license] = await Promise.all([fetcher.seo(), fetcher.author(), fetcher.license()]);
   return (
     <>
       <Header />
@@ -41,7 +39,7 @@ export const TemplatePage: React.FC<TemplatePageProps> = async ({ data, prev, ne
             <MetaInfo data={data} />
           </Title>
           {children}
-          {data.layout === "post" && <Copyright data={data} seo={seo} author={author} license={license} />}
+          {data.layout === "post" && <Copyright data={data} />}
         </article>
         <Toc data={data.body.headings} />
         <CursorPagination prev={prev} next={next} />

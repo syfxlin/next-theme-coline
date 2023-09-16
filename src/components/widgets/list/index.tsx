@@ -1,4 +1,3 @@
-"use client";
 import * as styles from "./styles.css";
 import React, { ElementType, forwardRef, HTMLAttributes, PropsWithChildren } from "react";
 import { cx } from "@syfxlin/reve";

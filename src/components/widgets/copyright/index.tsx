@@ -1,33 +1,31 @@
-"use client";
 import * as styles from "./styles.css";
 import React from "react";
 import { Link } from "../../ui/link";
 import { resolve } from "../../../utils/vender";
-import { ArticleList, AuthorData, LicenseData, SeoData } from "../../../contents/types";
+import { ArticleList } from "../../../contents/types";
+import { fetcher } from "../../../contents";
 
 export type CopyrightProps = {
   data: ArticleList;
-  seo: SeoData;
-  author: AuthorData;
-  license: LicenseData;
 };
 
-export const Copyright: React.FC<CopyrightProps> = (props) => {
+export const Copyright: React.FC<CopyrightProps> = async (props) => {
+  const [seo, author, license] = await Promise.all([fetcher.seo(), fetcher.author(), fetcher.license()]);
   return (
     <section className={styles.section}>
       <p className={styles.title}>{props.data.title}</p>
-      <Link href={resolve(props.seo.link, props.data.link)}>{resolve(props.seo.link, props.data.link)}</Link>
+      <Link href={resolve(seo.link, props.data.link)}>{resolve(seo.link, props.data.link)}</Link>
       <ul className={styles.list}>
         <li>
           <p className={styles.item}>许可协议</p>
-          <p className={styles.content} aria-label={`许可协议：${props.license.name}`}>
-            {props.license.name}
+          <p className={styles.content} aria-label={`许可协议：${license.name}`}>
+            {license.name}
           </p>
         </li>
         <li>
           <p className={styles.item}>本文作者</p>
-          <p className={styles.content} aria-label={`本文作者：${props.author.fullname}`}>
-            {props.author.fullname}
+          <p className={styles.content} aria-label={`本文作者：${author.fullname}`}>
+            {author.fullname}
           </p>
         </li>
         <li>
