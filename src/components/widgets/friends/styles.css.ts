@@ -12,6 +12,7 @@ export const link = styled.css`
   text-align: left;
   gap: ${theme.spacing.calc(4)};
   padding: ${theme.spacing.calc(4)};
+  border-bottom: none;
 `;
 
 export const avatar = styled.css`

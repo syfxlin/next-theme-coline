@@ -4,6 +4,9 @@ import { theme } from "../../../theme/theme.css";
 export const container = styled.css`
   position: relative;
   font-size: ${theme.fontSize.calc(0.9)} !important;
+  font-weight: ${theme.fontWeight.default};
+  line-height: ${theme.lineHeight.none};
+  letter-spacing: ${theme.letterSpacing.default};
   padding: 0 !important;
   background: ${theme.color.background.x2} !important;
   margin-top: ${theme.spacing.calc(4)};
@@ -14,7 +17,7 @@ export const container = styled.css`
     opacity: 1;
     content: attr(data-language);
     font-size: ${theme.fontSize.calc(1)};
-    padding: ${theme.fontSize.calc(0.3)} ${theme.fontSize.calc(0.9)};
+    padding: ${theme.fontSize.calc(0.9)} ${theme.fontSize.calc(0.9)};
     position: absolute;
     right: 0;
     top: 0;

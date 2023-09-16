@@ -1,25 +1,34 @@
 // @ts-nocheck
-import React from "react";
+import React, { ReactNode } from "react";
 import { Code } from "./code";
+import { List } from "./list";
 import { Link } from "../ui/link";
 import { Image } from "../ui/image";
+import { Table } from "./table";
 import { Katex } from "./katex";
 import { Github } from "./github";
 import { Article } from "./article";
 import { Message } from "./message";
-import { Wrapper } from "./wrapper";
+import { Divider } from "./divider";
 import { Heading } from "./heading";
+import { Paragraph } from "./paragraph";
+import { InlineCode } from "./inline-code";
 import { DocumentRenderer } from "@keystatic/core/renderer";
 import { DocumentRendererProps } from "@keystatic/core/dist/declarations/src/renderer";
 
 export const renderers: DocumentRendererProps["renderers"] = {
   inline: {
     link: Link,
+    code: InlineCode,
   },
   block: {
     code: Code,
+    list: List,
     image: Image,
+    table: Table,
+    divider: Divider,
     heading: Heading,
+    paragraph: Paragraph,
   },
 };
 
@@ -30,10 +39,16 @@ export const components: DocumentRendererProps["componentBlocks"] = {
   message: Message,
 };
 
-export const Renderer: React.FC<{ document: any[] }> = React.memo(({ document }) => {
+export type RendererProps = {
+  document: any[];
+  children?: ReactNode;
+};
+
+export const Renderer: React.FC<RendererProps> = React.memo(({ document, children }) => {
   return (
-    <Wrapper>
+    <section className="slide-enter-content">
       <DocumentRenderer document={document} renderers={renderers} componentBlocks={components} />
-    </Wrapper>
+      {children}
+    </section>
   );
 });

@@ -4,6 +4,7 @@ import { styled } from "@syfxlin/reve";
 export const container = styled.css`
   position: relative;
   display: block;
+  max-width: 100%;
   margin-left: auto;
   margin-right: auto;
   transition: filter 0.3s;

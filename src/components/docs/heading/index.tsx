@@ -1,3 +1,4 @@
+import * as styles from "./styles.css";
 import React, { isValidElement, JSX, ReactNode } from "react";
 
 const visit = (node: any): string => {
@@ -35,13 +36,13 @@ export type HeadingProps = {
   children: ReactNode;
 };
 
-export const Heading: React.FC<HeadingProps> = React.memo((props) => {
+export const Heading: React.FC<HeadingProps> = (props) => {
   const id = parse(props.children);
   const Component: keyof JSX.IntrinsicElements = `h${props.level}`;
   return (
-    <Component id={id}>
+    <Component id={id} className={styles.container}>
       <a href={`#${encodeURIComponent(id)}`} aria-label={`${id} permalink`} />
       {props.children}
     </Component>
   );
-});
+};

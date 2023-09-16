@@ -18,7 +18,7 @@ export type CodeProps = {
   children: string;
 };
 
-export const Code: React.FC<CodeProps> = React.memo(async ({ language, children }) => {
+export const Code: React.FC<CodeProps> = async ({ language, children }) => {
   const html = parse("light", children, language) + parse("dark", children, language);
   return (
     <div
@@ -27,4 +27,4 @@ export const Code: React.FC<CodeProps> = React.memo(async ({ language, children 
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );
-});
+};
