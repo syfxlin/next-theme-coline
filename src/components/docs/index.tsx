@@ -15,6 +15,7 @@ import { Paragraph } from "./paragraph";
 import { InlineCode } from "./inline-code";
 import { DocumentRenderer } from "@keystatic/core/renderer";
 import { DocumentRendererProps } from "@keystatic/core/dist/declarations/src/renderer";
+import { Blockquote } from "./blockquote";
 
 export const renderers: DocumentRendererProps["renderers"] = {
   inline: {
@@ -29,6 +30,7 @@ export const renderers: DocumentRendererProps["renderers"] = {
     divider: Divider,
     heading: Heading,
     paragraph: Paragraph,
+    blockquote: Blockquote,
   },
 };
 
