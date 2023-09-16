@@ -15,6 +15,7 @@ import {
   HeaderData,
   LicenseData,
   PageData,
+  ProjectsData,
   SeoData,
   SingletonResult,
 } from "./types";
@@ -150,6 +151,14 @@ const friends: () => SingletonResult<FriendsData> = React.cache(async () => {
       link: i.link,
     })),
   };
+});
+
+const projects: () => SingletonResult<ProjectsData> = React.cache(async () => {
+  const info = await reader.singletons.projects.read();
+  if (!info) {
+    throw new TypeError("No projects data configured.");
+  }
+  return info;
 });
 
 const pages: () => CollectionResult<ArticleData, PageData<ArticleData>> = React.cache(async () => {
@@ -408,6 +417,7 @@ export const fetcher = {
   footer,
   license,
   friends,
+  projects,
   pages,
   posts,
   categories,

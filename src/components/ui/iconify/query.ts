@@ -2,9 +2,10 @@ import ri from "@iconify/json/json/ri.json";
 import ph from "@iconify/json/json/ph.json";
 import uil from "@iconify/json/json/uil.json";
 import tabler from "@iconify/json/json/tabler.json";
+import lucide from "@iconify/json/json/lucide.json";
 import { getIconData, iconToHTML, iconToSVG } from "@iconify/utils";
 
-const icons = [ri, ph, uil, tabler];
+const icons = [ri, ph, uil, tabler, lucide];
 
 const svg = (icon: string) => {
   const [prefix, target] = icon.split(":");

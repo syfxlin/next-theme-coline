@@ -502,25 +502,41 @@ export default config({
       entryLayout: "form",
       format: { data: "yaml" },
       schema: {
-        items: fields.array(
+        categories: fields.array(
           fields.object({
             name: fields.text({
               label: "分类名称",
               validation: { length: { min: 1 } },
             }),
-            items: fields.object({
-              name: fields.text({
-                label: "站点名称",
-                validation: { length: { min: 1 } },
+            items: fields.array(
+              fields.object({
+                name: fields.text({
+                  label: "项目名称",
+                  validation: { length: { min: 1 } },
+                }),
+                icon: fields.text({
+                  label: "项目图标",
+                  validation: { length: { min: 1 } },
+                }),
+                link: fields.text({
+                  label: "项目链接",
+                  validation: { length: { min: 1 } },
+                }),
+                description: fields.text({
+                  label: "项目简介",
+                  multiline: true,
+                  validation: { length: { min: 1 } },
+                }),
               }),
-              link: fields.text({
-                label: "站点链接",
+              {
+                label: "项目",
+                itemLabel: (props) => props.fields.name.value,
                 validation: { length: { min: 1 } },
-              }),
-            }),
+              },
+            ),
           }),
           {
-            label: "项目分类",
+            label: "分类",
             itemLabel: (props) => props.fields.name.value,
             validation: { length: { min: 0 } },
           },

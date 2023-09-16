@@ -82,6 +82,18 @@ export interface FriendsData {
   }>;
 }
 
+export interface ProjectsData {
+  categories: ReadonlyArray<{
+    name: string;
+    items: ReadonlyArray<{
+      name: string;
+      icon: string;
+      link: string;
+      description: string;
+    }>;
+  }>;
+}
+
 export interface ArticleList {
   title: string;
   slug: string;
