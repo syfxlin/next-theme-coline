@@ -31,11 +31,11 @@ export const right = styled.css`
 export const always = styled.css`
   display: inline-flex;
 
-  > span:nth-child(1) {
+  > :nth-child(1) {
     display: inline;
   }
 
-  > span:nth-child(2) {
+  > :nth-child(2) {
     display: none;
   }
 `;
@@ -43,20 +43,20 @@ export const always = styled.css`
 export const elastic = styled.css`
   display: inline-flex;
 
-  > span:nth-child(1) {
+  > :nth-child(1) {
     display: inline;
   }
 
-  > span:nth-child(2) {
+  > :nth-child(2) {
     display: none;
   }
 
   ${theme.media.md} {
-    > span:nth-child(1) {
+    > :nth-child(1) {
       display: none;
     }
 
-    > span:nth-child(2) {
+    > :nth-child(2) {
       display: inline;
     }
   }
@@ -65,11 +65,11 @@ export const elastic = styled.css`
 export const always_icon = styled.css`
   display: inline-flex;
 
-  > span:nth-child(1) {
+  > :nth-child(1) {
     display: none;
   }
 
-  > span:nth-child(2) {
+  > :nth-child(2) {
     display: inline;
   }
 `;
@@ -77,11 +77,11 @@ export const always_icon = styled.css`
 export const elastic_icon = styled.css`
   display: inline-flex;
 
-  > span:nth-child(1) {
+  > :nth-child(1) {
     display: none;
   }
 
-  > span:nth-child(2) {
+  > :nth-child(2) {
     display: inline;
   }
 

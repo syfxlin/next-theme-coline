@@ -2,13 +2,13 @@
 import * as styles from "./styles.css";
 import React, { useState } from "react";
 import useSWR from "swr";
-import { Close, Search } from "@icon-park/react";
 import { Button } from "../../ui/button";
 import { useDebounce } from "react-use";
 import { Loading } from "../../ui/loading";
 import { ArticleInfo } from "../../layouts/article-info";
 import { Pagination } from "../../ui/pagination";
 import { SearchResponse } from "../../../app/api/search/route";
+import { Iconify } from "../../ui/iconify/client";
 
 const fetcher = async ([path, page, search]: [string, number, string]) => {
   const url = new URL(path, location.href);
@@ -45,7 +45,9 @@ export const Spotlight: React.FC<SpotlightProps> = (props) => {
       />
       <div className={styles.container} style={{ opacity: props.active ? 1 : 0 }}>
         <div className={styles.header}>
-          <Search className={styles.icon} />
+          <div className={styles.icon}>
+            <Iconify icon={styles.icon_search} />
+          </div>
           <input
             className={styles.input}
             type="text"
@@ -54,7 +56,7 @@ export const Spotlight: React.FC<SpotlightProps> = (props) => {
             onChange={(e) => setSearch(e.target.value)}
           />
           <Button aria-label="关闭" onClick={() => props.setActive(false)}>
-            <Close />
+            <Iconify icon={styles.icon_close} />
           </Button>
         </div>
         {(query.isLoading || query.data) && (

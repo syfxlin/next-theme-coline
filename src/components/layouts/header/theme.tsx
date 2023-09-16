@@ -1,10 +1,13 @@
 "use client";
-import React from "react";
+import React, { ReactNode } from "react";
 import { useTheme } from "next-themes";
-import { DarkMode } from "@icon-park/react";
 import { Button } from "../../ui/button";
 
-export const Theme: React.FC = () => {
+export type ThemeProps = {
+  icon: ReactNode;
+};
+
+export const Theme: React.FC<ThemeProps> = ({ icon }) => {
   const { theme, resolvedTheme, setTheme } = useTheme();
   return (
     <Button
@@ -20,7 +23,7 @@ export const Theme: React.FC = () => {
         }
       }}
     >
-      <DarkMode />
+      {icon}
     </Button>
   );
 };

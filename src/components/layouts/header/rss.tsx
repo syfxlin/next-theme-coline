@@ -1,12 +1,15 @@
 "use client";
-import React from "react";
+import React, { ReactNode } from "react";
 import { LinkButton } from "../../ui/button";
-import { Rss as Icon } from "@icon-park/react";
 
-export const Rss: React.FC = () => {
+export type RssProps = {
+  icon: ReactNode;
+};
+
+export const Rss: React.FC<RssProps> = ({ icon }) => {
   return (
     <LinkButton tippy aria-label="RSS" href="/rss.xml">
-      <Icon />
+      {icon}
     </LinkButton>
   );
 };

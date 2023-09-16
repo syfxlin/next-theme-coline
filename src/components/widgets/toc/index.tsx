@@ -5,7 +5,7 @@ import { cx } from "@syfxlin/reve";
 import { useIntersectionObserver } from "../../../hooks/use-intersection-observer";
 import { TocData } from "../../../contents/types";
 import { Link } from "../../ui/link";
-import { LeftAlignment } from "@icon-park/react";
+import { Iconify } from "../../ui/iconify/client";
 
 export type TocProps = {
   data: ReadonlyArray<TocData>;
@@ -37,7 +37,7 @@ export const Toc: React.FC<TocProps> = ({ data }) => {
 
   return (
     <aside className={styles.container}>
-      <LeftAlignment className={styles.icon} />
+      <Iconify icon={styles.icon} />
       <Item data={data} active={active} />
     </aside>
   );

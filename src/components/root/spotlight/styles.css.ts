@@ -1,5 +1,6 @@
 import { theme } from "../../../theme/theme.css";
 import { styled } from "@syfxlin/reve";
+import { iconify } from "../../ui/iconify/query";
 
 export const root = styled.css`
   transition-property: visibility;
@@ -70,6 +71,9 @@ export const header = styled.css`
 export const icon = styled.css`
   color: ${theme.color.primary.text};
   margin-right: ${theme.spacing.calc(0.5)};
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const input = styled.css`
@@ -95,4 +99,12 @@ export const section = styled.css`
   width: 100%;
   overflow-y: auto;
   pointer-events: auto;
+`;
+
+export const icon_search = styled.css`
+  ${iconify.css("ri:search-line")}
+`;
+
+export const icon_close = styled.css`
+  ${iconify.css("ri:close-line")}
 `;

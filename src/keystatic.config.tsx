@@ -380,7 +380,6 @@ export default config({
             }),
             icon: fields.text({
               label: "图标",
-              multiline: true,
               validation: { length: { min: 1 } },
             }),
             view: fields.select({
@@ -491,6 +490,37 @@ export default config({
           }),
           {
             label: "已失联的友链",
+            itemLabel: (props) => props.fields.name.value,
+            validation: { length: { min: 0 } },
+          },
+        ),
+      },
+    }),
+    projects: singleton({
+      label: "项目",
+      path: "src/content/config/projects",
+      entryLayout: "form",
+      format: { data: "yaml" },
+      schema: {
+        items: fields.array(
+          fields.object({
+            name: fields.text({
+              label: "分类名称",
+              validation: { length: { min: 1 } },
+            }),
+            items: fields.object({
+              name: fields.text({
+                label: "站点名称",
+                validation: { length: { min: 1 } },
+              }),
+              link: fields.text({
+                label: "站点链接",
+                validation: { length: { min: 1 } },
+              }),
+            }),
+          }),
+          {
+            label: "项目分类",
             itemLabel: (props) => props.fields.name.value,
             validation: { length: { min: 0 } },
           },

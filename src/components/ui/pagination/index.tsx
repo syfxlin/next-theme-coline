@@ -3,7 +3,7 @@ import * as styles from "./styles.css";
 import React from "react";
 import { LinkButton } from "../button";
 import { range, resolve } from "../../../utils/vender";
-import { Left, Right } from "@icon-park/react";
+import { Iconify } from "../iconify/client";
 
 export type PaginationProps = {
   index: number;
@@ -23,7 +23,7 @@ export const Pagination: React.FC<PaginationProps> = ({ index, pages, links, onL
           href={links !== undefined ? resolve(links, "page", index - 1) : onLink?.(index - 1) ?? "#"}
           onClick={() => onPage?.(index - 1)}
         >
-          <Left /> 上一页
+          <Iconify icon={styles.icon_left} /> 上一页
         </LinkButton>
       )}
       {pages >= 1 && (
@@ -70,7 +70,7 @@ export const Pagination: React.FC<PaginationProps> = ({ index, pages, links, onL
           href={links !== undefined && links !== null ? resolve(links, "page", index + 1) : onLink?.(index + 1) ?? "#"}
           onClick={() => onPage?.(index + 1)}
         >
-          下一页 <Right />
+          下一页 <Iconify icon={styles.icon_right} />
         </LinkButton>
       )}
     </section>
@@ -98,7 +98,7 @@ export const CursorPagination: React.FC<CursorPaginationProps> = (props) => {
           aria-label={`上一页：${props.prev.name}`}
           href={props.prev.link}
         >
-          <Left /> {props.prev.name}
+          <Iconify icon={styles.icon_left} /> {props.prev.name}
         </LinkButton>
       )}
       {props.next && (
@@ -108,7 +108,7 @@ export const CursorPagination: React.FC<CursorPaginationProps> = (props) => {
           aria-label={`下一页：${props.next.name}`}
           href={props.next.link}
         >
-          {props.next.name} <Right />
+          {props.next.name} <Iconify icon={styles.icon_right} />
         </LinkButton>
       )}
     </section>

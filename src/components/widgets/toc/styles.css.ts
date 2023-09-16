@@ -1,5 +1,6 @@
 import { theme } from "../../../theme/theme.css";
 import { styled } from "@syfxlin/reve";
+import { iconify } from "../../ui/iconify/query";
 
 export const container = styled.css`
   position: fixed;
@@ -35,14 +36,12 @@ export const container = styled.css`
 `;
 
 export const icon = styled.css`
-  margin: ${theme.spacing.calc(2.5)};
+  ${iconify.css("ri:menu-2-fill")}
 
-  svg {
-    fill: ${theme.color.text.x3};
-    color: ${theme.color.text.x3};
-    height: ${theme.fontSize.calc(1.5)};
-    width: ${theme.fontSize.calc(1.5)};
-  }
+  margin: ${theme.spacing.calc(2)};
+  color: ${theme.color.text.x3};
+  height: ${theme.fontSize.calc(1.5)};
+  width: ${theme.fontSize.calc(1.5)};
 `;
 
 export const list = styled.css`

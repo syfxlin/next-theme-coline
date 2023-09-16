@@ -2,12 +2,12 @@ import * as styles from "./styles.css";
 import React from "react";
 import { cx } from "@syfxlin/reve";
 import { fetcher } from "../../../contents";
-import { Icon } from "../../ui/icon";
 import { Image } from "../../ui/image";
 import { LinkButton } from "../../ui/button";
 import { Rss } from "./rss";
 import { Theme } from "./theme";
 import { Search } from "./search";
+import { Iconify } from "../../ui/iconify";
 
 export const Header: React.FC = async () => {
   const [seo, header] = await Promise.all([fetcher.seo(), fetcher.header()]);
@@ -31,12 +31,12 @@ export const Header: React.FC = async () => {
             )}
           >
             <span>{item.title}</span>
-            <Icon data={item.icon} />
+            <Iconify icon={item.icon} />
           </LinkButton>
         ))}
-        <Rss />
-        <Theme />
-        <Search />
+        <Rss icon={<Iconify icon="ri:rss-line" />} />
+        <Theme icon={<Iconify icon="ri:sun-line" />} />
+        <Search icon={<Iconify icon="ri:search-line" />} />
       </div>
     </header>
   );

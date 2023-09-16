@@ -1,5 +1,6 @@
 import { theme } from "../../../theme/theme.css";
 import { styled } from "@syfxlin/reve";
+import { iconify } from "../iconify/query";
 
 export const container = styled.css`
   display: flex;
@@ -36,4 +37,12 @@ export const cursor_link = styled.css`
   flex: 1;
   text-align: center;
   justify-content: center;
+`;
+
+export const icon_left = styled.css`
+  ${iconify.css("ri:arrow-left-s-line")}
+`;
+
+export const icon_right = styled.css`
+  ${iconify.css("ri:arrow-right-s-line")}
 `;
