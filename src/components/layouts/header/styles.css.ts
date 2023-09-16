@@ -2,6 +2,7 @@ import { theme } from "../../../theme/theme.css";
 import { styled } from "@syfxlin/reve";
 
 export const container = styled.css`
+  height: 80px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -18,13 +19,13 @@ export const logo = styled.css`
 export const left = styled.css`
   display: flex;
   gap: ${theme.spacing.calc(1)};
-  margin: ${theme.spacing.calc(4)};
+  margin: 0 ${theme.spacing.calc(4)};
 `;
 
 export const right = styled.css`
   display: flex;
   gap: ${theme.spacing.calc(1)};
-  margin: ${theme.spacing.calc(4)};
+  margin: 0 ${theme.spacing.calc(4)};
 `;
 
 export const always = styled.css`

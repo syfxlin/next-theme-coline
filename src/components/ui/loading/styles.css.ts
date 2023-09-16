@@ -7,7 +7,7 @@ export const container = styled.css`
   height: 100%;
   align-items: center;
   justify-content: center;
-  padding: ${theme.spacing.calc(2)};
+  padding: ${theme.spacing.calc(6)};
 `;
 
 export const svg = styled.css`

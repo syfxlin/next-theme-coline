@@ -31,19 +31,19 @@ export const theme = createReveTheme({
   static: {
     // breakpoint
     breakpoint: {
-      xs: `${breakpoints.xs}px`,
-      sm: `${breakpoints.sm}px`,
-      md: `${breakpoints.md}px`,
-      lg: `${breakpoints.lg}px`,
-      xl: `${breakpoints.xl}px`,
+      xs: `${breakpoints.xs}`,
+      sm: `${breakpoints.sm}`,
+      md: `${breakpoints.md}`,
+      lg: `${breakpoints.lg}`,
+      xl: `${breakpoints.xl}`,
     },
     // media query
     media: {
-      xs: `screen and (max-width: ${breakpoints.xs}px)`,
-      sm: `screen and (max-width: ${breakpoints.sm}px)`,
-      md: `screen and (max-width: ${breakpoints.md}px)`,
-      lg: `screen and (max-width: ${breakpoints.lg}px)`,
-      xl: `screen and (max-width: ${breakpoints.xl}px)`,
+      xs: `@media screen and (max-width: ${breakpoints.xs})`,
+      sm: `@media screen and (max-width: ${breakpoints.sm})`,
+      md: `@media screen and (max-width: ${breakpoints.md})`,
+      lg: `@media screen and (max-width: ${breakpoints.lg})`,
+      xl: `@media screen and (max-width: ${breakpoints.xl})`,
     },
     // font family
     fontFamily: {

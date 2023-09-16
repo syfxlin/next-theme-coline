@@ -18,6 +18,7 @@ import {
   SeoData,
   SingletonResult,
 } from "./types";
+import { IS_DEV } from "../env/public";
 
 export const slugger = (value: string) => {
   return slug(decodeURIComponent(value.trim().toLowerCase()));
@@ -156,6 +157,11 @@ const pages: () => CollectionResult<ArticleData, PageData<ArticleData>> = React.
 
   for (const info of await reader.collections.pages.all()) {
     const entry = info.entry as Record<string, any>;
+
+    if (!IS_DEV && entry.status !== "publish") {
+      continue;
+    }
+
     const year = String(new Date(entry.published_time).getFullYear());
     const body = document(await entry.body());
     results.push({
@@ -200,6 +206,11 @@ const posts: () => CollectionResult<ArticleData, PageData<ArticleData>> = React.
 
   for (const info of await reader.collections.posts.all()) {
     const entry = info.entry as Record<string, any>;
+
+    if (!IS_DEV && entry.status !== "publish") {
+      continue;
+    }
+
     const year = String(new Date(entry.published_time).getFullYear());
     const body = document(await entry.body());
     results.push({

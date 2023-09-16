@@ -3,6 +3,7 @@ import { styled } from "@syfxlin/reve";
 
 export const container = styled.css`
   position: relative;
+  width: 100%;
   max-width: ${theme.fontSize.calc(45)};
   margin: 0 auto;
   padding: ${theme.spacing.calc(5)} ${theme.spacing.calc(8)};

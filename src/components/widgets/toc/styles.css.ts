@@ -3,21 +3,45 @@ import { styled } from "@syfxlin/reve";
 
 export const container = styled.css`
   position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-left: ${theme.fontSize.calc(-14)};
-  width: ${theme.fontSize.calc(12)};
-  max-height: ${theme.fontSize.calc(30)};
-  padding: ${theme.spacing.calc(1)};
   overflow-y: auto;
+  top: 80px;
+  left: ${theme.fontSize.calc(1)};
+  padding: ${theme.spacing.calc(1)};
+  width: ${theme.fontSize.calc(18)};
+  height: calc(100vh - 160px);
 
-  @media (max-width: ${theme.fontSize.calc(75)}) {
+  @media (max-width: ${theme.fontSize.calc(36 + 45)}) {
     display: none;
   }
 
   > ul {
     margin: 0;
     padding: 0;
+    opacity: 0;
+    transition: opacity 0.6s;
+  }
+
+  > span {
+    opacity: 0.6;
+    transition: opacity 0.6s;
+  }
+
+  &:hover {
+    > ul,
+    > span {
+      opacity: 1;
+    }
+  }
+`;
+
+export const icon = styled.css`
+  margin: ${theme.spacing.calc(2.5)};
+
+  svg {
+    fill: ${theme.color.text.x3};
+    color: ${theme.color.text.x3};
+    height: ${theme.fontSize.calc(1.5)};
+    width: ${theme.fontSize.calc(1.5)};
   }
 `;
 
@@ -30,16 +54,26 @@ export const list = styled.css`
 `;
 
 export const item = styled.css`
-  display: flex;
-  flex-direction: column;
-
   a {
-    flex-grow: 1;
+    display: inline;
     text-align: left;
-    justify-content: flex-start;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow-x: hidden;
-    display: inline-block;
+    font-size: ${theme.fontSize.calc(0.9)};
+    margin: 0 ${theme.spacing.calc(2.5)};
+    color: ${theme.color.text.x3};
+    border-bottom-color: ${theme.color.border.underline};
+    transition:
+      color 0.3s,
+      border 0.3s;
+
+    &.active,
+    &:hover,
+    &:focus,
+    &:active {
+      color: ${theme.color.text.x2};
+      border-bottom-color: ${theme.color.text.x2};
+    }
   }
 `;

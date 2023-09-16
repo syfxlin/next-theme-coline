@@ -118,6 +118,7 @@ export const fields: ModifyFields = {
   document(config) {
     if (config.formatting === undefined) {
       config.formatting = {
+        alignment: true,
         softBreaks: true,
         inlineMarks: {
           bold: true,
