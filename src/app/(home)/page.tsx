@@ -41,12 +41,10 @@ export const generateMetadata = async (props: Props): Promise<Metadata> => {
   });
 };
 
-const ArticlesPage: React.FC<Props> = async (props) => {
+export default async function ArticlesPage(props: Props) {
   const result = await query(props);
   if (!result) {
     return notFound();
   }
   return <TemplateArticles index={result.index} pages={result.pages} total={result.total} items={result.items} />;
-};
-
-export default ArticlesPage;
+}

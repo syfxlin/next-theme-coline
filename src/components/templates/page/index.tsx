@@ -1,11 +1,9 @@
 import React from "react";
 import { Metadata } from "next";
 import { metadata as generateMetadata } from "../../layouts/root/metadata";
-import { DefaultTemplatePage } from "./default";
-import { LinksTemplatePage } from "./links";
-import { TemplatePageProps } from "./template";
+import { TemplatePage, TemplatePageProps } from "./default";
 
-export const metadataPage = async (props: Omit<TemplatePageProps, "children">): Promise<Metadata> => {
+export const metadataPage = async (props: TemplatePageProps): Promise<Metadata> => {
   return generateMetadata({
     link: props.data.link,
     title: props.data.title,
@@ -15,7 +13,6 @@ export const metadataPage = async (props: Omit<TemplatePageProps, "children">): 
 };
 
 export const layouts: Record<string, React.ComponentType<any>> = {
-  post: DefaultTemplatePage,
-  page: DefaultTemplatePage,
-  links: LinksTemplatePage,
+  post: TemplatePage,
+  page: TemplatePage,
 };

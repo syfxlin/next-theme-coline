@@ -27,6 +27,13 @@ export interface TocData {
   children: ReadonlyArray<TocData>;
 }
 
+export interface DocumentData {
+  document: Array<any>;
+  headings: Array<TocData>;
+  contents: string;
+  excerpts: string;
+}
+
 export interface SeoData {
   language: string;
   link: string;
@@ -69,6 +76,10 @@ export interface LicenseData {
 }
 
 export interface FriendsData {
+  body: {
+    discriminant: "none" | "top" | "bottom";
+    value: DocumentData | undefined;
+  };
   links: ReadonlyArray<{
     name: string;
     link: string;
@@ -103,9 +114,7 @@ export interface ArticleList {
   published: Date;
   modified: Date;
   thumbnail?: string;
-  body: {
-    excerpts: string;
-  };
+  body: Pick<DocumentData, "excerpts">;
   archives: {
     name: string;
     slug: string;
@@ -124,12 +133,7 @@ export interface ArticleList {
 }
 
 export interface ArticleData extends ArticleList {
-  body: {
-    document: Array<any>;
-    headings: Array<TocData>;
-    contents: string;
-    excerpts: string;
-  };
+  body: DocumentData;
 }
 
 export type SingletonResult<T> = Promise<T>;

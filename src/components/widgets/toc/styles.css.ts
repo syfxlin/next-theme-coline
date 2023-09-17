@@ -11,7 +11,7 @@ export const container = styled.css`
   width: ${theme.fontSize.calc(18)};
   height: calc(100vh - 160px);
 
-  @media (max-width: ${theme.fontSize.calc(36 + 45)}) {
+  @media screen and (max-width: ${theme.fontSize.calc(36 + 45)}) {
     display: none;
   }
 

@@ -10,7 +10,7 @@ export const Title: React.FC<TitleProps> = (props) => {
   return (
     <section className={styles.container}>
       <h1 className={styles.title}>{props.title}</h1>
-      <div className={styles.description}>{props.children}</div>
+      {props.children && <div className={styles.description}>{props.children}</div>}
     </section>
   );
 };

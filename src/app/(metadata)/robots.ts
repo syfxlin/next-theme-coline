@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { fetcher } from "../../contents";
 import { resolve } from "../../utils/vender";
 
-const Robots = async (): Promise<MetadataRoute.Robots> => {
+export default async function Robots(): Promise<MetadataRoute.Robots> {
   const seo = await fetcher.seo();
   return {
     host: resolve(seo.link),
@@ -13,6 +13,4 @@ const Robots = async (): Promise<MetadataRoute.Robots> => {
       disallow: "/admin",
     },
   };
-};
-
-export default Robots;
+}

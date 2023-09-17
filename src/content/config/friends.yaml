@@ -1,9 +1,184 @@
+body:
+  discriminant: top
 links:
   - name: Pasi's Studio
     link: https://pasi.cat/
-    avatar: /image/links/0/avatar.640x640.jpg
+    avatar: /image/config/friends/links/0/avatar.640x640.jpg
     author: Pasi
     description: 404 Not Found
+  - name: 天空·边界
+    link: https://liyin.date
+    avatar: /image/config/friends/links/1/avatar.160x160.png
+    author: 立音喵
+    description: 用心探知天空的边界
+  - name: 晴耕物语博客
+    link: https://www.sayxw.top
+    avatar: /image/config/friends/links/2/avatar.120x120.png
+    description: 晴天丶故事丶雨声丶平静的心。
+  - name: Zavier's Blog
+    link: https://zavierlab.com
+    avatar: /image/config/friends/links/3/avatar.750x750.png
+    author: Zavier
+    description: 平淡就好
+  - name: 蠢黑通行
+    link: https://blackyau.cc
+    avatar: /image/config/friends/links/4/avatar.360x354.png
+    author: 蠢黑通行
+  - name: 下午茶的轻音部
+    link: https://www.myeriri.com/
+    avatar: /image/config/friends/links/5/avatar.512x512.png
+    author: Haibara
+  - name: 恶魔菌の记事簿
+    link: https://meow3.family.blog
+    avatar: /image/config/friends/links/6/avatar.661x661.png
+    author: 恶魔菌
+    description: 半文艺、半动漫的二次元美少女的涂鸦簿！
+  - name: Zohar's Blog
+    link: https://www.iwch.me
+    avatar: /image/config/friends/links/7/avatar.640x640.png
+    author: Zohar
+    description: The Most Important Thing in My Life is Freedom
+  - name: 萨摩公园
+    link: https://i-meto.com
+    avatar: /image/config/friends/links/8/avatar.256x256.png
+    author: Meto
+    description: 我就是我，不食人间烟火
+  - name: 奶冰の冷藏室
+    link: https://milkice.me
+    avatar: /image/config/friends/links/9/avatar.256x256.png
+    author: Milkice
+    description: Maybe a way to explore the world?
+  - name: KeJun's Blog
+    link: https://kejun.me
+    avatar: /image/config/friends/links/10/avatar.500x500.png
+    author: KeJun
+    description: 二次元智障
+  - name: 梦之翼
+    link: https://fly.moe
+    avatar: /image/config/friends/links/11/avatar.140x140.png
+    author: Fly3949
+    description: Flyの宅基地
+  - name: Elepover's Blog
+    link: https://daily.elepover.com
+    avatar: /image/config/friends/links/12/avatar.700x700.png
+    author: Elepover
+    description: 没有人能阻挡，我们与生俱来对自由的渴望
+  - name: 无垠
+    link: https://flyhigher.top
+    avatar: /image/config/friends/links/13/avatar.270x270.png
+    author: Axton
+    description: 飞翔的天空无限大
+  - name: 苏卡卡的有底洞
+    link: https://skk.moe
+    avatar: /image/config/friends/links/14/avatar.128x128.png
+    author: Sukka
+    description: 「童话只美在真实却从不续写」
+  - name: ⑨BIE
+    link: https://9bie.org
+    avatar: /image/config/friends/links/15/avatar.800x800.jpg
+    author: ⑨BIE
+    description: 伪技术宅的谜之地
+  - name: Re:Vigorous Pro
+    link: https://www.wevg.org
+    avatar: /image/config/friends/links/16/avatar.959x960.jpg
+    author: Edison Jwa
+    description: Hi, nice to meet you.这是一个从零开始的世界
+  - name: Indexyz's Blog
+    link: https://blog.indexyz.me
+    avatar: /image/config/friends/links/17/avatar.640x640.jpg
+    author: Indexyz
+    description: Sharing light, even in death.
+  - name: 黄蜂说
+    link: https://www.sjy.im
+    avatar: /image/config/friends/links/18/avatar.530x530.png
+    author: a.k.a. 小黄蜂
+    description: 一名互联网从业者的自留地，分享自己的所见所得，自认为过程比结果重要。
+  - name: NEVER迷の小窝
+    link: https://blog.never.pet
+    avatar: /image/config/friends/links/19/avatar.512x388.png
+    author: NeverBehave
+    description: 喵喵喵～
+  - name: idealclover
+    link: https://idealclover.top
+    avatar: /image/config/friends/links/20/avatar.320x320.jpg
+    author: idealclover
+    description: 翠翠酱的个人网站
+  - name: 罗炜杰个人博客
+    link: https://www.lwjppz.cn
+    avatar: /image/config/friends/links/21/avatar.700x700.jpg
+    author: 不必谁懂我
+    description: 记录写代码的苦逼日子
+  - name: 小竹's Blog
+    link: https://blog.justforlxz.com
+    avatar: /image/config/friends/links/22/avatar.400x400.png
+    author: 小竹
+    description: 永远不要停止思考
+  - name: 辣椒の酱
+    link: https://removeif.github.io
+    avatar: /image/config/friends/links/23/avatar.640x638.jpg
+    author: 辣椒の酱
+    description: 后端开发，技术分享
+  - name: 蝉時雨
+    link: https://chanshiyu.com
+    avatar: /image/config/friends/links/24/avatar.402x402.jpg
+    author: 蝉時雨
+    description: 蝉鸣如雨 花宵道中
+  - name: Jing blog
+    link: https://jingine.com
+    avatar: /image/config/friends/links/25/avatar.1247x1280.png
+    author: Chris
+  - name: TonyHe
+    link: https://www.ouorz.com
+    avatar: /image/config/friends/links/26/avatar.960x960.jpg
+    author: TonyHe
+    description: Just A Poor Lifesinger
+  - name: Cyberspace of Swung
+    link: https://www.swung0x48.com
+    avatar: /image/config/friends/links/27/avatar.640x640.jpg
+    author: Swung0x48
+    description: Lost in cyberpunk.
+  - name: WenJie' Blog
+    link: https://wenjie.store
+    avatar: /image/config/friends/links/28/avatar.1893x1594.jpg
+    author: chenwenjie
+    description: 记录一些学习笔记、杂谈
+  - name: 蚊Blog
+    link: https://qwq.moe
+    avatar: /image/config/friends/links/29/avatar.640x640.png
+    author: 贫困の蚊子
+  - name: Cyris
+    link: https://cyris.moe
+    avatar: /image/config/friends/links/30/avatar.1558x1556.png
+    author: Cyris
+    description: 花如解笑还多事，石不能言最可人
+  - name: Cotpear
+    link: https://www.cotpear.com?utm_src=blog.ixk.me
+    avatar: /image/config/friends/links/31/avatar.1600x1600.jpg
+    author: 齊一和其團隊
+  - name: QWQAQ
+    link: https://qwqaq.com
+    avatar: /image/config/friends/links/32/avatar.640x640.png
+    author: qwqaq
+    description: 生命不止，折腾不息 ( ゜- ゜)
+  - name: OS0day
+    link: https://blog.os0day.cn
+    avatar: /image/config/friends/links/33/avatar.640x640.png
+    author: OS0day
+    description: 一位医疗行业的软件工程师
+  - name: 冰糕Luminous の 小窝
+    link: https://0m0.co
+    avatar: /image/config/friends/links/34/avatar.500x500.png
+    author: 冰糕Luminous
 lost_links:
   - name: 周海棠啦
     link: https://begonia98.github.io
+  - name: Viosey's Blog
+    link: https://blog.viosey.com
+  - name: neoFelhz's Blog
+    link: https://nfz.moe
+  - name: 诸葛小百科
+    link: https://www.xiaobaike.net/
+  - name: stackboom
+    link: http://stackboom.xin
+  - name: N0ts Blog
+    link: https://blog.n0ts.cn

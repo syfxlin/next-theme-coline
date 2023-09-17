@@ -49,7 +49,7 @@ export const generateMetadata = async (props: Props): Promise<Metadata> => {
   });
 };
 
-const CategoryPage: React.FC<Props> = async (props) => {
+export default async function CategoryPage(props: Props) {
   const data = await query(props);
   if (!data) {
     return notFound();
@@ -65,6 +65,4 @@ const CategoryPage: React.FC<Props> = async (props) => {
       items={data.items}
     />
   );
-};
-
-export default CategoryPage;
+}

@@ -4,7 +4,7 @@ import { styled } from "@syfxlin/reve";
 export const container = styled.css`
   text-align: center;
   padding: ${theme.spacing.calc(6)} 0 0;
-  margin-bottom: ${theme.spacing.calc(4)};
+  margin-bottom: ${theme.spacing.calc(8)};
 `;
 
 export const title = styled.css`

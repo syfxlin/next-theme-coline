@@ -32,13 +32,11 @@ export const generateMetadata = async (props: Props): Promise<Metadata> => {
   return metadataPage({ data });
 };
 
-const Page: React.FC<Props> = async (props) => {
+export default async function Page(props: Props) {
   const data = await query(props);
   if (!data) {
     return notFound();
   }
   const Component = layouts[data.layout];
   return <Component data={data} />;
-};
-
-export default Page;
+}

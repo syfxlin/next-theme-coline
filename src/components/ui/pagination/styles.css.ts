@@ -26,7 +26,8 @@ export const more = styled.css`
 
 export const cursor_container = styled.css`
   display: flex;
-  padding: ${theme.spacing.calc(4)} 0;
+  margin: ${theme.spacing.calc(4)} 0;
+  padding: 0;
   gap: ${theme.spacing.calc(2)};
 `;
 

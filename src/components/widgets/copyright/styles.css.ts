@@ -8,7 +8,7 @@ export const section = styled.css`
   font-size: ${theme.fontSize.calc(0.6)};
   background: ${theme.color.info.background};
   color: ${theme.color.text.x2};
-  margin-top: ${theme.spacing.calc(4)};
+  margin: ${theme.spacing.calc(4)} 0;
   padding: ${theme.spacing.calc(5)} ${theme.spacing.calc(6)};
 
   &::after {

@@ -1,6 +1,84 @@
 import { collection, component, config, singleton } from "@keystatic/core";
 import { fields } from "./contents/fields";
-import { Article, Github, Katex, Message } from "./components/docs/dynamic";
+import { Katex } from "./components/docs/katex/dynamic";
+import { Github } from "./components/docs/github/dynamic";
+import { Article } from "./components/docs/article/dynamic";
+import { Message } from "./components/docs/message/dynamic";
+
+const body = (path: string) =>
+  fields.document({
+    label: "内容",
+    images: {
+      directory: `public/image${path}`,
+      publicPath: `/image${path}`,
+    },
+    componentBlocks: {
+      katex: component({
+        label: "Katex",
+        schema: {
+          math: fields.text({
+            label: "Math",
+            multiline: true,
+            validation: { length: { min: 0 } },
+          }),
+        },
+        preview: (props) => {
+          return <Katex math={props.fields.math.value} />;
+        },
+      }),
+      github: component({
+        label: "GitHub",
+        schema: {
+          repo: fields.text({
+            label: "Repo",
+            validation: { length: { min: 1 } },
+          }),
+        },
+        preview: (props) => {
+          return <Github repo={props.fields.repo.value} />;
+        },
+      }),
+      article: component({
+        label: "Article",
+        schema: {
+          link: fields.text({
+            label: "Link",
+            validation: { length: { min: 1 } },
+          }),
+          title: fields.text({
+            label: "Title",
+            validation: { length: { min: 0 } },
+          }),
+        },
+        preview: (props) => {
+          return <Article link={props.fields.link.value} title={props.fields.link.value} />;
+        },
+      }),
+      message: component({
+        label: "Message",
+        schema: {
+          type: fields.select({
+            label: "Type",
+            defaultValue: "success",
+            options: [
+              { label: "success", value: "success" },
+              { label: "error", value: "error" },
+              { label: "info", value: "info" },
+              { label: "warn", value: "warn" },
+            ],
+          }),
+          children: fields.text({
+            label: "Message",
+            multiline: true,
+            validation: { length: { min: 1 } },
+          }),
+        },
+        preview: (props) => {
+          return <Message type={props.fields.type.value as any}>{props.fields.children.value}</Message>;
+        },
+      }),
+    },
+  });
 
 export default config({
   storage: {
@@ -30,10 +108,7 @@ export default config({
         layout: fields.select({
           label: "布局",
           defaultValue: "page",
-          options: [
-            { label: "页面", value: "page" },
-            { label: "友链", value: "links" },
-          ],
+          options: [{ label: "页面", value: "page" }],
         }),
         status: fields.select({
           label: "状态",
@@ -57,83 +132,11 @@ export default config({
         }),
         thumbnail: fields.image({
           label: "缩略图",
-          directory: "public/image",
-          publicPath: "/image",
+          directory: "public/image/pages",
+          publicPath: "/image/pages",
           validation: { isRequired: false },
         }),
-        body: fields.document({
-          label: "内容",
-          images: {
-            directory: "public/image",
-            publicPath: "/image",
-          },
-          componentBlocks: {
-            katex: component({
-              label: "Katex",
-              schema: {
-                math: fields.text({
-                  label: "Math",
-                  multiline: true,
-                  validation: { length: { min: 0 } },
-                }),
-              },
-              preview: (props) => {
-                return <Katex math={props.fields.math.value} />;
-              },
-            }),
-            github: component({
-              label: "GitHub",
-              schema: {
-                repo: fields.text({
-                  label: "Repo",
-                  validation: { length: { min: 1 } },
-                }),
-              },
-              preview: (props) => {
-                return <Github repo={props.fields.repo.value} />;
-              },
-            }),
-            article: component({
-              label: "Article",
-              schema: {
-                link: fields.text({
-                  label: "Link",
-                  validation: { length: { min: 1 } },
-                }),
-                title: fields.text({
-                  label: "Title",
-                  validation: { length: { min: 0 } },
-                }),
-              },
-              preview: (props) => {
-                return <Article link={props.fields.link.value} title={props.fields.link.value} />;
-              },
-            }),
-            message: component({
-              label: "Message",
-              schema: {
-                type: fields.select({
-                  label: "Type",
-                  defaultValue: "success",
-                  options: [
-                    { label: "success", value: "success" },
-                    { label: "error", value: "error" },
-                    { label: "info", value: "info" },
-                    { label: "warn", value: "warn" },
-                  ],
-                }),
-                children: fields.text({
-                  label: "Message",
-                  multiline: true,
-                  validation: { length: { min: 1 } },
-                }),
-              },
-              preview: (props) => {
-                return <Message type={props.fields.type.value as any}>{props.fields.children.value}</Message>;
-              },
-            }),
-          },
-        }),
+        body: body("/pages"),
       },
     }),
     posts: collection({
@@ -178,8 +181,8 @@ export default config({
         }),
         thumbnail: fields.image({
           label: "缩略图",
-          directory: "public/image",
-          publicPath: "/image",
+          directory: "public/image/posts",
+          publicPath: "/image/posts",
           validation: { isRequired: false },
         }),
         categories: fields.array(
@@ -204,79 +207,7 @@ export default config({
             validation: { length: { min: 0, max: 10 } },
           },
         ),
-        body: fields.document({
-          label: "内容",
-          images: {
-            directory: "public/image",
-            publicPath: "/image",
-          },
-          componentBlocks: {
-            katex: component({
-              label: "Katex",
-              schema: {
-                math: fields.text({
-                  label: "Math",
-                  multiline: true,
-                  validation: { length: { min: 0 } },
-                }),
-              },
-              preview: (props) => {
-                return <Katex math={props.fields.math.value} />;
-              },
-            }),
-            github: component({
-              label: "GitHub",
-              schema: {
-                repo: fields.text({
-                  label: "Repo",
-                  validation: { length: { min: 1 } },
-                }),
-              },
-              preview: (props) => {
-                return <Github repo={props.fields.repo.value} />;
-              },
-            }),
-            article: component({
-              label: "Article",
-              schema: {
-                link: fields.text({
-                  label: "Link",
-                  validation: { length: { min: 1 } },
-                }),
-                title: fields.text({
-                  label: "Title",
-                  validation: { length: { min: 0 } },
-                }),
-              },
-              preview: (props) => {
-                return <Article link={props.fields.link.value} title={props.fields.link.value} />;
-              },
-            }),
-            message: component({
-              label: "Message",
-              schema: {
-                type: fields.select({
-                  label: "Type",
-                  defaultValue: "success",
-                  options: [
-                    { label: "success", value: "success" },
-                    { label: "error", value: "error" },
-                    { label: "info", value: "info" },
-                    { label: "warn", value: "warn" },
-                  ],
-                }),
-                children: fields.text({
-                  label: "Message",
-                  multiline: true,
-                  validation: { length: { min: 1 } },
-                }),
-              },
-              preview: (props) => {
-                return <Message type={props.fields.type.value as any}>{props.fields.children.value}</Message>;
-              },
-            }),
-          },
-        }),
+        body: body("/posts"),
       },
     }),
   },
@@ -297,8 +228,8 @@ export default config({
         }),
         logo: fields.image({
           label: "站点图片",
-          directory: "public/image",
-          publicPath: "/image",
+          directory: "public/image/config/seo",
+          publicPath: "/image/config/seo",
           validation: { isRequired: true },
         }),
         title: fields.text({
@@ -356,8 +287,8 @@ export default config({
         }),
         avatar: fields.image({
           label: "头像",
-          directory: "public/image",
-          publicPath: "/image",
+          directory: "public/image/config/author",
+          publicPath: "/image/config/author",
           validation: { isRequired: true },
         }),
       },
@@ -448,6 +379,22 @@ export default config({
       entryLayout: "form",
       format: { data: "yaml" },
       schema: {
+        body: fields.conditional(
+          fields.select({
+            label: "内容",
+            defaultValue: "none",
+            options: [
+              { label: "不显示", value: "none" },
+              { label: "显示于顶部", value: "top" },
+              { label: "显示于底部", value: "bottom" },
+            ],
+          }),
+          {
+            none: fields.empty(),
+            top: body("/config/friends"),
+            bottom: body("/config/friends"),
+          },
+        ),
         links: fields.array(
           fields.object({
             name: fields.text({
@@ -460,8 +407,8 @@ export default config({
             }),
             avatar: fields.image({
               label: "站点头像",
-              directory: "public/image",
-              publicPath: "/image",
+              directory: "public/image/config/friends",
+              publicPath: "/image/config/friends",
               validation: { isRequired: true },
             }),
             author: fields.text({

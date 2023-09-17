@@ -1,12 +1,6 @@
 import { theme } from "../../../theme/theme.css";
 import { styled } from "@syfxlin/reve";
 
-export const container = styled.css`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: ${theme.spacing.calc(2)};
-`;
-
 export const link = styled.css`
   display: flex;
   text-align: left;

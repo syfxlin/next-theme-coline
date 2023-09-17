@@ -139,6 +139,10 @@ const friends: () => SingletonResult<FriendsData> = React.cache(async () => {
     throw new TypeError("No friends data configured.");
   }
   return {
+    body: {
+      discriminant: info.body.discriminant,
+      value: info.body.value ? document(await info.body.value()) : undefined,
+    },
     links: info.links.map((i) => ({
       name: i.name,
       link: i.link,

@@ -42,7 +42,7 @@ export const TemplateGroup: React.FC<TemplateGroupComponentProps> = (props) => {
       <Header />
       <Main>
         <Title title={`${props.type}：${props.name}${props.index === 1 ? `` : ` - 第 ${props.index} 页`}`}>
-          共 {props.total} 篇文章
+          {props.total} 篇文章
         </Title>
         <section>
           {props.items.map((item, index) => (

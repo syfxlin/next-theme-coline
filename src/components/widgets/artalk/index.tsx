@@ -1,5 +1,6 @@
 "use client";
 import "artalk/dist/Artalk.css";
+import * as styles from "./styles.css";
 import React, { useEffect } from "react";
 import ArtalkComment from "artalk";
 import { COLINE_ARTALK_SERVER_URL, COLINE_ARTALK_SITE_NAME } from "../../../env/public";
@@ -33,7 +34,5 @@ export const Artalk: React.FC<Props> = ({ name, slug }) => {
       // ignore
     }
   }, [name, slug, resolvedTheme]);
-  return <section id="comment" aria-label="评论系统" />;
+  return <section id="comment" aria-label="评论系统" className={styles.container} />;
 };
-
-export default Artalk;
