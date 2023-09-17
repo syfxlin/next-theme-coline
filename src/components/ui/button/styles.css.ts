@@ -34,7 +34,7 @@ export const button = styled.css`
     box-shadow: 0 0 0 ${theme.borderWidth.calc(2)} ${theme.color.primary.focus};
   }
 
-  .iconify {
+  > .iconify {
     margin: 0 ${theme.spacing.calc(-0.4)};
     width: 1.1rem;
     height: 1.1rem;

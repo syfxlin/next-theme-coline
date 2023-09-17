@@ -143,17 +143,8 @@ const friends: () => SingletonResult<FriendsData> = React.cache(async () => {
       discriminant: info.body.discriminant,
       value: info.body.value ? document(await info.body.value()) : undefined,
     },
-    links: info.links.map((i) => ({
-      name: i.name,
-      link: i.link,
-      avatar: i.avatar,
-      author: i.author,
-      description: i.description,
-    })),
-    lost_links: info.lost_links.map((i) => ({
-      name: i.name,
-      link: i.link,
-    })),
+    links: info.links,
+    lost_links: info.lost_links,
   };
 });
 
@@ -162,7 +153,13 @@ const projects: () => SingletonResult<ProjectsData> = React.cache(async () => {
   if (!info) {
     throw new TypeError("No projects data configured.");
   }
-  return info;
+  return {
+    body: {
+      discriminant: info.body.discriminant,
+      value: info.body.value ? document(await info.body.value()) : undefined,
+    },
+    categories: info.categories,
+  };
 });
 
 const pages: () => CollectionResult<ArticleData, PageData<ArticleData>> = React.cache(async () => {

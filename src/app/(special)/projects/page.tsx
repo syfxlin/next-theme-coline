@@ -3,26 +3,26 @@ import { metadata } from "../../../components/layouts/root/metadata";
 import { fetcher } from "../../../contents";
 import { Template } from "../../../components/templates/template";
 import { Renderer } from "../../../components/docs";
-import { Friends } from "../../../components/widgets/friends";
+import { Projects } from "../../../components/widgets/projects";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   return metadata({
-    title: "友邻",
-    link: "/links",
+    title: "项目",
+    link: "/projects",
   });
 };
 
 export default async function LinksPage() {
-  const data = await fetcher.friends();
+  const data = await fetcher.projects();
   return (
     <Template
-      name="友邻"
-      slug="/links"
-      desc={`${data.links.length} 友邻 × ${data.lost_links.length} 已失联友邻`}
+      name="项目"
+      slug="/projects"
+      desc={`${data.categories.length} 分类 × ${data.categories.reduce((a, i) => a + i.projects.length, 0)} 项目`}
       artalk={true}
     >
       <Renderer document={data.body.value?.document} position={data.body.discriminant}>
-        <Friends data={data} />
+        <Projects data={data} />
       </Renderer>
     </Template>
   );

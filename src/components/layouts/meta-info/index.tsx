@@ -25,7 +25,7 @@ export const MetaInfo: React.FC<MetaInfoProps> = ({ data }) => {
           &nbsp;(已编辑)
         </Link>
       )}
-      {data.categories?.length && <Divider orientation="vertical" />}
+      {!!data.categories?.length && <Divider orientation="vertical" />}
       {data.categories
         ?.slice(0, 2)
         .map((i) => (
@@ -40,7 +40,7 @@ export const MetaInfo: React.FC<MetaInfoProps> = ({ data }) => {
           all.push(item);
           return all;
         }, [])}
-      {data.tags?.length && <Divider orientation="vertical" />}
+      {!!data.tags?.length && <Divider orientation="vertical" />}
       {data.tags
         ?.slice(0, 3)
         .map((i) => (

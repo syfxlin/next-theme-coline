@@ -358,17 +358,17 @@ export default config({
       },
     }),
     license: singleton({
-      label: "版权",
+      label: "协议",
       path: "src/content/config/license",
       entryLayout: "form",
       format: { data: "yaml" },
       schema: {
         name: fields.text({
-          label: "协议名称",
+          label: "名称",
           validation: { length: { min: 1 } },
         }),
         link: fields.text({
-          label: "协议链接",
+          label: "链接",
           validation: { length: { min: 1 } },
         }),
       },
@@ -398,24 +398,24 @@ export default config({
         links: fields.array(
           fields.object({
             name: fields.text({
-              label: "站点名称",
+              label: "名称",
               validation: { length: { min: 1 } },
             }),
             link: fields.text({
-              label: "站点链接",
+              label: "链接",
               validation: { length: { min: 1 } },
             }),
             avatar: fields.image({
-              label: "站点头像",
+              label: "头像",
               directory: "public/image/config/friends",
               publicPath: "/image/config/friends",
               validation: { isRequired: true },
             }),
             author: fields.text({
-              label: "站点作者",
+              label: "作者",
             }),
             description: fields.text({
-              label: "站点简介",
+              label: "简介",
             }),
           }),
           {
@@ -427,11 +427,11 @@ export default config({
         lost_links: fields.array(
           fields.object({
             name: fields.text({
-              label: "站点名称",
+              label: "名称",
               validation: { length: { min: 1 } },
             }),
             link: fields.text({
-              label: "站点链接",
+              label: "链接",
               validation: { length: { min: 1 } },
             }),
           }),
@@ -449,31 +449,54 @@ export default config({
       entryLayout: "form",
       format: { data: "yaml" },
       schema: {
+        body: fields.conditional(
+          fields.select({
+            label: "内容",
+            defaultValue: "none",
+            options: [
+              { label: "不显示", value: "none" },
+              { label: "显示于顶部", value: "top" },
+              { label: "显示于底部", value: "bottom" },
+            ],
+          }),
+          {
+            none: fields.empty(),
+            top: body("/config/projects"),
+            bottom: body("/config/projects"),
+          },
+        ),
         categories: fields.array(
           fields.object({
             name: fields.text({
               label: "分类名称",
               validation: { length: { min: 1 } },
             }),
-            items: fields.array(
+            projects: fields.array(
               fields.object({
                 name: fields.text({
-                  label: "项目名称",
-                  validation: { length: { min: 1 } },
-                }),
-                icon: fields.text({
-                  label: "项目图标",
+                  label: "名称",
                   validation: { length: { min: 1 } },
                 }),
                 link: fields.text({
-                  label: "项目链接",
+                  label: "链接",
                   validation: { length: { min: 1 } },
                 }),
                 description: fields.text({
-                  label: "项目简介",
+                  label: "简介",
                   multiline: true,
                   validation: { length: { min: 1 } },
                 }),
+                components: fields.array(
+                  fields.text({
+                    label: "图标",
+                    validation: { length: { min: 1 } },
+                  }),
+                  {
+                    label: "组件",
+                    itemLabel: (props) => props.value,
+                    validation: { length: { min: 0 } },
+                  },
+                ),
               }),
               {
                 label: "项目",

@@ -94,13 +94,17 @@ export interface FriendsData {
 }
 
 export interface ProjectsData {
+  body: {
+    discriminant: "none" | "top" | "bottom";
+    value: DocumentData | undefined;
+  };
   categories: ReadonlyArray<{
     name: string;
-    items: ReadonlyArray<{
+    projects: ReadonlyArray<{
       name: string;
-      icon: string;
       link: string;
       description: string;
+      components: ReadonlyArray<string>;
     }>;
   }>;
 }

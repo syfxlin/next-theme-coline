@@ -11,14 +11,15 @@ export const link = styled.css`
 
 export const avatar = styled.css`
   overflow: hidden;
-  width: ${theme.size.calc(20)};
-  height: ${theme.size.calc(20)};
-  flex-basis: ${theme.size.calc(20)};
+  width: ${theme.size.calc(15)};
+  height: ${theme.size.calc(15)};
+  flex-basis: ${theme.size.calc(15)};
   border-radius: ${theme.borderRadius.half};
 `;
 
 export const section = styled.css`
   flex: 1;
+  display: block;
   overflow: hidden;
 `;
 
@@ -28,8 +29,9 @@ export const name = styled.css`
   white-space: nowrap;
   overflow: hidden;
   line-height: ${theme.lineHeight.default};
-  font-size: ${theme.fontSize.calc(1.1)};
-  color: ${theme.color.primary.text};
+  font-size: ${theme.fontSize.calc(1)};
+  font-weight: ${theme.fontWeight.semibold};
+  color: ${theme.color.text.x1};
 `;
 
 export const text = styled.css`
@@ -38,6 +40,6 @@ export const text = styled.css`
   white-space: nowrap;
   overflow: hidden;
   line-height: ${theme.lineHeight.default};
-  font-size: ${theme.fontSize.calc(0.9)};
+  font-size: ${theme.fontSize.calc(0.8)};
   color: ${theme.color.text.x2};
 `;

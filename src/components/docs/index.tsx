@@ -52,9 +52,13 @@ export type RendererProps = {
 export const Renderer: React.FC<RendererProps> = React.memo(({ document, position, children }) => {
   return (
     <section className={cx("slide-enter-content", styles.container)}>
-      {position === "bottom" && children}
-      {document && <DocumentRenderer document={document} renderers={renderers} componentBlocks={components} />}
-      {position === "top" && children}
+      {position === "top" && document && (
+        <DocumentRenderer document={document} renderers={renderers} componentBlocks={components} />
+      )}
+      {children}
+      {position === "bottom" && document && (
+        <DocumentRenderer document={document} renderers={renderers} componentBlocks={components} />
+      )}
     </section>
   );
 });

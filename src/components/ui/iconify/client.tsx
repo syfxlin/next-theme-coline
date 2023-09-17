@@ -4,6 +4,7 @@ import { cx } from "@syfxlin/reve";
 
 export type IconifyProps = {
   icon: string;
+  className?: string;
 };
 
 export const Iconify: React.FC<IconifyProps> = (props) => {
@@ -14,9 +15,9 @@ export const Iconify: React.FC<IconifyProps> = (props) => {
         height="1.1rem"
         viewBox="0 0 24 24"
         dangerouslySetInnerHTML={{ __html: props.icon.substring(4) }}
-        className="iconify"
+        className={cx("iconify", props.className)}
       />
     );
   }
-  return <span className={cx("iconify", props.icon)} />;
+  return <span className={cx("iconify", props.icon, props.className)} />;
 };
