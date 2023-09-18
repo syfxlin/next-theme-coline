@@ -9,7 +9,7 @@ export const container = styled.css`
 `;
 
 export const logo = styled.css`
-  display: block;
+  display: flex;
   overflow: hidden;
   width: ${theme.fontSize.calc(2)};
   height: ${theme.fontSize.calc(2)};

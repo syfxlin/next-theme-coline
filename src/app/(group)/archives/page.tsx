@@ -2,10 +2,10 @@ import React from "react";
 import { Metadata } from "next";
 import { fetcher } from "../../../contents";
 import { metadata } from "../../../components/layouts/root/metadata";
-import { Heading } from "../../../components/widgets/heading";
-import { List } from "../../../components/widgets/list";
 import { Link } from "../../../components/ui/link";
 import { Template } from "../../../components/templates/template";
+import { Heading } from "../../../components/docs/heading";
+import { List } from "../../../components/docs/list";
 
 const query = async () => {
   const [pages, posts, archives, categories, tags] = await Promise.all([
@@ -64,7 +64,7 @@ export default async function ArchivesPage() {
     >
       <section className="slide-enter" style={{ "--enter-step": 0 } as any}>
         <Heading level={2}>分类</Heading>
-        <List type="ul">
+        <List type="unordered" direction="vertical">
           {[...data.categories]
             .sort((i1, i2) => i2.count - i1.count)
             .map((i) => (
@@ -78,7 +78,7 @@ export default async function ArchivesPage() {
       </section>
       <section className="slide-enter" style={{ "--enter-step": 1 } as any}>
         <Heading level={2}>归档</Heading>
-        <List type="ul">
+        <List type="unordered" direction="vertical">
           {[...data.archives]
             .sort((i1, i2) => i2.name.localeCompare(i1.name))
             .map((i) => (
@@ -92,7 +92,7 @@ export default async function ArchivesPage() {
       </section>
       <section className="slide-enter" style={{ "--enter-step": 2 } as any}>
         <Heading level={2}>标签</Heading>
-        <List type="ul" style={{ flexDirection: "row" }}>
+        <List type="unordered" direction="horizontal">
           {[...data.tags]
             .sort((i1, i2) => i1.name.localeCompare(i2.name))
             .map((i) => (

@@ -12,19 +12,13 @@ const parse = (src: string) => {
     return {
       src: src,
       blurDataURL: `/_next/image?w=8&q=70&url=${encodeURIComponent(src)}`,
-      width: width,
-      height: height,
-      blurWidth: 8,
-      blurHeight: Math.round((height / width) * 8),
+      sizes: { width, height },
     };
   } else {
     return {
       src: src,
       blurDataURL: `/_next/image?w=8&q=70&url=${encodeURIComponent(src)}`,
-      width: 8,
-      height: 6,
-      blurWidth: 8,
-      blurHeight: 6,
+      sizes: undefined,
     };
   }
 };
@@ -36,21 +30,23 @@ export const Image = forwardRef<HTMLDivElement, ImageProps>(({ src, alt, ...prop
   return (
     <span
       {...props}
-      className={cx(props.className, styles.container)}
-      style={sx(props.style, { maxWidth: `${parsed.width}px` })}
       ref={ref}
+      className={cx(props.className, styles.container)}
+      style={sx(props.style, { maxWidth: parsed.sizes ? `${parsed.sizes.width}px` : `100%` })}
     >
-      <span
-        className={styles.placeholder}
-        style={{ paddingBottom: `${((parsed.height / parsed.width) * 100).toFixed(4)}%` }}
-      />
+      {parsed.sizes && (
+        <span
+          className={styles.placeholder}
+          style={{ paddingBottom: `${((parsed.sizes.height / parsed.sizes.width) * 100).toFixed(4)}%` }}
+        />
+      )}
       <NImage
-        fill
         src={parsed.src}
         alt={alt ?? "image"}
         blurDataURL={parsed.blurDataURL}
         placeholder={parsed.blurDataURL ? "blur" : "empty"}
-        style={{ objectFit: "cover" }}
+        className={styles.image}
+        {...(parsed.sizes ? parsed.sizes : { fill: true, sizes: "50vw" })}
       />
     </span>
   );

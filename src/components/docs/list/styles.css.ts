@@ -13,3 +13,23 @@ export const container = styled.css`
     margin-bottom: 0;
   }
 `;
+
+export const horizontal = styled.css`
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  gap: ${theme.spacing.calc(4)} ${theme.spacing.calc(6)};
+`;
+
+export const vertical = styled.css`
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  gap: ${theme.spacing.calc(4)} ${theme.spacing.calc(6)};
+`;
