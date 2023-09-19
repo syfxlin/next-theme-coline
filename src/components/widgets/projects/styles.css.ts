@@ -9,17 +9,28 @@ export const link = styled.css`
   border-bottom: none;
 `;
 
+export const left = styled.css`
+  flex: 1;
+  display: block;
+  overflow: hidden;
+`;
+
 export const name = styled.css`
   display: flex;
   align-items: center;
   gap: ${theme.spacing.calc(2)};
-  text-overflow: ellipsis;
-  white-space: nowrap;
   overflow: hidden;
   line-height: ${theme.lineHeight.default};
   font-size: ${theme.fontSize.calc(1)};
   font-weight: ${theme.fontWeight.semibold};
   color: ${theme.color.text.x1};
+
+  span:nth-child(1) {
+    display: block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
 `;
 
 export const text = styled.css`
@@ -47,22 +58,33 @@ export const component = styled.css`
   height: ${theme.fontSize.calc(0.9)};
 `;
 
+export const right = styled.css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: ${theme.spacing.calc(0.5)};
+`;
+
 export const icon = styled.css`
   color: ${theme.color.text.x3};
-  flex-basis: ${theme.fontSize.calc(1.4)};
   width: ${theme.fontSize.calc(1.4)} !important;
   height: ${theme.fontSize.calc(1.4)} !important;
 `;
 
 export const github = styled.css`
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: ${theme.spacing.calc(0.5)};
   color: ${theme.color.text.x3};
   font-size: ${theme.fontSize.calc(0.5)};
   line-height: ${theme.lineHeight.none};
+  min-width: calc(4ch + ${theme.fontSize.calc(1.4)});
+  white-space: nowrap;
 
   svg {
+    margin-top: ${theme.fontSize.calc(0.1)};
     width: ${theme.fontSize.calc(0.9)};
     height: ${theme.fontSize.calc(0.9)};
   }

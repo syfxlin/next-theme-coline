@@ -1,6 +1,7 @@
 // @ts-nocheck
 import ri from "@iconify/json/json/ri.json";
 import ph from "@iconify/json/json/ph.json";
+import la from "@iconify/json/json/la.json";
 import uil from "@iconify/json/json/uil.json";
 import tabler from "@iconify/json/json/tabler.json";
 import lucide from "@iconify/json/json/lucide.json";
@@ -8,20 +9,20 @@ import simple from "@iconify/json/json/simple-icons.json";
 import material from "@iconify/json/json/material-symbols.json";
 import { getIconData, iconToHTML, iconToSVG } from "@iconify/utils";
 
-const icons = [ri, ph, uil, tabler, lucide, simple, material];
+const icons = [ri, ph, la, uil, tabler, lucide, simple, material];
 
 const svg = (icon: string) => {
   const [prefix, target] = icon.split(":");
   if (!prefix || !target) {
-    throw new TypeError(`Invalid icon`);
+    throw new TypeError(`Invalid icon: ${icon}`);
   }
   const data = icons.find((i) => i.prefix === prefix);
   if (!data) {
-    throw new TypeError(`Invalid icon`);
+    throw new TypeError(`Invalid icon: ${icon}`);
   }
   const item = getIconData(data, target);
   if (!item) {
-    throw new TypeError(`Invalid icon`);
+    throw new TypeError(`Invalid icon: ${icon}`);
   }
   return iconToSVG(item, { width: "1.1rem", height: "1.1rem" });
 };

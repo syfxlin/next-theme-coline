@@ -11,6 +11,13 @@ export const random = (start: number, end: number) => {
   return Math.random() * (end - start) + start;
 };
 
+export const stars = (count: number) => {
+  if (count >= 5000) {
+    return `${(count / 1000).toFixed(1).replace(/[0.]+$/, "")}k`;
+  }
+  return count;
+};
+
 export const shuffle = <T>(array: ReadonlyArray<T>): ReadonlyArray<T> => {
   const a = [...array];
   for (let i = a.length - 1; i > 0; i--) {

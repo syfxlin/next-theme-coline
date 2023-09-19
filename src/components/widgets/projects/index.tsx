@@ -6,6 +6,7 @@ import { LinkButton } from "../../ui/button";
 import { Iconify } from "../../ui/iconify";
 import { GithubAdapter } from "../../../adapters/github-adapter";
 import { Heading } from "../heading";
+import { stars } from "../../../utils/vender";
 
 const adapter = new GithubAdapter();
 
@@ -21,7 +22,7 @@ export const Projects: React.FC<ProjectsProps> = async ({ data }) => {
         <Grid>
           {await Promise.all(
             category.projects.map(async (project) => {
-              const match = /https?:\/\/(?:www\.)?github\.com\/(\w+)\/(\w+)/.exec(project.link);
+              const match = /https?:\/\/(?:www\.)?github\.com\/([^\/]+)\/([^\/]+)/.exec(project.link);
               const github = match ? await adapter.component({ repo: `${match[1]}/${match[2]}` }) : undefined;
               return (
                 <LinkButton
@@ -31,21 +32,21 @@ export const Projects: React.FC<ProjectsProps> = async ({ data }) => {
                   aria-label={`项目：${project.name}`}
                   target="_blank"
                 >
-                  <span>
+                  <span className={styles.left}>
                     <span className={styles.name}>
-                      {project.name}
+                      <span>{project.name}</span>
                       {project.components.map((component) => (
                         <Iconify key={`component-${component}`} icon={component} className={styles.component} />
                       ))}
                     </span>
                     <span className={styles.text}>{project.description}</span>
                   </span>
-                  <span>
+                  <span className={styles.right}>
                     <Iconify icon={match ? "uil:github" : "ri:link"} className={styles.icon} />
                     {github?.data && (
                       <span className={styles.github}>
                         <Iconify icon="ri:star-s-line" />
-                        {github.data.stars}
+                        <span>{stars(github.data.stars)}</span>
                       </span>
                     )}
                   </span>
