@@ -23,7 +23,7 @@ export const name = styled.css`
   line-height: ${theme.lineHeight.default};
   font-size: ${theme.fontSize.calc(1)};
   font-weight: ${theme.fontWeight.semibold};
-  color: ${theme.color.text.x1};
+  color: ${theme.color.text.x2};
 
   span:nth-child(1) {
     display: block;

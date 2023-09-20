@@ -21,6 +21,7 @@ export const author = styled.css`
   line-height: ${theme.lineHeight.default};
   font-weight: ${theme.fontWeight.default};
   margin: ${theme.spacing.calc(2)} 0 0 0;
+  color: ${theme.color.text.x1};
 `;
 
 export const description = styled.css`

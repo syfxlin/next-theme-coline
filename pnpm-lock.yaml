@@ -25,6 +25,9 @@ dependencies:
   '@markdoc/markdoc':
     specifier: ^0.3.2
     version: 0.3.2(@types/react@18.2.21)(react@18.2.0)
+  '@radix-ui/colors':
+    specifier: 3.0.0-rc.4
+    version: 3.0.0-rc.4
   '@syfxlin/reve':
     specifier: ^1.0.5
     version: 1.0.5(@vanilla-extract/css@1.13.0)
@@ -2508,6 +2511,10 @@ packages:
 
   /@popperjs/core@2.11.8:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
+    dev: false
+
+  /@radix-ui/colors@3.0.0-rc.4:
+    resolution: {integrity: sha512-dUG9WQCdjKPiiqbQsahUGmOuC+9kCltckQtej7hkVIQp56xirLaMsNrOs9xMYXnIbNqK/vZCmoEk+q1Nda+2AA==}
     dev: false
 
   /@react-aria/actiongroup@3.6.2(react@18.2.0):

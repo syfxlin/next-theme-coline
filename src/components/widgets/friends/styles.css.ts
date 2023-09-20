@@ -31,7 +31,7 @@ export const name = styled.css`
   line-height: ${theme.lineHeight.default};
   font-size: ${theme.fontSize.calc(1)};
   font-weight: ${theme.fontWeight.semibold};
-  color: ${theme.color.text.x1};
+  color: ${theme.color.text.x2};
 `;
 
 export const text = styled.css`

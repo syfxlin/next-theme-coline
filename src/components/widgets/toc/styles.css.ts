@@ -23,7 +23,7 @@ export const container = styled.css`
   }
 
   > span {
-    opacity: 0.6;
+    opacity: 0.5;
     transition: opacity 0.6s;
   }
 
@@ -39,7 +39,7 @@ export const icon = styled.css`
   ${iconify.css("ri:menu-2-fill")}
 
   margin: ${theme.spacing.calc(2)};
-  color: ${theme.color.text.x3};
+  color: ${theme.color.text.x2};
   height: ${theme.fontSize.calc(1.5)};
   width: ${theme.fontSize.calc(1.5)};
 `;
@@ -62,7 +62,6 @@ export const item = styled.css`
     font-size: ${theme.fontSize.calc(0.9)};
     margin: 0 ${theme.spacing.calc(2.5)};
     color: ${theme.color.text.x3};
-    border-bottom-color: ${theme.color.border.underline};
     transition:
       color 0.3s,
       border 0.3s;

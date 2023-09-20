@@ -1,6 +1,21 @@
 import { createReveTheme } from "@syfxlin/reve";
-import { breakpoints, colors } from "./tokens";
-import { rgba } from "polished";
+import { breakpoints } from "./tokens";
+import {
+  blueA,
+  blueDarkA,
+  grayA,
+  grayDarkA,
+  greenA,
+  greenDarkA,
+  redA,
+  redDarkA,
+  slate,
+  slateA,
+  slateDark,
+  slateDarkA,
+  yellowA,
+  yellowDarkA,
+} from "@radix-ui/colors";
 
 const values = <V extends Record<string, string> = Record<string, string>>(def: string | number, values: V) => {
   const calc = (value?: string | number | undefined | null) => {
@@ -145,100 +160,82 @@ export const theme = createReveTheme({
     [`:root, [data-theme="light"]`]: {
       color: {
         primary: {
-          text: colors.violet7,
-          hover: rgba(colors.violet1, 0.3),
-          focus: colors.violet1,
+          text: slateA.slateA10,
+          hover: slateA.slateA3,
+          focus: slateA.slateA6,
         },
         text: {
-          x1: colors.gray9,
-          x2: colors.gray7,
-          x3: colors.gray6,
+          x1: slateA.slateA12,
+          x2: slateA.slateA11,
+          x3: slateA.slateA10,
         },
         background: {
-          x1: colors.white,
-          x2: rgba(colors.gray3, 0.3),
-        },
-        code: {
-          text: colors.red7,
-          background: rgba(colors.red1, 0.3),
+          x1: slate.slate1,
+          x2: slateA.slateA2,
         },
         image: {
           filter: "none",
         },
-        border: {
-          underline: rgba(colors.black, 0.1),
-          background: colors.violet7,
-          shadow: rgba(colors.violet7, 0.4),
-        },
         scrollbar: {
-          track: rgba(colors.black, 0.1),
-          thumb: rgba(colors.black, 0.2),
+          track: grayA.grayA3,
+          thumb: grayA.grayA6,
         },
         info: {
-          text: colors.blue6,
-          background: rgba(colors.blue2, 0.3),
+          text: blueA.blueA9,
+          background: blueA.blueA3,
         },
         warn: {
-          text: colors.yellow6,
-          background: rgba(colors.yellow2, 0.3),
+          text: yellowA.yellowA11,
+          background: yellowA.yellowA3,
         },
         success: {
-          text: colors.green6,
-          background: rgba(colors.green2, 0.3),
+          text: greenA.greenA9,
+          background: greenA.greenA3,
         },
         error: {
-          text: colors.red6,
-          background: rgba(colors.red2, 0.3),
+          text: redA.redA9,
+          background: redA.redA3,
         },
       },
     },
     [`[data-theme="dark"]`]: {
       color: {
         primary: {
-          text: colors.violet3,
-          hover: rgba(colors.violet9, 0.3),
-          focus: colors.violet9,
+          text: slateDarkA.slateA10,
+          hover: slateDarkA.slateA3,
+          focus: slateDarkA.slateA6,
         },
         text: {
-          x1: colors.dark0,
-          x2: colors.dark2,
-          x3: colors.gray6,
+          x1: slateDarkA.slateA12,
+          x2: slateDarkA.slateA11,
+          x3: slateDarkA.slateA10,
         },
         background: {
-          x1: colors.dark7,
-          x2: rgba(colors.dark4, 0.3),
-        },
-        code: {
-          text: colors.red3,
-          background: rgba(colors.red5, 0.3),
+          x1: slateDark.slate1,
+          x2: slateDarkA.slateA2,
         },
         image: {
           filter: "brightness(0.7)",
         },
-        border: {
-          underline: rgba(colors.black, 0.1),
-          background: colors.violet3,
-          shadow: rgba(colors.violet3, 0.4),
-        },
         scrollbar: {
-          track: rgba(colors.white, 0.1),
-          thumb: rgba(colors.white, 0.2),
+          track: grayDarkA.grayA3,
+          thumb: grayDarkA.grayA6,
         },
         info: {
-          text: colors.blue6,
-          background: rgba(colors.blue4, 0.3),
+          text: blueDarkA.blueA9,
+          background: blueDarkA.blueA3,
         },
         warn: {
-          text: colors.yellow6,
-          background: rgba(colors.yellow4, 0.3),
+          text: yellowDarkA.yellowA11,
+          background: yellowDarkA.yellowA3,
         },
         success: {
-          text: colors.green6,
-          background: rgba(colors.green4, 0.3),
+          text: greenDarkA.greenA9,
+          background: greenDarkA.greenA3,
         },
         error: {
-          text: colors.red6,
-          background: rgba(colors.red4, 0.3),
+          text: redDarkA.redA9,
+          background: redDarkA.redA3,
         },
       },
     },
