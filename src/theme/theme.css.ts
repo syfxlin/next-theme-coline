@@ -212,7 +212,7 @@ export const theme = createReveTheme({
         },
         background: {
           x1: slateDark.slate1,
-          x2: slateDarkA.slateA2,
+          x2: slateDarkA.slateA3,
         },
         image: {
           filter: "brightness(0.7)",
