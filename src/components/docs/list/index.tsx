@@ -1,11 +1,11 @@
 import * as styles from "./styles.css";
-import React, { ReactNode } from "react";
+import React, { ReactElement } from "react";
 import { cx } from "@syfxlin/reve";
 
 export type ListProps = {
   type: "ordered" | "unordered";
   direction?: "default" | "horizontal" | "vertical";
-  children: ReactNode;
+  children: ReactElement[];
 };
 
 export const List: React.FC<ListProps> = (props) => {
@@ -18,7 +18,9 @@ export const List: React.FC<ListProps> = (props) => {
           props.direction === "vertical" && styles.vertical,
         )}
       >
-        {props.children}
+        {props.children.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
       </ol>
     );
   } else {
@@ -30,7 +32,9 @@ export const List: React.FC<ListProps> = (props) => {
           props.direction === "vertical" && styles.vertical,
         )}
       >
-        {props.children}
+        {props.children.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
       </ul>
     );
   }

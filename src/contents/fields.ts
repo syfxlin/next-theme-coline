@@ -152,6 +152,9 @@ export const fields: ModifyFields = {
     if (config.tables === undefined) {
       config.tables = true;
     }
+    if (config.layouts === undefined) {
+      config.layouts = [[1], [1, 1], [1, 1, 1], [1, 1, 1, 1]];
+    }
 
     const result = fs.document(config);
     const serialize = result.serialize;
