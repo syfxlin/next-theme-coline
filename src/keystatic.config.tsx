@@ -5,8 +5,8 @@ import { Github } from "./components/docs/github/dynamic";
 import { Article } from "./components/docs/article/dynamic";
 import { Message } from "./components/docs/message/dynamic";
 
-const body = (path: string) =>
-  fields.document({
+const body = (path: string) => {
+  return fields.document({
     label: "内容",
     images: {
       directory: `public/image${path}`,
@@ -79,6 +79,7 @@ const body = (path: string) =>
       }),
     },
   });
+};
 
 export default config({
   storage: {
