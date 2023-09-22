@@ -1,5 +1,4 @@
-body:
-  discriminant: none
+display: none
 categories:
   - name: Focus
     projects:

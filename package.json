@@ -1,9 +1,10 @@
 {
   "name": "@syfxlin/next-theme-coline",
   "version": "0.0.0-semantic-release",
-  "private": false,
   "description": "Next.js theme for Coline",
   "author": "syfxlin <i@ixk.me>",
+  "private": false,
+  "type": "module",
   "keywords": [
     "next",
     "next-theme",
@@ -12,13 +13,11 @@
   "scripts": {
     "dev": "next dev",
     "start": "next start",
-    "build": "next build",
-    "proxy": "static-cms-proxy-server"
+    "build": "next build"
   },
   "publishConfig": {
     "access": "public"
   },
-  "type": "module",
   "dependencies": {
     "@iconify/json": "^2.2.116",
     "@iconify/utils": "^2.1.9",
@@ -47,7 +46,7 @@
     "react-use": "^17.4.0",
     "rss": "^1.2.2",
     "sharp": "^0.32.5",
-    "shiki": "^0.14.4",
+    "shikiji": "^0.6.8",
     "swr": "^2.2.2"
   },
   "devDependencies": {

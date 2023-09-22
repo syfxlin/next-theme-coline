@@ -1,5 +1,4 @@
-body:
-  discriminant: top
+display: top
 links:
   - name: Pasi's Studio
     link: https://pasi.cat/

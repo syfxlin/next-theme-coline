@@ -11,12 +11,12 @@ import { stars } from "../../../utils/vender";
 const adapter = new GithubAdapter();
 
 export type ProjectsProps = {
-  data: ProjectsData;
+  data: Exclude<ProjectsData["categories"], undefined>;
 };
 
 export const Projects: React.FC<ProjectsProps> = async ({ data }) => {
   return await Promise.all(
-    data.categories.map(async (category) => (
+    data.map(async (category) => (
       <React.Fragment key={`category-${category.name}`}>
         <Heading>{category.name}</Heading>
         <Grid>

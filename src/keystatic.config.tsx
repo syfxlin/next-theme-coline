@@ -94,7 +94,7 @@ export default config({
     pages: collection({
       label: "页面",
       slugField: "slug",
-      path: "src/content/pages/*/",
+      path: "content/pages/*/",
       entryLayout: "content",
       format: { contentField: "body" },
       schema: {
@@ -143,7 +143,7 @@ export default config({
     posts: collection({
       label: "文章",
       slugField: "slug",
-      path: "src/content/posts/*/",
+      path: "content/posts/*/",
       entryLayout: "content",
       format: { contentField: "body" },
       schema: {
@@ -213,9 +213,10 @@ export default config({
     }),
   },
   singletons: {
+    // config
     seo: singleton({
       label: "SEO",
-      path: "src/content/config/seo",
+      path: "content/config/seo",
       entryLayout: "form",
       format: { data: "yaml" },
       schema: {
@@ -265,7 +266,7 @@ export default config({
     }),
     author: singleton({
       label: "作者",
-      path: "src/content/config/author",
+      path: "content/config/author",
       entryLayout: "form",
       format: { data: "yaml" },
       schema: {
@@ -296,7 +297,7 @@ export default config({
     }),
     header: singleton({
       label: "页首",
-      path: "src/content/config/header",
+      path: "content/config/header",
       entryLayout: "form",
       format: { data: "yaml" },
       schema: {
@@ -335,7 +336,7 @@ export default config({
     }),
     footer: singleton({
       label: "页脚",
-      path: "src/content/config/footer",
+      path: "content/config/footer",
       entryLayout: "form",
       format: { data: "yaml" },
       schema: {
@@ -360,7 +361,7 @@ export default config({
     }),
     license: singleton({
       label: "协议",
-      path: "src/content/config/license",
+      path: "content/config/license",
       entryLayout: "form",
       format: { data: "yaml" },
       schema: {
@@ -374,28 +375,41 @@ export default config({
         }),
       },
     }),
-    friends: singleton({
-      label: "友链",
-      path: "src/content/config/friends",
+    // pages
+    home: singleton({
+      label: "首页",
+      path: "content/config/home",
       entryLayout: "form",
       format: { data: "yaml" },
       schema: {
-        body: fields.conditional(
-          fields.select({
-            label: "内容",
-            defaultValue: "none",
-            options: [
-              { label: "不显示", value: "none" },
-              { label: "显示于顶部", value: "top" },
-              { label: "显示于底部", value: "bottom" },
-            ],
-          }),
-          {
-            none: fields.empty(),
-            top: body("/config/friends"),
-            bottom: body("/config/friends"),
-          },
-        ),
+        display: fields.select({
+          label: "显示模式",
+          defaultValue: "list",
+          options: [
+            { label: "文章列表", value: "list" },
+            { label: "内容文档", value: "document" },
+          ],
+        }),
+        content: body("config/home"),
+      },
+    }),
+    friends: singleton({
+      label: "友链",
+      path: "content/config/friends",
+      entryLayout: "form",
+      format: { data: "yaml" },
+      schema: {
+        display: fields.select({
+          label: "显示模式",
+          defaultValue: "hidden",
+          options: [
+            { label: "启用页面（不显示内容）", value: "none" },
+            { label: "启用页面（内容显示于顶部）", value: "top" },
+            { label: "启用页面（内容显示于底部）", value: "bottom" },
+            { label: "禁用页面", value: "hidden" },
+          ],
+        }),
+        content: body("config/friends"),
         links: fields.array(
           fields.object({
             name: fields.text({
@@ -446,26 +460,21 @@ export default config({
     }),
     projects: singleton({
       label: "项目",
-      path: "src/content/config/projects",
+      path: "content/config/projects",
       entryLayout: "form",
       format: { data: "yaml" },
       schema: {
-        body: fields.conditional(
-          fields.select({
-            label: "内容",
-            defaultValue: "none",
-            options: [
-              { label: "不显示", value: "none" },
-              { label: "显示于顶部", value: "top" },
-              { label: "显示于底部", value: "bottom" },
-            ],
-          }),
-          {
-            none: fields.empty(),
-            top: body("/config/projects"),
-            bottom: body("/config/projects"),
-          },
-        ),
+        display: fields.select({
+          label: "显示模式",
+          defaultValue: "hidden",
+          options: [
+            { label: "启用页面（不显示内容）", value: "none" },
+            { label: "启用页面（内容显示于顶部）", value: "top" },
+            { label: "启用页面（内容显示于底部）", value: "bottom" },
+            { label: "禁用页面", value: "hidden" },
+          ],
+        }),
+        content: body("config/projects"),
         categories: fields.array(
           fields.object({
             name: fields.text({

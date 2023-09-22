@@ -1,9 +1,10 @@
 import React from "react";
 import * as styles from "./styles.css";
-import { getHighlighter } from "shiki";
+import { bundledLanguages, bundledThemes, getHighlighter } from "shikiji";
 
 const highlighter = await getHighlighter({
-  themes: ["vitesse-light", "vitesse-dark"],
+  themes: Object.values(bundledThemes),
+  langs: Object.values(bundledLanguages),
 });
 
 const parse = (theme: "light" | "dark", code: string, lang?: string) => {

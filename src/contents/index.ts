@@ -1,9 +1,10 @@
 import React from "react";
 import config from "../keystatic.config";
 import Fuse from "fuse.js";
-import { slug } from "github-slugger";
 import { createReader } from "@keystatic/core/reader";
 import { pagination, resolve } from "../utils/vender";
+import { discover, slugger } from "./utils";
+import { IS_DEV } from "../env/public";
 import {
   ArticleData,
   AuthorData,
@@ -19,13 +20,10 @@ import {
   SeoData,
   SingletonResult,
 } from "./types";
-import { IS_DEV } from "../env/public";
 
-export const slugger = (value: string) => {
-  return slug(decodeURIComponent(value.trim().toLowerCase()));
-};
+export * from "./utils";
 
-export const reader = createReader(process.cwd(), config);
+export const reader = createReader(discover(), config);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const document = (body: Array<any>) => {
@@ -112,7 +110,7 @@ const author: () => SingletonResult<AuthorData> = React.cache(async () => {
 const header: () => SingletonResult<HeaderData> = React.cache(async () => {
   const info = await reader.singletons.header.read();
   if (!info) {
-    throw new TypeError("No header data configured.");
+    return { main: [] };
   }
   return info as HeaderData;
 });
@@ -120,7 +118,7 @@ const header: () => SingletonResult<HeaderData> = React.cache(async () => {
 const footer: () => SingletonResult<FooterData> = React.cache(async () => {
   const info = await reader.singletons.footer.read();
   if (!info) {
-    throw new TypeError("No footer data configured.");
+    return { main: [] };
   }
   return info as FooterData;
 });
@@ -128,7 +126,7 @@ const footer: () => SingletonResult<FooterData> = React.cache(async () => {
 const license: () => SingletonResult<LicenseData> = React.cache(async () => {
   const info = await reader.singletons.license.read();
   if (!info) {
-    throw new TypeError("No license data configured.");
+    return { name: "BY-NC-SA", link: "https://creativecommons.org/licenses/by-nc-sa/4.0/" };
   }
   return info as LicenseData;
 });
@@ -136,30 +134,26 @@ const license: () => SingletonResult<LicenseData> = React.cache(async () => {
 const friends: () => SingletonResult<FriendsData> = React.cache(async () => {
   const info = await reader.singletons.friends.read();
   if (!info) {
-    throw new TypeError("No friends data configured.");
+    return { display: "hidden" };
   }
   return {
-    body: {
-      discriminant: info.body.discriminant,
-      value: info.body.value ? document(await info.body.value()) : undefined,
-    },
+    display: info.display,
+    content: document(await info.content()),
     links: info.links,
     lost_links: info.lost_links,
-  };
+  } as FriendsData;
 });
 
 const projects: () => SingletonResult<ProjectsData> = React.cache(async () => {
   const info = await reader.singletons.projects.read();
   if (!info) {
-    throw new TypeError("No projects data configured.");
+    return { display: "hidden" };
   }
   return {
-    body: {
-      discriminant: info.body.discriminant,
-      value: info.body.value ? document(await info.body.value()) : undefined,
-    },
+    display: info.display,
+    content: document(await info.content()),
     categories: info.categories,
-  };
+  } as ProjectsData;
 });
 
 const pages: () => CollectionResult<ArticleData, PageData<ArticleData>> = React.cache(async () => {

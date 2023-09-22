@@ -9,11 +9,11 @@ import { Grid } from "../../layouts/grid";
 import { ClientOnly } from "../../ui/client-only/ClientOnly";
 
 export type FriendsProps = {
-  data: FriendsData;
+  data: Exclude<FriendsData["links"], undefined>;
 };
 
 export const Friends: React.FC<FriendsProps> = ({ data }) => {
-  const links = useMemo(() => shuffle(data.links), [data.links]);
+  const links = useMemo(() => shuffle(data ?? []), [data]);
   return (
     <ClientOnly>
       <Grid>

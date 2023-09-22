@@ -76,29 +76,25 @@ export interface LicenseData {
 }
 
 export interface FriendsData {
-  body: {
-    discriminant: "none" | "top" | "bottom";
-    value: DocumentData | undefined;
-  };
-  links: ReadonlyArray<{
+  display: "hidden" | "none" | "top" | "bottom";
+  content?: DocumentData;
+  links?: ReadonlyArray<{
     name: string;
     link: string;
     avatar: string;
     author?: string;
     description?: string;
   }>;
-  lost_links: ReadonlyArray<{
+  lost_links?: ReadonlyArray<{
     name: string;
     link: string;
   }>;
 }
 
 export interface ProjectsData {
-  body: {
-    discriminant: "none" | "top" | "bottom";
-    value: DocumentData | undefined;
-  };
-  categories: ReadonlyArray<{
+  display: "hidden" | "none" | "top" | "bottom";
+  content?: DocumentData;
+  categories?: ReadonlyArray<{
     name: string;
     projects: ReadonlyArray<{
       name: string;

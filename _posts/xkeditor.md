@@ -131,7 +131,8 @@ cp -r ./node_modules/xkeditor/public/static ./
 - 导入 XK-Editor 组件
 
 ```javascript
-import XK_Editor from "xkeditor";
+import XK_Editor from "_posts/xkeditor";
+
 export default {
   components: {
     "xk-editor": XK_Editor,
