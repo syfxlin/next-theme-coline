@@ -7,4 +7,23 @@ const withPwa = createPwaPlugin({ dest: "public" });
 const withVanillaExtract = createVanillaExtractPlugin();
 const withBundleAnalyzer = createBundleAnalyzer({ enabled: !IS_DEV && COLINE_ANALYZE === "true" });
 
-export default withPwa(withVanillaExtract(withBundleAnalyzer()));
+/** @type {import("next").NextConfig} */
+const config = {
+  output: "standalone",
+  experimental: {
+    serverActions: true,
+    useDeploymentId: true,
+    useDeploymentIdServerActions: true,
+    serverMinification: true,
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
+  },
+};
+
+export default withPwa(withVanillaExtract(withBundleAnalyzer(config)));
