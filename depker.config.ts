@@ -1,4 +1,4 @@
-import { depker, docker, nextjs, proxy, service } from "../depker-deno/mod.ts";
+import { depker, docker, nextjs, proxy, service } from "https://raw.githubusercontent.com/syfxlin/depker/master/mod.ts";
 
 const app = depker();
 
