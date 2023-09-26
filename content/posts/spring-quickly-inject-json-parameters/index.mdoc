@@ -1,0 +1,251 @@
+---
+title: 无须定义类，Spring 快速注入 Json 参数
+status: publish
+published_time: 2020-08-04T00:00
+modified_time: 2021-07-28T06:58
+layout: post
+categories:
+  - 折腾记录
+tags:
+  - Spring
+---
+
+## 前言
+
+不知各位在开发的时候有没有遇到这种情况，当前后端分离的时候，前端时常会把很简单的参数使用 JSON 格式传入，当 Spring 要获取这些参数的时候每次都需要定义一个类，在使用的时候也需要使用对象的 `Getter` 方法，这样极其不方便。而如果要改前端使用 FormData 的方式传输，那么又会遇到另外一个问题：前端常用的请求库是 `axios`，而 axios 传输的数据默认是采用 JSON 格式传输的，如果需要使用 FromData 的方式传输，那么需要再每个请求方法上增加 FormData 的 `Content-Type`，或者添加到默认的配置中。
+
+那么有什么办法可以在 Spring 中使 JSON 可以像 FormData 那样方便的注入呢？
+
+## 思路
+
+在 Spring 入参 Controller 的时候会经过一系列的 `HandlerMethodArgumentResolver`，我们可以写一个 Resolver 实现该接口，并在 Spring 中增加这个 Resolver，那么只要符合 JSON 格式参数，那么就可以通过该 Resolver 实现注入。
+
+## 实现
+
+首先我们需要准备一些注解，用于标注是通过 JSON 格式的数据获取参数的：
+
+首先是和 `@RequestParam` 一样的 `@JsonParam`，用于标注该参数注入的名称和是否必须注入等信息：
+
+```java
+@Target({ ElementType.PARAMETER })
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface JsonParam {
+  @AliasFor("name")
+  String value() default "";
+
+  @AliasFor("value")
+  String name() default "";
+
+  boolean required() default true;
+
+  String defaultValue() default "\n\t\t\n\t\t\n\ue000\ue001\ue002\n\t\t\t\t\n";
+}
+```
+
+然后是用于标注在方法上的 `@RequestJson`，通过标注这个注解，我们就可以不需要使用 `@JsonParam` 注解来描述参数，而是使 Spring 通过参数的名称注入该参数：
+
+```java
+@Target({ ElementType.METHOD })
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface RequestJson {
+}
+```
+
+还有一些工具类这里就不写了，这些工具类主要是用于一些特性的实现，比如点语法等。具体可以到 [这里](https://github.com/syfxlin/spring-learn/tree/master/json_inject) 查看。
+
+接着就是用于处理 JSON 格式参数的 `HandlerMethodArgumentResolver` 了：
+
+```java
+package me.ixk.json_inject.injector;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.NullNode;
+import com.fasterxml.jackson.databind.node.TextNode;
+import java.io.IOException;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
+import me.ixk.json_inject.annotation.JsonParam;
+import me.ixk.json_inject.annotation.RequestJson;
+import me.ixk.json_inject.utils.Helper;
+import me.ixk.json_inject.utils.JSON;
+import org.springframework.core.MethodParameter;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.support.WebDataBinderFactory;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.method.support.ModelAndViewContainer;
+
+public class JsonArgumentResolver implements HandlerMethodArgumentResolver {
+  private static final String JSON_REQUEST_ATTRIBUTE_NAME = "JSON_REQUEST_BODY";
+
+  @Override
+  public boolean supportsParameter(final MethodParameter methodParameter) {
+    // 当参数有 JsonParam 或者 RequestJson 注解的时候，就视为传入的是 JSON 格式的参数
+    return (
+      methodParameter.hasParameterAnnotation(JsonParam.class) ||
+      methodParameter.hasMethodAnnotation(RequestJson.class)
+    );
+  }
+
+  @Override
+  public Object resolveArgument(
+    final MethodParameter methodParameter,
+    final ModelAndViewContainer modelAndViewContainer,
+    final NativeWebRequest nativeWebRequest,
+    final WebDataBinderFactory webDataBinderFactory
+  )
+    throws Exception {
+    // 读取并解析 JSON，记得把 JSON 存起来，一是可以避免多次解析，二是 Body 如果没有进行处理的话默认只能读取一次，当第二次读取的时候则会为空。
+    final JsonNode body = this.getJsonBody(nativeWebRequest);
+    // 判断是否是读取整个 JSON (因为有的时候传入的可能是一个数组或者其他类型的数据，而不是 JSON 对象)
+    if ("$body".equals(methodParameter.getParameterName())) {
+      return JSON.convertToObject(body, methodParameter.getParameterType());
+    }
+    final JsonParam jsonParam = methodParameter.getParameterAnnotation(
+      JsonParam.class
+    );
+    final RequestJson requestJson = methodParameter.getMethodAnnotation(
+      RequestJson.class
+    );
+    JsonNode node = NullNode.getInstance();
+    if (jsonParam != null) {
+      // 通过 JsonParam 中设置的名称读取
+      node = Helper.dataGet(body, jsonParam.name(), NullNode.getInstance());
+    } else if (requestJson != null) {
+      // 通过参数名称读取
+      node = body.get(methodParameter.getParameterName());
+    }
+    if (node.isNull()) {
+      if (jsonParam != null) {
+        // 若为空并且必须传入，则抛出异常
+        if (jsonParam.required()) {
+          throw new MissingServletRequestParameterException(
+            jsonParam.name(),
+            methodParameter.getParameterType().getTypeName()
+          );
+        } else {
+          // 否则传入默认参数
+          node = TextNode.valueOf(jsonParam.defaultValue());
+        }
+      } else {
+        return null;
+      }
+    }
+    // 转换数据类型
+    return JSON.convertToObject(node, methodParameter.getParameterType());
+  }
+
+  private JsonNode getJsonBody(final NativeWebRequest nativeWebRequest) {
+    final HttpServletRequest servletRequest = nativeWebRequest.getNativeRequest(
+      HttpServletRequest.class
+    );
+
+    JsonNode body = (JsonNode) nativeWebRequest.getAttribute(
+      JSON_REQUEST_ATTRIBUTE_NAME,
+      NativeWebRequest.SCOPE_REQUEST
+    );
+
+    if (body == null) {
+      try {
+        if (servletRequest != null) {
+          body =
+            JSON.parse(
+              servletRequest
+                .getReader()
+                .lines()
+                .collect(Collectors.joining("\n"))
+            );
+        }
+      } catch (final IOException e) {
+        //
+      }
+      if (body == null) {
+        body = NullNode.getInstance();
+      }
+      nativeWebRequest.setAttribute(
+        JSON_REQUEST_ATTRIBUTE_NAME,
+        body,
+        NativeWebRequest.SCOPE_REQUEST
+      );
+    }
+
+    return body;
+  }
+}
+```
+
+最后还需要将该 Resolver 添加到 Spring 中：
+
+```java
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+
+  @Override
+  public void addArgumentResolvers(
+    List<HandlerMethodArgumentResolver> resolvers
+  ) {
+    resolvers.add(new JsonArgumentResolver());
+  }
+}
+```
+
+至此实现的部分就完成了，让我们看看如何使用吧。
+
+## 使用
+
+```java
+@SpringBootApplication
+@RestController
+public class JsonInjectApplication {
+
+  public static void main(final String[] args) {
+    SpringApplication.run(JsonInjectApplication.class, args);
+  }
+
+  @PostMapping("/param")
+  public String param(@JsonParam(name = "key") final String key) {
+    return key;
+  }
+
+  @PostMapping("/method")
+  @RequestJson
+  public String method(final String key) {
+    return key;
+  }
+
+  @PostMapping("/data-get")
+  public String dataGet(@JsonParam(name = "key.sub") final String key) {
+    return key;
+  }
+
+  @PostMapping("/default-value")
+  public String defaultValue(
+    @JsonParam(name = "value", required = false) final String value
+  ) {
+    return value;
+  }
+
+  @PostMapping("/convert")
+  public Integer convert(@JsonParam(name = "key") final Integer key) {
+    return key;
+  }
+
+  @GetMapping("/get")
+  public String get(String key) {
+    return key;
+  }
+
+  @PostMapping("/post")
+  public String post(String key) {
+    return key;
+  }
+}
+```
+
+可以看到使用的方式和 `@RequestParam` 无太大差别。
+
+## 结语
+
+最近打算开始接着折腾 Spring 和后端了，感觉我还是更喜欢后端，前端太折腾了 ?。

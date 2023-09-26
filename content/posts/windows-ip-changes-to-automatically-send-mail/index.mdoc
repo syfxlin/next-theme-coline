@@ -1,0 +1,121 @@
+---
+title: Windows IP变化自动发送邮件
+status: publish
+published_time: 2018-12-30T00:00
+modified_time: 2021-07-28T07:24
+layout: post
+categories:
+  - 折腾记录
+  - 分享推荐
+tags:
+  - Lab
+  - Python
+---
+
+> 由于学校的机房使用的 IDE 过于坑爹，什么 VC6.0 啦，VS2008 啦，DEV-C++啦，一点补全功能都没有，Java 用的是反人类的 Eclipse，无奈只能远程连接我的工作站，其实就是垃圾笔电啦，这时就需要知道笔电的 IP，然而学校并不提供固定 IP，什么时候变化都不可知，若 IP 变了然而我不知，上课时只能咕咕了，所以只好造个通知的脚本来检查 IP 变化，并在变化时发送邮件通知我
+
+# 原理
+
+还要什么原理，就是执行 windows 的 ipconfig 命令然后提取其中的 IPv4 地址，与之前检测存储的 IP 进行比较，若相同，则 IP 不变化，若变化就写入新的 IP，同时调用发送邮件的脚本
+
+# 实现
+
+本文使用 Python3 来开发，所以需要先装好 Python3 的环境，至于为什么要用 python 来开发，请看上一篇文章，其实就是 Java 要导入 jar 包，之前没解决如何 jar 包，无奈只能使用不太熟悉的 Python 来开发
+
+## 检查脚本
+
+```python
+import subprocess
+import re
+import os
+nowip = subprocess.Popen('ipconfig', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+s = nowip.stdout.read()
+s2 = s.decode("GBK")
+wlan_index = s2.find("无线局域网适配器 WLAN:")
+wlan_str = s2[wlan_index:]
+ip_str = wlan_str[wlan_str.find("IPv4 地址"):wlan_str.find("子网掩码")]
+ip_str = ip_str[34:]
+ip = re.search("([.\d]+)", ip_str).group(1)
+ip_log = open("E:/ip_log.txt","r")
+if ip_log.readline() == ip:
+    print("Yes")
+else:
+    print("No")
+    ip_log2 = open("E:/ip_log.txt","w")
+    ip_log2.write(ip)
+    os.system("python E:/ip_notice.py")
+ip_log.close()
+```
+
+## 发送邮件脚本
+
+```python
+#  coding:utf-8
+import smtplib
+from email.mime.text import MIMEText
+from email.utils import formatdate
+from email.header import Header
+import sys
+import subprocess
+
+# 本地执行获取IP
+nowip = subprocess.Popen('ipconfig', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+ip_gbk = nowip.stdout.read()
+ip_out = ip_gbk.decode("GBK")
+
+#设置默认字符集为UTF8 不然有些时候转码会出问题
+default_encoding = 'utf-8'
+if sys.getdefaultencoding() != default_encoding:
+    reload(sys)
+    sys.setdefaultencoding(default_encoding)
+
+#发送邮件的相关信息，根据你实际情况填写
+smtpHost = 'SMTP地址'
+# smtpPort = '25'
+sslPort = '465' # 端口
+fromMail = '邮件发送方'
+toMail = '邮件接收方'
+username = '登陆SMTP的用户名'
+password = '密码'
+
+#邮件标题和内容
+subject = u'Otstar-Laptop-IPNotice'
+body = u'' + ip_out
+
+#初始化邮件
+encoding = 'utf-8'
+mail = MIMEText(body.encode(encoding), 'plain', encoding)
+mail['Subject'] = Header(subject, encoding)
+mail['From'] = fromMail
+mail['To'] = toMail
+mail['Date'] = formatdate()
+
+try:
+    # 连接smtp服务器，明文/SSL/TLS三种方式，根据你使用的SMTP支持情况选择一种
+    # 普通方式，通信过程不加密
+    # smtp = smtplib.SMTP(smtpHost, smtpPort)
+    # smtp.ehlo()
+    # smtp.login(username, password)
+
+    # tls加密方式，通信过程加密，邮件数据安全，使用正常的smtp端口
+    # smtp = smtplib.SMTP(smtpHost,smtpPort)
+    # smtp.set_debuglevel(True)
+    # smtp.ehlo()
+    # smtp.starttls()
+    # smtp.ehlo()
+    # smtp.login(username,password)
+
+    # 纯粹的ssl加密方式，通信过程加密，邮件数据安全
+    smtp = smtplib.SMTP_SSL(smtpHost,sslPort)
+    smtp.ehlo()
+    smtp.login(username,password)
+
+    # 发送邮件
+    smtp.sendmail(fromMail, toMail, mail.as_string())
+    smtp.close()
+    print ("OK")
+except Exception as e:
+    print (e)
+```
+
+博主偷懒就只发送 ipconfig 的返回值，没切片得出 IP，需要的可以将切片代码从检查脚本复制到通知脚本即可

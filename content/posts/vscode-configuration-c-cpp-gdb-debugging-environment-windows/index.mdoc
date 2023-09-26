@@ -1,0 +1,158 @@
+---
+title: "VSCode配置C/C++ GDB调试环境[Windows]"
+status: publish
+published_time: 2018-09-04T00:00
+modified_time: 2021-07-28T07:43
+layout: post
+categories:
+  - 折腾记录
+tags:
+  - C
+  - VSCode
+  - Develop
+---
+
+> 折腾了两个小时，终于把 VSCode 调试环境弄好了 （开心
+
+# 环境准备
+
+## VSCode
+
+### 安装 C/C++ for Visual Studio Code 插件
+
+1. 按下 Ctrl+Shift+X
+2. 在搜索框中输入 C/C++
+3. 安装第一个插件
+
+至此 VSCode 环境部分配置完毕
+
+## GDB
+
+### 安装 MinGW
+
+1. 下载 [MinGW](https://osdn.net/projects/mingw/downloads/68260/mingw-get-setup.exe/)
+2. 点击`Continue`开始安装，安装过程需联网，若安装时提示`error`则需使用梯子进行安装
+3. 当`Continue`按钮恢复为可用状态，点击完成安装
+
+### GCC 环境安装
+
+1. 打开 MinGW
+2. 选中左栏的`Basic Setup`,然后选中`mingw32-gcc-g++-bin`,右键选择`Mark for installation`
+3. 选中`All packages`,找到`mingw32-gdb-bin,mingw32-gdb-doc,mingw32-gdb-info,mingw32-gdb-lang,mingw32-gdb-lic,mingw32-gdb-man`,右键选择`Mark for installation`
+4. 点击左上角的`installation`,然后点击`Apply Changes`
+5. 点击`Apply`,等待安装完成,点击 close
+
+至此 GDB 环境部分配置完成
+
+> MinGW 配置较为繁琐，可以考虑使用[MinGW64](https://mingw-w64.org)，MinGW64 安装后就不需上方的配置，一路点击下一步即可。（但是还是要配置环境变量
+
+## 添加环境变量
+
+1. 进入设置,点击系统,然后选择关于,然后点击右侧系统信息
+2. 在弹出的系统信息中,选中左栏高级系统设置,然后选中环境变量
+3. 在系统变量一栏中找到`Path`,双击,然后新建一个`C:\MinGW\bin` 的变量
+4. 一路确定,直到关闭所有选卡
+5. 重启电脑
+
+# 配置 VSCode
+
+新建一个`cpp`文件,写上以下测试代码
+
+```c
+#include <iostream>
+int main()
+{
+    using namespace std;
+    cout << "Test 1";
+    cin.get ();
+    return 0;
+}
+```
+
+Ctrl+S 保存,然后按 F5,VSCode 会在上方弹出选择环境,选择`C++(GDB/LLDB)`,然后将以下代码覆盖至`launch.json`,注意`miDebuggerPath`路径要对应
+
+```json
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "(gdb) Launch",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${fileDirname}/${fileBasenameNoExtension}.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "externalConsole": true,
+      "MIMode": "gdb",
+      "miDebuggerPath": "C:/MinGW/bin/gdb.exe",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+      "preLaunchTask": "Build"
+    }
+  ]
+}
+```
+
+回到新建的`cpp`中,按下 F5,会显示找不到任务,点击配置任务,点击使用模板创建,然后点击带有`Other`的选项,用以下代码覆盖`tasks.json`
+
+```json
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build",
+      "command": "g++",
+      "args": ["-g", "-Wall", "-std=c++11", "-lm", "${file}", "-o", "${fileDirname}/${fileBasenameNoExtension}.exe"],
+      "presentation": {
+        "reveal": "always",
+        "echo": false,
+        "focus": true
+      },
+      "problemMatcher": {
+        "owner": "cpp",
+        "fileLocation": "absolute",
+        "pattern": {
+          "regexp": "^(.*):(\\d+):(\\d+):\\s+(error):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        }
+      }
+    },
+
+    {
+      "label": "Run",
+      "type": "shell",
+      "dependsOn": "Build",
+      "command": "${fileDirname}/${fileBasenameNoExtension}.exe",
+      "args": [],
+      "presentation": {
+        "reveal": "always",
+        "focus": true
+      },
+      "problemMatcher": [],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    }
+  ]
+}
+```
+
+Ctrl+S 保存,然后回到新建的`cpp`,按下 F5,程序就会被编译运行,至此 GDB 调试环境便配置完成.
+
+对了,C/C++也是可以进行断点调试的,具体方法可以参考 [VSCode 配置 PHP 调试环境\[Windows\]](https://blog.ixk.me/vscode-configuration-php-gdb-debugging-environment-windows.html)
+
+在使用过程中你可能会遇到输入或输出中文乱码的问题，此时只需要将文件改成 `GB2312` 编码即可

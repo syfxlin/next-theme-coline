@@ -1,0 +1,754 @@
+---
+title: 从零实现一个 PHP 微框架 - IoC 容器
+layout: post
+status: publish
+published_time: 2020-05-13T00:00
+modified_time: 2023-09-24T17:16
+categories:
+  - 折腾记录
+tags:
+  - PHP
+  - XK-PHP
+  - 从零实现
+---
+## 前言
+
+差不多该写写该系列文章了，咕了好几天 ?。
+
+在 XK-PHP 中 IoC 容器是框架的**核心**，其掌管着框架中**实例的存储和初始化**，并提供**自动依赖注入等功能**，我们可以把 IoC 容器看成一个拥有存储功能的**工厂**，当我们需要某个实例的时候，工厂会依靠需求将实例组装好并返回给需求者，如果实例是单例的，那么制作好的实例就可以存到仓库中，当需求者再次需要的时候就可以直接返回实例。需求者**无需关心实例是如何制造的**，只需要将需求提交给工厂即可。这看起来似乎就是工厂模式？IoC 容器和 工厂模式 很类似，但是工厂模式注入的依赖是**定死的**，而 IoC 容器可以依据需求**按需**注入依赖。
+
+## DI & IoC
+
+由于我之前写过 DI 和 IoC 的介绍文章，这里就不重复写了，链接见下方：
+
+## IoC 容器
+
+由于之前的文章已经说明了 IoC 容器的实现了，这里就不再讲解 IoC 容器内部的细节了，本文就只讲述将 IoC 容器集成到我们上次创建的项目之中。
+
+首先，因为我们的容器需要兼容 **PSR-11** ，那么就需要引入 `psr/container` 的包，来引入 `ContainerInterface` 接口：
+
+```bash
+composer require psr/container
+```
+
+然后容器需要使用两个自定义函数，我们将其放到 `app/Helper/functions.php` 中，并修改 `composer.json`，使函数能被 Composer **自动导入并且全局生效**：
+
+```php
+<?php
+// functions.php
+
+// 解析 class@method 的字符串，返回 [class, method] 数组
+function str_parse_callback($callback, $default = null)
+{
+    if (is_array($callback)) {
+        return $callback;
+    }
+    if (strpos($callback, '@') !== false) {
+        return explode('@', $callback);
+    }
+    if (strpos($callback, '::') !== false) {
+        return explode('::', $callback);
+    }
+    return [$callback, $default];
+}
+
+// 解析 [class, method] 或 [class, split, method] 到 class@method 或 class::method
+function str_stringify_callback(
+    $callback,
+    $default = null,
+    bool $isStatic = false
+) {
+    $split = $isStatic ? '::' : '@';
+    if (is_array($callback)) {
+        return implode($split, $callback);
+    }
+    if (preg_match('/@|::/', $callback) > 0) {
+        return $callback;
+    }
+    if ($default === null) {
+        return $callback;
+    }
+    return "{$callback}{$split}{$default}";
+}
+```
+
+```json
+{
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
+    },
+    // 新增
+    "files": ["app/Helper/functions.php"]
+  }
+}
+```
+
+修改了 `composer.json` 的 `autoload` 后需要运行以下命令后**才能生效**：
+
+```bash
+composer dump-auto
+```
+
+然后就可以写容器的代码了，首先创建 `app/Kernel/Container.php` 的文件，输入以下代码，本文的容器代码和之前的文章中的容器**不一样**，但是流程是**一样**的：
+
+```php
+<?php
+
+namespace App\Kernel;
+
+use Closure;
+use Psr\Container\ContainerInterface;
+use ReflectionClass;
+use ReflectionException;
+use ReflectionFunction;
+use ReflectionMethod;
+use ReflectionParameter;
+use RuntimeException;
+use function array_pad;
+use function class_exists;
+use function compact;
+use function count;
+use function is_array;
+use function is_bool;
+use function is_int;
+use function is_string;
+use function preg_match;
+use function str_parse_callback;
+use function strpos;
+
+/**
+ * IoC 容器，兼容 PSR-11
+ */
+class Container implements ContainerInterface
+{
+    /**
+     * 容器中存储依赖的数组
+     * 存储的是闭包，运行闭包会返回对应的依赖实例
+     *
+     * @var array
+     */
+    protected $bindings = [];
+
+    /**
+     * 绑定方法
+     *
+     * @var array
+     */
+    protected $methodBindings = [];
+
+    /**
+     * 已创建的单例实例
+     *
+     * @var array
+     */
+    protected $instances = [];
+
+    /**
+     * 自动通过类名绑定类
+     *
+     * @var bool
+     */
+    protected $autobind = true;
+
+    /**
+     * 依赖别名
+     *
+     * @var string[]
+     */
+    protected $aliases = [];
+
+    /**
+     * 绑定依赖
+     *
+     * @param string|array $abstract 依赖名或者依赖列表
+     * @param Closure|string|null $concrete 依赖闭包
+     *
+     * @param bool $shared
+     * @param bool|string $alias
+     * @param bool $overwrite
+     * @return  Container
+     */
+    public function bind(
+        $abstract,
+        $concrete = null,
+        bool $shared = false,
+        $alias = false,
+        bool $overwrite = false
+    ): Container {
+        // 同时绑定多个依赖
+        if (is_array($abstract)) {
+            foreach ($abstract as $_abstract => $value) {
+                if (is_int($_abstract)) {
+                    $_abstract = $value;
+                }
+                $_concrete = null;
+                $_shared = false;
+                $_alias = false;
+                $_overwrite = false;
+                if (is_bool($value)) {
+                    $_shared = $value;
+                } elseif (is_array($value)) {
+                    [$_concrete, $_shared, $_alias, $_overwrite] = array_pad(
+                        $value,
+                        3,
+                        false
+                    );
+                }
+                $this->bind(
+                    $_abstract,
+                    $_concrete === false ? null : $_concrete,
+                    $_shared,
+                    $_alias,
+                    $_overwrite
+                );
+            }
+            return $this;
+        }
+        [$abstract, $alias] = $this->getAbstractAndAliasByAlias(
+            $abstract,
+            $alias
+        );
+        // 为了方便绑定依赖，可以节省一个参数
+        if ($concrete === null) {
+            $concrete = $abstract;
+        }
+        $this->setBinding($abstract, $concrete, $shared, $overwrite);
+        if ($alias) {
+            $this->alias($abstract, $alias);
+        }
+        // 返回 this 使其支持链式调用
+        return $this;
+    }
+
+    // 设置 binding
+    protected function setBinding(
+        string $abstract,
+        $concrete,
+        bool $shared = false,
+        bool $overwrite = false
+    ): void {
+        $abstract = $this->getAbstractByAlias($abstract);
+        // 传入的默认是闭包，如果没有传入闭包则默认创建
+        if (!$concrete instanceof Closure) {
+            $concrete = function (Container $c, array $args = []) use (
+                $concrete
+            ) {
+                return $c->build($concrete, $args);
+            };
+        }
+        // 判断是否是单例，是否被设置过
+        if (!$overwrite && $shared && isset($this->bindings[$abstract])) {
+            throw new RuntimeException(
+                "Target [$abstract] is a singleton and has been bind"
+            );
+        }
+        // 设置绑定的闭包
+        $this->bindings[$abstract] = compact('concrete', 'shared');
+    }
+
+    // 获取 binding
+    protected function getBinding(string $abstract)
+    {
+        $abstract = $this->getAbstractByAlias($abstract);
+        if (!isset($this->bindings[$abstract])) {
+            // 尝试自动绑定
+            if (
+                $this->autobind &&
+                $abstract[0] !== '$' &&
+                class_exists($abstract)
+            ) {
+                $this->setBinding($abstract, $abstract);
+            } else {
+                throw new RuntimeException(
+                    "Target [$abstract] is not binding or fail autobind"
+                );
+            }
+        }
+        return $this->bindings[$abstract];
+    }
+
+    // 判断 binding 是否存在
+    protected function hasBinding(string $abstract): bool
+    {
+        $abstract = $this->getAbstractByAlias($abstract);
+        return isset($this->bindings[$abstract]);
+    }
+
+    /**
+     * 实例化对象
+     *
+     * @param string $abstract 对象名称
+     * @param array $args
+     *
+     * @return  mixed
+     */
+    public function make(string $abstract, array $args = [])
+    {
+        $abstract = $this->getAbstractByAlias($abstract);
+        $binding = $this->getBinding($abstract);
+        $concrete = $binding['concrete'];
+        $shared = $binding['shared'];
+        // 判断是否是单例，若是单例并且已经实例化过就直接返回实例
+        if ($shared && isset($this->instances[$abstract])) {
+            return $this->instances[$abstract];
+        }
+        // 构建实例
+        $instance = $concrete($this, $args);
+        // 判断是否是单例，若是则设置到容器的单例列表中
+        if ($shared) {
+            $this->instances[$abstract] = $instance;
+        }
+        return $instance;
+    }
+
+    /**
+     * 绑定单例
+     *
+     * @param string $abstract 依赖名称
+     * @param mixed $concrete 依赖闭包
+     * @param bool|string $alias
+     *
+     * @param bool $overwrite
+     * @return  Container
+     */
+    public function singleton(
+        string $abstract,
+        $concrete = null,
+        $alias = false,
+        bool $overwrite = false
+    ): Container {
+        $this->bind($abstract, $concrete, true, $alias, $overwrite);
+        return $this;
+    }
+
+    /**
+     * 绑定已实例化的单例
+     *
+     * @param string $abstract 依赖名称
+     * @param mixed $instance 已实例化的单例
+     * @param string|false $alias
+     *
+     * @param bool $overwrite
+     * @return  Container
+     */
+    public function instance(
+        string $abstract,
+        $instance,
+        $alias = false
+    ): Container {
+        [$abstract, $alias] = $this->getAbstractAndAliasByAlias(
+            $abstract,
+            $alias
+        );
+        $this->instances[$abstract] = $instance;
+        $this->bind(
+            $abstract,
+            function () use ($instance) {
+                return $instance;
+            },
+            true,
+            $alias,
+            true
+        );
+        return $this;
+    }
+
+    /**
+     * 构建实例
+     *
+     * @param Closure|string $class 类名或者闭包
+     * @param array $args
+     * @return  mixed
+     *
+     * @throws ReflectionException
+     */
+    public function build($class, array $args = [])
+    {
+        if ($class instanceof Closure) {
+            return $class($this, $args);
+        }
+        if (!class_exists($class)) {
+            return $class;
+        }
+        // 取得反射类
+        $reflector = new ReflectionClass($class);
+        // 检查类是否可实例化
+        if (!$reflector->isInstantiable()) {
+            // 如果不能，意味着接口不能正常工作，报错
+            throw new RuntimeException("Target [$class] is not instantiable");
+        }
+        // 取得构造函数
+        $constructor = $reflector->getConstructor();
+        // 检查是否有构造函数
+        if ($constructor === null) {
+            // 如果没有，就说明没有依赖，直接实例化
+            $instance = new $class();
+        } else {
+            // 返回已注入依赖的参数数组
+            $dependency = $this->injectingDependencies($constructor, $args);
+            // 利用注入后的参数创建实例
+            $instance = $reflector->newInstanceArgs($dependency);
+        }
+        return $instance;
+    }
+
+    /**
+     * 注入依赖
+     *
+     * @param ReflectionFunction|ReflectionMethod $method
+     * @param array $args
+     *
+     * @return  array
+     */
+    protected function injectingDependencies($method, array $args = []): array
+    {
+        $dependency = [];
+        $parameters = $method->getParameters();
+        foreach ($parameters as $parameter) {
+            if (isset($args[$parameter->name])) {
+                $dependency[] = $args[$parameter->name];
+                continue;
+            }
+            // 利用参数的类型声明，获取到参数的类型，然后从 bindings 中获取依赖注入
+            $dependencyClass = $parameter->getClass();
+            if ($dependencyClass === null) {
+                $dependency[] = $this->resolvePrimitive($parameter);
+            } else {
+                // 实例化依赖
+                $dependency[] = $this->resolveClass($parameter);
+            }
+        }
+        return $dependency;
+    }
+
+    /**
+     * 处理非类的依赖
+     *
+     * @param ReflectionParameter $parameter
+     *
+     * @return  mixed
+     */
+    protected function resolvePrimitive(ReflectionParameter $parameter)
+    {
+        $abstract = $parameter->name;
+        // 通过 bind 获取
+        if ($this->hasBinding('$' . $parameter->name)) {
+            $abstract = '$' . $parameter->name;
+        }
+        // 匹配别名
+        if ($this->isAlias($abstract)) {
+            $abstract = $this->getAbstractByAlias($abstract);
+        }
+        try {
+            $concrete = $this->getBinding($abstract)['concrete'];
+        } catch (RuntimeException $e) {
+            $concrete = null;
+        }
+        if ($concrete !== null) {
+            return $concrete instanceof Closure ? $concrete($this) : $concrete;
+        }
+        if ($parameter->isDefaultValueAvailable()) {
+            return $parameter->getDefaultValue();
+        }
+        throw new RuntimeException("Target [$$parameter->name] is not binding");
+    }
+
+    /**
+     * 处理类依赖
+     *
+     * @param ReflectionParameter $parameter
+     *
+     * @return  mixed
+     */
+    protected function resolveClass(ReflectionParameter $parameter)
+    {
+        try {
+            return $this->make($parameter->getClass()->name);
+        } catch (RuntimeException $e) {
+            if ($parameter->isDefaultValueAvailable()) {
+                return $parameter->getDefaultValue();
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * 设置自动绑定
+     *
+     * @param   bool  $use  是否自动绑定类
+     *
+     * @return  void
+     */
+    public function useAutoBind(bool $use): void
+    {
+        $this->autobind = $use;
+    }
+
+    /**
+     * 判断是否绑定了指定的依赖
+     *
+     * @param $id
+     * @return  bool
+     */
+    public function has($id): bool
+    {
+        return $this->hasBinding($id);
+    }
+
+    /**
+     * 同 make
+     *
+     * @param   string  $id  对象名称
+     *
+     * @return  mixed
+     */
+    public function get($id)
+    {
+        return $this->make($id);
+    }
+
+    public function hasMethod(string $method): bool
+    {
+        return isset($this->methodBindings[$method]);
+    }
+
+    public function bindMethod(string $method, $callback): void
+    {
+        $this->methodBindings[$method] = $callback;
+    }
+
+    protected function getMethodBind(string $method)
+    {
+        if (isset($this->methodBindings[$method])) {
+            return $this->methodBindings[$method];
+        }
+        throw new RuntimeException("Target [$method] is not binding");
+    }
+
+    public function call(
+        $method,
+        array $args = [],
+        $object = null,
+        $isStatic = false
+    ) {
+        if ($object !== null) {
+            return $this->callMethod($object, $method, $isStatic, $args);
+        }
+        if (
+            is_array($method) ||
+            (is_string($method) && preg_match('/@|::/', $method) > 0)
+        ) {
+            return $this->callClass($method, $args);
+        }
+        if (is_string($method)) {
+            $method = $this->getMethodBind($method);
+        }
+        return $this->callFunction($method, $args);
+    }
+
+    protected function callFunction($method, array $args = [])
+    {
+        $reflector = new ReflectionFunction($method);
+        $dependency = $this->injectingDependencies($reflector, $args);
+        return $reflector->invokeArgs($dependency);
+    }
+
+    /**
+     * @param string|array $target
+     * @param array $args
+     * @return mixed
+     */
+    protected function callClass($target, array $args = [])
+    {
+        $class = null;
+        $method = null;
+        $object = null;
+        $isStatic = false;
+        if (is_string($target)) {
+            $isStatic = strpos($target, '@') === false;
+            [$class, $method] = str_parse_callback($target);
+            $object = $this->bindAndMakeReflection($class, $isStatic);
+        } else {
+            if (count($target) === 3) {
+                [$class, $split, $method] = $target;
+                $isStatic = $split === '::';
+            } else {
+                [$class, $method] = $target;
+            }
+            $object = $this->bindAndMakeReflection($class, $isStatic);
+        }
+        return $this->callMethod($object, $method, $isStatic, $args);
+    }
+
+    protected function bindAndMakeReflection(
+        string $class,
+        bool $isStatic = false
+    ) {
+        if ($isStatic) {
+            return $class;
+        }
+        if (!$this->has($class)) {
+            $this->bind($class);
+        }
+        return $this->make($class);
+    }
+
+    protected function callMethod(
+        $object,
+        $method,
+        $isStatic = false,
+        array $args = []
+    ) {
+        $reflector = new ReflectionMethod($object, $method);
+        $dependency = $this->injectingDependencies($reflector, $args);
+        return $reflector->invokeArgs($isStatic ? null : $object, $dependency);
+    }
+
+    public function isAlias(string $name): bool
+    {
+        return isset($this->aliases[$name]);
+    }
+
+    public function alias(string $abstract, string $alias): void
+    {
+        if ($abstract === $alias) {
+            return;
+        }
+        $this->aliases[$alias] = $abstract;
+    }
+
+    public function getAlias($abstract)
+    {
+        foreach ($this->aliases as $alias => $value) {
+            if ($value === $abstract) {
+                return $alias;
+            }
+        }
+        return $abstract;
+    }
+
+    public function removeAlias($alias): void
+    {
+        unset($this->aliases[$alias]);
+    }
+
+    protected function getAbstractByAlias($alias)
+    {
+        return $this->aliases[$alias] ?? $alias;
+    }
+
+    protected function getAbstractAndAliasByAlias(
+        $alias,
+        $inAlias = false
+    ): array {
+        $abstract = $this->getAbstractByAlias($alias);
+        if ($alias === $abstract) {
+            return [$abstract, $inAlias];
+        }
+        if (!$inAlias) {
+            return [$abstract, $alias];
+        }
+        return [$abstract, $inAlias];
+    }
+}
+```
+
+## 测试
+
+完成以上步骤后就可以测试下容器是否可以正常工作了，首先创建几个测试类：
+
+```php
+<?php
+
+namespace App\Entry;
+
+// app/Entry/Cat.php
+class Cat
+{
+    public function name(): string
+    {
+        return "Cat";
+    }
+}
+
+// app/Entry/Dog.php
+class Dog
+{
+    public function name(): string
+    {
+        return "Dog";
+    }
+}
+
+// app/Entry/CatShop.php
+class CatShop
+{
+    /**
+     * @var Cat
+     */
+    protected $cat;
+
+    public function __construct(Cat $cat)
+    {
+        $this->cat = $cat;
+    }
+
+    public function getName(): string
+    {
+        return $this->cat->name();
+    }
+}
+
+// app/Entry/DogShop.php
+class DogShop
+{
+    /**
+     * @var Dog
+     */
+    protected $dog;
+
+    public function __construct(Dog $dog)
+    {
+        $this->dog = $dog;
+    }
+
+    public function getName(): string
+    {
+        return $this->dog->name();
+    }
+}
+```
+
+然后修改 `public/index.php` 文件，把之前 Test 相关的代码都删了，然后添加以下代码：
+
+```php
+<?php
+// public/index.php
+
+$container = new Container();
+
+$container->bind(Cat::class, null, 'cat');
+$container->bind(Dog::class, null, 'dog');
+
+$container->singleton(CatShop::class);
+$container->singleton(DogShop::class);
+
+/* @var CatShop $cat_shop */
+$cat_shop = $container->make(CatShop::class);
+/* @var DogShop $dog_shop */
+$dog_shop = $container->make(DogShop::class);
+
+echo $cat_shop->getName() . "\n"; // Cat
+echo $dog_shop->getName() . "\n"; // Dog
+```
+
+添加完毕后就可以进行测试了，运行 `index.php`：
+
+![](/image/posts/implement-a-php-microframework-from-zero-3/eb82605c-82fd-47b7-b015-18abda0f8c3a.975x523.jpg)
+
+可以看到，我们并没有写赋值 `Cat` 和 `Dog` 的代码，按理使用的时候应该为 `null`，而 `CatShop` 和 `DogShop` 却可以正常使用，这是因为 IoC 容器中**为我们完成了赋值的工作**，我们只需要关心需要**使用什么**而不需要关心依赖是**如何来的**，这样就可以很好的解耦代码，同时也简化了代码的编写。
+
+## 结语
+
+结语。。。实在不知道写什么了 ?。

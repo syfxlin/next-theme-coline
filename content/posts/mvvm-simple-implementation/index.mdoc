@@ -1,0 +1,232 @@
+---
+title: MVVM 简单实现
+layout: post
+status: publish
+published_time: 2020-04-20T00:00
+modified_time: 2023-09-24T17:23
+categories:
+  - 折腾记录
+tags:
+  - Vue
+  - JavaScript
+  - 前端
+---
+## 什么是 MVVM？
+
+**MVVM** 即 **Model-View-ViewModel** 的缩写，最早由微软提出，其中的 Model 和 View 想必大家都很清楚了，这就只讲 ViewModel 吧，ViewModel 是 View 和 Model 中的一座桥梁，将 **View 和 Model 进行绑定**，使得 Model 中数据的变化可以传递给 View 引起视图的变化，反之亦可，这一过程是**自动化**的，这种轻量级的架构使得开发更加高效便捷，同时也保证视图和数据的一致性。
+
+![](/image/posts/mvvm-simple-implementation/f3a4b197-fca4-45d0-beb2-78c7169f41b9.898x370.jpg)
+
+MVVM 模型
+
+## 谈谈 MVVM 框架
+
+MVVM 在挺多的地方都有使用，如 Android，Web 等，这里就只讨论 Web。
+
+在前端 Vue.js 提供了类似于 MVVM 的数据双向绑定方式，它的核心是 ViewModel，主要负责 View 和 Model 的数据绑定。
+
+实例如下：
+
+```html
+<!-- View -->
+<div id="app">
+  <input type="text" v-model="msg" />
+  <input type="text" v-model="msg" />
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js"></script>
+<script>
+  // Model
+  let data = {
+    msg: "value",
+  };
+
+  // ViewModel
+  let vm = new Vue({
+    el: "#app",
+    data: data,
+  });
+</script>
+```
+
+当第一个 input 改变值的时候，第二个 input 也会跟着改变，反过来也是可以的，然而我们并没有写两者绑定的代码，这一过程是 ViewModel 自动为我们完成的。
+
+## 实现一个 MVVM
+
+> 这里就不谈 Vue.js 是如何实现的了，原理都差不多，网上相关的文章也很多，可以自行搜索查看，本篇文章主要讲述 [MVVM Demo](https://github.com/syfxlin/code/tree/master/design-pattern/MVVM) 的实现原理和过程。
+
+### 流程
+
+首先先放一张流程图：
+
+![](/image/posts/mvvm-simple-implementation/493facdd-0059-4bbf-af03-6204af8d62f5.903x779.jpg)
+
+从图中可以比较清楚的看到创建 MVVM 时需要对 **模板(View)** 进行编译，对 **数据(Model)** 进行劫持，然后创建 **监听器(Watcher)** 以及 **发布器(Dispatcher)**，最后将 **Watcher 绑定到 Dispatcher** 上即可完成 **Model 绑定 View**，对于可以修改的 View 元素，如 input，则需要同时**创建一个更新事件**，当可修改的元素发生改变后则**直接修改 Model 中的数据**，此时就完成了 View 绑定 Model。
+
+Model 到 View 的更新过程如上图**蓝色路线**，当被劫持的数据即 Model 发生改变后，则调用与之绑定的 Dispatcher 的 **notify 方法**，notify 方法则会调用与其绑定的每个 Watcher 的 **update 方法**，update 方法会调用对应的元素的**更新回调方法**，如普通的文本节点修改的是 textContent，input 元素修改的是 value，具体的修改方法是在**创建 Watcher 的时候指定的**，更新回调执行完毕后对应的更改就会反映到 View 上。
+
+View 到 Model 的更新过程如上图**绿色路线**，当 View 修改的时候，**会触发对应的更新事件**，更新事件是在编译模板的时候就指定的，该更新事件会**直接对 Model 的数据进行修改**。不过此时同样会触发 Model 的 set，为了防止死循环就需要进行节流，即**判断新值是否和旧值相同**，如果相同则不调用 Dispatcher 的 notify 方法。
+
+### 实现
+
+相关的流程讲完了，那么就进入实现的过程吧。ヾ(≧ ▽ ≦)ゝ
+
+#### 创建 VM
+
+创建 VM 的 [过程](https://github.com/syfxlin/code/blob/master/design-pattern/MVVM/vm.js#L12-L21) 很简单，就是 **劫持数据** 和 **编译模板**：
+
+#### 劫持数据
+
+劫持数据的方法目前有挺多种的，可以使用传统的观察者模式，或者使用 Object.defineProperty，也可以使用 Proxy 的方式。本文劫持数据的方式使用的是 [Proxy](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy)。
+
+Proxy 只能代理对象，而不能代理基本数据类型，所以 Vue 3.0 的 Ref 为了代理基本数据类型将基本数据类型封装成**只有一个 value 键的对象**，不过本文就不弄那么复杂了，遇到基本数据类型就 [直接返回值](https://github.com/syfxlin/code/blob/master/design-pattern/MVVM/vm.js#L70)。由于 Proxy 并不能**深度代理数据**，所以**需要**[**递归**](https://github.com/syfxlin/code/blob/master/design-pattern/MVVM/vm.js#L35-L37)**的对每一个对象进行代理**。
+
+当发现这个对象没有子对象的时候就可以创建 Proxy 代理对象了，不过在这之前需要先**创建该对象的**[**Dispatcher**](https://github.com/syfxlin/code/blob/master/design-pattern/MVVM/vm.js#L39)，作为该对象改变的**通知调度器**。Proxy 可以定义多种陷阱方法，这里就只设置 set，get 和 deleteProperty，下面就具体说下这 3 个方法。
+
+首先是 [get](https://github.com/syfxlin/code/blob/master/design-pattern/MVVM/vm.js#L41-L50) 方法：
+
+```javascript
+functon get(obj, prop) {
+  // 一个临时指向 watcher 的指针，当有新的 watcher 创建时，会首次获取绑定数据，此时就会将 watcher 绑定到 dispatcher
+  if (Dispatcher.target) {
+    dispatcher.bind(prop);
+  }
+  if (Dispatcher.targetFor) {
+    dispatcher.bindFor();
+  }
+  return obj[prop];
+}
+```
+
+在创建 Watcher 的时候，会[设置](https://github.com/syfxlin/code/blob/master/design-pattern/MVVM/vm.js#L162) **Dispatcher.target 为当前 Watcher**，并且因为模板中并没有绑定数据，所以要从 Model 中**首次获取数据**，此时就会调用对象的 get 陷阱方法，也就是上面的代码，**判断 Dispatcher.target 不为空**的时候就会将 **Dispatcher.target 的 Watcher 绑定到该对象的 Dispatcher 上**，**此时 Model 就和 View 绑定在了一起**。Dispatcher.targetFor 同理，只不过这个指向的 Watcher 是父元素，用于 for 循环。
+
+然后是 [set](https://github.com/syfxlin/code/blob/master/design-pattern/MVVM/vm.js#L51-L62) 方法：
+
+```javascript
+function set(obj, prop, value) {
+  if (obj[prop] !== value) {
+    obj[prop] = _this.observable(value);
+    // 通知数据更新
+    dispatcher.notify();
+  }
+  // Hook length 属性以监听数组的增加
+  if (prop === "length" && dispatcher.for) {
+    dispatcher.notifyFor();
+  }
+  return true;
+}
+```
+
+由于设置值的时候也**可以设置相同的值**，此时一样**会触发 set 陷阱方法**，会造成不必要的更新，同时可能会导致死循环，所以需要在真正设置值和 notify 前对其进行节流，当**新值和旧值相同时就不操作**，直接返回 true（Proxy 的 set 方法要求返回 true，返回 false 或不返回会抛出异常），如果值不同，就可以设置，不过由于设置的可能是一个对象，**这个对象可能不是 Proxy 对象**，**所以还需要递归的代理该对象**。设置完毕后就可以**调用 notify 方法**来通知 Watcher 更新视图了。
+
+由于数组有可能新增或减少，所以可以判断更改的**是否是 length 属性**，如果是则**通知 for 循环的 Watcher**。
+
+[deleteProperty](https://github.com/syfxlin/code/blob/master/design-pattern/MVVM/vm.js#L63-L67) 和 set 差不多，这里就不讲了。
+
+#### 模板编译
+
+劫持数据说完了，接下来就是模板编译了。编译普通的模板其实挺简单的，比如这个编译纯文本：
+
+```javascript
+// <div x-text="msg">
+function compileText(node, before = "") {
+  node.textContent = new Watcher(
+    before + node.getAttribute("x-text"),
+    (value) => {
+      node.textContent = value;
+    },
+    this.vm
+  ).value;
+}
+```
+
+代码其实很简单就是创建一个 Watcher，创建 Watcher 的时候 Watcher 会将获取到的值（第一次的值）保存到 value 属性中，只需要将指定节点的 textContent 属性设置为这个 value 就可以了。
+
+不过除了像文本节点和属性节点外，还有 input 这种输入节点，此时还需要为 input 增加监听器，当 input 更改的时候触发监听器设置 Model：
+
+```javascript
+function compileModel(node, before = "") {
+  let key = node.getAttribute("x-model");
+  node.value = new Watcher(
+    before + key,
+    (value) => {
+      node.value = value;
+    },
+    this.vm
+  ).value;
+  node.addEventListener("change", (e) => {
+    this.vm.set(key, node.value);
+  });
+}
+```
+
+#### Dispatcher & Watcher
+
+Dispatcher 和 Watcher 这里就不介绍了，其实就是订阅者模式稍微改变下而已，具体可以自行查阅。（￣︶￣）↗
+
+#### 使用
+
+使用的方法有点类似于 Vue：
+
+```html
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+      <h1 x-text="titleText"></h1>
+      <h2 x-html="titleHtml"></h2>
+      <input x-model="inputModel" />
+      <textarea x-model="textareaModel" cols="5" rows="5"></textarea>
+      <select x-model="selectModel">
+        <option value="true">true</option>
+        <option value="false"></option>
+      </select>
+      <img x-bind="src:imgBind" />
+      <ul x-for="item in ulFor">
+        <li>
+          <p x-class="item.class" x-text="item.value"></p>
+        </li>
+      </ul>
+      <div x-show="divShow">Show</div>
+      <div>
+        <button x-if="btnIf === 1">1</button>
+      </div>
+    </div>
+    <script src="vm.js"></script>
+  </body>
+</html>
+```
+
+```javascript
+let vm = new Vm({
+  el: "#app",
+  data: {
+    titleText: "title",
+    titleHtml: "title",
+    inputModel: "input",
+    textareaModel: "textarea",
+    selectModel: true,
+    imgBind: "https://ixk.me/assets/img/1.jpg",
+    ulFor: [
+      {
+        class: "class-1",
+        value: 1,
+      },
+      {
+        class: "class-2",
+        value: 2,
+      },
+    ],
+    divShow: true,
+    btnIf: 1,
+  },
+});
+```
+
+## 结语
+
+总算码完了这篇文章，具体的代码可以到 [Github](https://github.com/syfxlin/code/blob/master/design-pattern/MVVM/) 上查看，文中可能有错误或不足之处，如果您发现了问题欢迎反馈。[]~(￣ ▽ ￣)~*

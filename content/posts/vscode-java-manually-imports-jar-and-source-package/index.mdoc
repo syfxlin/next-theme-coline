@@ -1,0 +1,63 @@
+---
+title: VSCode Java手动导入jar和源码包
+status: publish
+published_time: 2018-12-30T00:00
+modified_time: 2021-07-28T07:23
+layout: post
+categories:
+  - 折腾记录
+tags:
+  - Java
+  - VSCode
+  - 开发环境
+---
+
+> 使用 Maven 等包管理的可以不用向下看了，以下只讲述如何为普通 Java 项目导入单独的 jar 包
+>
+> 之前有一篇文章讲述了如何配置 VSCode 的 Java 调试环境，博主我从配置成功使用到现在一直只使用了 JDK 自带的包，直到昨天由于有一个项目需要进行邮件发送，需要引入 Mail 包，网上的教程大多是在 JDK 中引入 jar 包，但是这时 VSCode 会报一大堆莫名奇妙的错误，然而实际运行 JVM 却没有报错，直到今天学习 JDBC 时 Eclipse 导入 jar 包时才发现可以在每个 Java 项目中独立导入 jar 包，然而 VSCode 又该如何导入 jar 包？
+
+# 探索
+
+在之前的教程中我的方案时利用一个插件来创建 Java 项目，而创建的 Java 项目就是 Eclipse 项目（VSCode 支持 Eclipse 项目），创建项目后我们看到在项目文件夹中有两个子文件夹，一个用来存源码，一个用来存 class 文件，另外还有两个文件一个是`.classpath`文件，一个是`.project`文件，通过从 Eclipse 导出添加过 jar 和源码的项目可以发现，在`.classpath`的文件中多了一行配置
+
+```xml
+<classpath>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+    <attributes>
+      <attribute name="module" value="true"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="src" path="src"/>
+  <classpathentry kind="output" path="bin"/>
+  <!--多出的一行-->
+  <classpathentry kind="lib" path="lib/mysql-connector-java-8.0.13.jar" sourcepath="lib/sources/mysql-connector-java-8.0.13.zip"/>
+</classpath>
+```
+
+从中可以看到，在 VSCode 中引入 jar 包只需将 jar 的路径填入到 path 中，源码路径填入到 sourcepath 中即可
+
+# 实现
+
+第一步：在项目文件夹中添加一个 lib 目录，一般引入的 jar 包都存储在 lib 目录，方便后续操作
+
+第二步：将要引入的 jar 包复制到 lib 目录下
+
+第三步：修改`.classpath`文件，增加一行 classpathentry，并填入正确的路径，可以填相对路径，也可以填绝对路径
+
+```xml
+<classpathentry kind="lib" path="lib/mysql-connector-java-8.0.13.jar" sourcepath="lib/sources/mysql-connector-java-8.0.13.zip"/>
+```
+
+若不导入源码只需将 sourcepath 属性删除即可
+
+若要导入源码请继续往下
+
+第四步：在 lib 目录中新建一个 sources 文件夹，然后将该 jar 包的源码复制到该文件夹即可
+
+第五步：在该 jar 包的 classpathentry 标签中增加 sourcepath 属性，并填入正确的路径
+
+第六步：Ctrl+S 保存，然后回到 java 文件，此时一堆莫名奇妙的报错应该都已经消失了，若还存在，请重新启动 VSCode 或者重置 VSCode 中的 Java 环境
+
+# 结语
+
+这时有些人可能会吐槽这么麻烦为什么不换其他的 IDE，因为已经掉入了 VSCode 的坑里爬不出来了，各种神奇的插件，非常快的启动速度，以及多种编程语言快速切换，博主我有多个工作区，比如 C 和 Java 的，切换时只需关闭目前的工作区然后切换另一个工作区，VSCode 就会将该语言的编译环境自动加载，同时 VSCode 的代码补全也是极为方便的，基本只需要打两个字母然后按下 Tab 键，VSCode 就能完成正确的补全，这时就要吐槽一下 Eclipse 反人类的补全快捷键，大多编辑器和 IDE 的补全快捷键都是 Tab 键，然而 Eclipse 却是不同寻常的 Enter 键，用起来实在难受，然而学校机房就是使用 Eclipse（捂脸

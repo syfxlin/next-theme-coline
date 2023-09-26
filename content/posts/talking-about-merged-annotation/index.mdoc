@@ -1,0 +1,740 @@
+---
+title: 浅谈组合注解 & 注解别名
+layout: post
+status: publish
+published_time: 2021-01-15T00:00
+modified_time: 2023-09-24T17:22
+categories:
+  - 折腾记录
+tags:
+  - Java
+  - 框架
+  - Spring
+---
+## 前言
+
+这篇文章很早就躺在了草稿里了，一直没有写 2333，最近在考试，因为都是一些相对简单的考试，同时又暂停的项目的开发，所以最近相对较闲，便打算把这个坑填一下。
+
+## 什么是组合注解和注解别名？
+
+如果你看过 Spring 的注解的源码，那么这两个概念一定不会陌生。
+
+**注解别名** 指的注解的属性拥有别名的功能，让多个属性值表达同一个意思，如 Spring 的 `@Bean` 注解：
+
+```java
+public @interface Bean {
+	@AliasFor("name")
+	String[] value() default {};
+
+	@AliasFor("value")
+	String[] name() default {};
+}
+```
+
+从代码中看到 `value` 属性和 `name` 属性是相同的，设置 `value` 和 `name` 任意一个值都代表了设置了 Bean 的名称。这就是注解别名。
+
+**组合注解** 简单来说就是 Spring 自行实现的将多个注解组合到一个注解上的功能。如 Spring 里的 `@RestController` 注解：
+
+```java
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Controller
+@ResponseBody
+public @interface RestController {
+	@AliasFor(annotation = Controller.class)
+	String value() default "";
+}
+```
+
+从代码中看到，`@RestController` 注解上标记了 `@Controller` 和 `@ResponseBody` 注解，这样 `@RestController` 就组合了 `@Controller` 和 `@ResponseBody` 的功能。
+
+除了 **组合注解** 和 **注解别名**，Spring 还提供了类似于类继承的 **注解继承** 功能，比如 `@RestController` 的 `value` 属性上标记了 `@AliasFor(annotation = Controller.class)`，此时若设置了 `@RestContoller` 的 `value` 属性，则代表设置了 `@Contoller` 的 `value` 属性。
+
+## Spring 是如何实现的？
+
+首先我们先随便写一个 Demo：
+
+```java
+@Controller
+public class CityController {
+
+    @GetMapping("/city")
+    public String index(Model model) {
+        model.addAttribute("provinces", CityConst.getProvinces());
+        return "city/index";
+    }
+}
+```
+
+```java
+@SpringBootTest
+@Slf4j
+class ApplicationTests {
+
+    @Test
+    void contextLoads() throws NoSuchMethodException {
+        final RequestMapping annotation = AnnotationUtils.getAnnotation(
+            CityController.class.getMethod("index", Model.class),
+            RequestMapping.class
+        );
+        annotation.path();
+    }
+}
+```
+
+启动调试会话，一路步入就可以看到以下的代码段：
+
+```java
+final class TypeMappedAnnotation<A extends Annotation> extends AbstractMergedAnnotation<A> {
+
+    // ...
+
+    static <A extends Annotation> MergedAnnotation<A> from(@Nullable Object source, A annotation) {
+		Assert.notNull(annotation, "Annotation must not be null");
+		AnnotationTypeMappings mappings = AnnotationTypeMappings.forAnnotationType(annotation.annotationType());
+		return new TypeMappedAnnotation<>(mappings.get(0), null, source, annotation, ReflectionUtils::invokeMethod, 0);
+	}
+
+	// ...
+}
+```
+
+可以看到，Spring 在创建 `MergedAnnotation` 前会先获取 `AnnotationTypeMappings`，该对象保存了 `MergedAnnotation.from` 传入的注解及其所有父注解（非 JDK 注解）的 `AnnotationTypeMapping` 信息，`AnnotationTypeMapping` 里保存了根注解（Spring 保存的方式是自下向上的，所以这个的根注解是 `from` 传入的注解），源注解（下一级注解，如 `RequestMapping` 的源注解是 `GetMapping`），别名索引数组，别名指向的方法等信息。然后获取当前传入注解的 `AnnotationTypeMapping` 组成 `MergedAnnotation`。
+
+不过有了 `MergedAnnotation` 那么如何把 `MergedAnnotation` 变成 Java 的注解呢？如果直接返回通过反射获取的注解，那么别名和子注解的值传上来的值就无法被更改，所以为了获得 Java 的注解，Spring 会重新创建该注解的注解代理类。
+
+如果你看过 Java 注解的源码，Java 注解其实是通过 JDK 代理实现的，通过 JDK 代理从 `AnnotationInvocationHandler` 里的 `memberValues` Map 获取注解值。Spring 就是使用类似的方式通过 `MergedAnnotation.synthesize` 方法调用了 `SynthesizedMergedAnnotationInvocationHandler.createProxy` 动态创建了 Java 注解，而 `SynthesizedMergedAnnotationInvocationHandler` 包装了 `MergedAnnotation` 和 `AttributeMethods`。
+
+```java
+final class SynthesizedMergedAnnotationInvocationHandler<A extends Annotation> implements InvocationHandler {
+
+    private final MergedAnnotation<?> annotation;
+	private final AttributeMethods attributes;
+
+    // ...
+
+    static <A extends Annotation> A createProxy(MergedAnnotation<A> annotation, Class<A> type) {
+		ClassLoader classLoader = type.getClassLoader();
+		InvocationHandler handler = new SynthesizedMergedAnnotationInvocationHandler<>(annotation, type);
+		Class<?>[] interfaces = isVisible(classLoader, SynthesizedAnnotation.class) ?
+				new Class<?>[] {type, SynthesizedAnnotation.class} : new Class<?>[] {type};
+		return (A) Proxy.newProxyInstance(classLoader, interfaces, handler);
+	}
+
+	// ...
+}
+```
+
+到此 Spring 处理组合注解的原理的关键部分就差不多讲完了，至于获取值部分就不说明了，只是简单的取到属性对应的方法，然后利用反射获取值。
+
+## 实现
+
+既然知道了原理，那么就可以自行实现一个组合注解 & 注解别名了。
+
+### 方式
+
+在进行编码前我们要先确定我们组合注解的实现方式。Spring 的实现方式较为复杂，所以我们不采用 Spring 的实现方法，而是直接对 Java 注解里的 `memberValues` Map 动手，通过修改这个 Map 的值，我们就可以修改注解的属性值。不过需要注意，Java 注解是单例的，所以我们不能直接修改从反射获取的注解里的 `memberValues`，而是要克隆一份，另外使用 JDK 动态代理创建注解对象。
+
+![](/image/posts/talking-about-merged-annotation/8381e1c7-a40b-47c2-a2c4-912851d8d4aa.793x414.jpg)
+
+### 代码
+
+首先我们先准备 `@AliasFor` 别名注解：
+
+```java
+@Target({ ElementType.METHOD })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface AliasFor {
+    String value() default "";
+
+    Class<? extends Annotation> annotation() default Annotation.class;
+
+    String attribute() default "";
+}
+```
+
+为了方便实现重复注解我添加了一个 `@RepeatItem` 注解：
+
+```java
+@Target({ ElementType.ANNOTATION_TYPE })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface RepeatItem {
+    Class<? extends Annotation> value();
+}
+```
+
+然后就是注解工具类的一些基础方法：
+
+```java
+public class AnnotationUtils {
+    @SuppressWarnings("unchecked")
+    private static Map<String, Object> getMemberValues(
+        final Annotation annotation
+    ) {
+        try {
+            final InvocationHandler invocationHandler = Proxy.getInvocationHandler(
+                annotation
+            );
+            final Field field = invocationHandler
+                .getClass()
+                .getDeclaredField("memberValues");
+            field.setAccessible(true);
+            return (Map<String, Object>) field.get(invocationHandler);
+        } catch (final Exception e) {
+            throw new RuntimeException("Get annotation member values failed");
+        }
+    }
+
+    public static boolean isDefaultValue(
+        final Method method,
+        final Map<String, Object> memberValues
+    ) {
+        return isDefaultValue(method, memberValues.get(method.getName()));
+    }
+
+    public static boolean isDefaultValue(
+        final Method method,
+        final Object value
+    ) {
+        final Object defaultValue = method.getDefaultValue();
+        if (method.getReturnType().isArray()) {
+            return Arrays.equals((Object[]) defaultValue, (Object[]) value);
+        } else {
+            return defaultValue.equals(value);
+        }
+    }
+
+    public static boolean isJdkAnnotation(
+        final Class<? extends Annotation> type
+    ) {
+        return (
+            type == Documented.class ||
+            type == Retention.class ||
+            type == Inherited.class ||
+            type == Native.class ||
+            type == Repeatable.class ||
+            type == Target.class
+        );
+    }
+
+    public static Class<? extends Annotation> getRepeatItem(
+        final Class<? extends Annotation> annotationType
+    ) {
+        final RepeatItem repeatItem = annotationType.getAnnotation(
+            RepeatItem.class
+        );
+        if (repeatItem == null) {
+            return null;
+        }
+        return repeatItem.value();
+    }
+
+    public static Class<? extends Annotation> getRepeatable(
+        final Class<? extends Annotation> annotationType
+    ) {
+        final Repeatable repeatable = annotationType.getAnnotation(
+            Repeatable.class
+        );
+        if (repeatable == null) {
+            return null;
+        }
+        return repeatable.value();
+    }
+}
+```
+
+为了创建注解代理类，我们还需要一个 `InvocationHandler` 用于代理属性方法，我懒得写了就直接把 JDK 里的 `AnnotationInvocationHandler` 拷贝了出来（JDK 里的是私有的不方便使用），由于代码太长了，这里就不贴了，可以到 [Github](https://github.com/syfxlin/xkjava/tree/master/xkjava-framework/src/main/java/me/ixk/framework/utils/AnnotationInvocationHandler.java) 上查看。
+
+然后就是相应的代理工具方法：
+
+```java
+public class AnnotationUtils {
+    @SuppressWarnings("unchecked")
+    public static <A extends Annotation> A annotationForMap(
+        final Class<A> annotationType,
+        final Map<String, Object> memberValues
+    ) {
+        return (A) Proxy.newProxyInstance(
+            annotationType.getClassLoader(),
+            new Class[] { annotationType },
+            new AnnotationInvocationHandler(annotationType, memberValues)
+        );
+    }
+}
+```
+
+然后就是最关键的合并注解值的方法了：
+
+```java
+public class AnnotationUtils {
+    private static Map<String, Object> mergeAnnotationValue(
+        final Annotation annotation,
+        final Map<Class<? extends Annotation>, Map<String, Object>> overwriteMap
+    ) {
+        final Class<? extends Annotation> annotationType = annotation.annotationType();
+        final Map<String, Object> overwrite = overwriteMap.get(annotationType);
+        // 原始 memberValues，不可修改，因为这是单例的
+        final Map<String, Object> memberValues = getMemberValues(annotation);
+        // 实际复制并操作后的 memberValues
+        final Map<String, Object> values = new HashMap<>(memberValues.size());
+        for (Entry<String, Object> entry : memberValues.entrySet()) {
+            final String attributeName = entry.getKey();
+            Object attributeValue = entry.getValue();
+            final Method method = ReflectUtil.getMethod(
+                annotationType,
+                attributeName
+            );
+            final AliasFor aliasFor = method.getAnnotation(AliasFor.class);
+            if (overwrite != null && overwrite.containsKey(attributeName)) {
+                // 如果从子元素设置了重写的值，那么就设置该值
+                attributeValue = overwrite.get(attributeName);
+            } else if (
+                aliasFor != null &&
+                !aliasFor.value().isEmpty() &&
+                isDefaultValue(method, memberValues)
+            ) {
+                // 如果为默认值，同时设置了 AliasFor.value 那么就使用别名的值（即使是默认值也一样）
+                final String alias = aliasFor.value();
+                if (overwrite != null && overwrite.containsKey(alias)) {
+                    attributeValue = overwrite.get(alias);
+                } else {
+                    attributeValue = memberValues.get(alias);
+                }
+            }
+            // 否则把自身 memberValues 值设置到新 Map 中
+            values.put(attributeName, attributeValue);
+            // 如果设置了 AliasFor.annotation 那么就设置父注解的重写值
+            if (aliasFor != null && aliasFor.annotation() != Annotation.class) {
+                final Class<? extends Annotation> parentType = aliasFor.annotation();
+                final Map<String, Object> parentOverwrite = overwriteMap.getOrDefault(
+                    parentType,
+                    new HashMap<>()
+                );
+                parentOverwrite.put(
+                    aliasFor.attribute().isEmpty()
+                        ? attributeName
+                        : aliasFor.attribute(),
+                    attributeValue
+                );
+                overwriteMap.put(parentType, parentOverwrite);
+            }
+        }
+        return values;
+    }
+}
+```
+
+梳理下流程会更方便阅读：
+
+首先我们要明确一点，注解的处理顺序是先子注解，然后父注解。
+
+1. 获取原始 `memberValues` 的 Map
+1. 创建克隆的空 `memberValues`
+1. 循环遍历原始 `memberValues`，取出每一项的值
+1. 通过属性名称从注解 `Class` 查找 `Method`，然后取得 `@AliasFor` 的注解
+1. 如果子注解有传上来覆盖的值，那么就使用这个值（`overwriteMap` 里存放）
+1. 否则看下有没有设置 `@AliasFor` 注解及 `value` 值（别名）如果设置了，则判断是否是默认值（`Method` 可以获取方法默认值，也就是属性默认值），如果不是默认值，那么这个值就是被设置过的，此时就不应该覆盖它。
+1. 如果设置了 `@AliasFor` 注解同时不是默认值，那么就获取别名的值（注意这个别名的值也有可能是子注解传上来的，所以需要判断下 `overwriteMap` 里有没有设置）
+1. 最后将获得的最终的值存入克隆的 `memberValues` 中
+1. 然后处理要传到父注解的值，如果设置了 `@AliasFor` 的 `annotation` 值，那么就将这个值设置到对应的 `overwriteMap` 里，这样父注解在处理的时候就可以获取到这个值了
+
+有了处理注解值的方法，那么就可以写遍历注解的方法了：
+
+```java
+public class AnnotationUtils {
+    private static void walkAnnotation(
+        final AnnotatedElement element,
+        Map<Class<? extends Annotation>, List<Map<String, Object>>> annotationMap,
+        Map<Class<? extends Annotation>, Map<String, Object>> overwriteMap
+    ) {
+        for (Annotation annotation : element.getAnnotations()) {
+            final Class<? extends Annotation> annotationType = annotation.annotationType();
+            if (isJdkAnnotation(annotationType)) {
+                continue;
+            }
+            // 处理当前注解
+            final List<Map<String, Object>> annotations = annotationMap.getOrDefault(
+                annotationType,
+                new ArrayList<>()
+            );
+            for (Annotation item : element.getAnnotationsByType(
+                annotationType
+            )) {
+                annotations.add(mergeAnnotationValue(item, overwriteMap));
+            }
+            annotationMap.put(annotationType, annotations);
+            // 处理重复注解
+            final Class<? extends Annotation> repeatItem = getRepeatItem(
+                annotationType
+            );
+            if (repeatItem != null) {
+                final List<Map<String, Object>> itemList = annotationMap.getOrDefault(
+                    repeatItem,
+                    new ArrayList<>()
+                );
+                for (final Annotation item : (Annotation[]) ReflectUtil.invoke(
+                    annotation,
+                    "value"
+                )) {
+                    itemList.add(mergeAnnotationValue(item, overwriteMap));
+                }
+                annotationMap.put(repeatItem, itemList);
+            }
+            // 处理父注解
+            walkAnnotation(annotationType, annotationMap, overwriteMap);
+        }
+    }
+}
+```
+
+照样写个流程吧：
+
+1. 因为传入的是可被标注的元素，所以就取出这个元素所标注的所有注解，遍历
+1. 如果是 JDK 注解就直接跳过，因为这些注解对我们的程序无用，而且会导致无限递归
+1. 接着就是使用 `AnnotatedElement` 的 `getAnnotationsByType` 方法获取标注在元素上的所有指定注解类型的值。之所以要这么做是因为 Java 支持重复注解，通过 `getAnnotations` 的方法只能取得一个同类型的注解
+1. 取得注解后就调用 `mergeAnnotationValue` 方法合并注解值，同时把要传到父注解的值存入 `overwriteMap` 中
+1. 除了 Java 标准的重复注解，我们还常用带 s 的注解包裹来做到重复注解，如 `@MapperScans` 和 `@MapperScan` 此时就需要特殊处理，这里使用的方法是在带 s 的注解里添加一个 `@RepeatItem` 注解，然后该注解存储单个注解的类型，这样就能把带 s 注解里的单个注解存到它对应类型的注解里。
+1. 处理完当前注解后就接着处理父注解（递归处理）
+
+遍历完所有的注解后，就取得了可标注元素的所有注解处理过的 `memberValues`，此时就可以将 `memberValues` 转成注解了。
+
+```java
+public class AnnotationUtils {
+    private static Map<Class<? extends Annotation>, List<Annotation>> annotationForMergeAnnotation(
+        Map<Class<? extends Annotation>, List<Map<String, Object>>> annotationMap
+    ) {
+        return annotationMap
+            .entrySet()
+            .stream()
+            .collect(
+                Collectors.toMap(
+                    Entry::getKey,
+                    e ->
+                        e
+                            .getValue()
+                            .stream()
+                            .map(
+                                i ->
+                                    AnnotationUtils.annotationForMap(
+                                        e.getKey(),
+                                        i
+                                    )
+                            )
+                            .collect(Collectors.toList()),
+                    (u, v) -> {
+                        throw new IllegalStateException(
+                            String.format("Duplicate key %s", u)
+                        );
+                    },
+                    LinkedHashMap::new
+                )
+            );
+    }
+
+    public static Map<Class<? extends Annotation>, List<Annotation>> mergeAnnotation(
+        final AnnotatedElement element
+    ) {
+        return MERGED_ANNOTATION_CACHE.computeIfAbsent(
+            element,
+            k -> {
+                final Map<Class<? extends Annotation>, List<Map<String, Object>>> annotationMap = new LinkedHashMap<>();
+                walkAnnotation(k, annotationMap, new HashMap<>());
+                return annotationForMergeAnnotation(annotationMap);
+            }
+        );
+    }
+}
+```
+
+此时就有了标注在可标注元素上所有的注解了，有了这些就可以封装成组合注解了：
+
+首先是 `MergedAnnotation` 的接口：
+
+```java
+public interface MergedAnnotation {
+    String VALUE = "value";
+    Logger log = LoggerFactory.getLogger(MergedAnnotation.class);
+
+    /**
+     * 获取所有注解
+     *
+     * @return 注解 Map
+     */
+    Map<Class<? extends Annotation>, List<Annotation>> annotations();
+
+    /**
+     * 获取注解
+     *
+     * @param annotationType 注解类型
+     * @param <A>            注解类型
+     * @return 注解
+     */
+    default <A extends Annotation> A getAnnotation(
+        final Class<A> annotationType
+    ) {
+        return this.getAnnotation(annotationType, 0);
+    }
+
+    /**
+     * 获取注解
+     *
+     * @param annotationType 注解类型
+     * @param index          索引
+     * @param <A>            注解类型
+     * @return 注解
+     */
+    @SuppressWarnings("unchecked")
+    default <A extends Annotation> A getAnnotation(
+        final Class<A> annotationType,
+        final int index
+    ) {
+        final List<Annotation> annotations =
+            this.annotations().get(annotationType);
+        if (
+            annotations == null ||
+            annotations.isEmpty() ||
+            index < 0 ||
+            index >= annotations.size()
+        ) {
+            return null;
+        }
+        if (annotations.size() > 1) {
+            log.warn(
+                "Annotation [{}] is multi, but only get one",
+                annotationType.getName()
+            );
+        }
+        return (A) annotations.get(index);
+    }
+
+    /**
+     * 获取指定类型的注解列表
+     *
+     * @param annotationType 注解类型
+     * @param <A>            注解类型
+     * @return 注解列表
+     */
+    @SuppressWarnings("unchecked")
+    default <A extends Annotation> List<A> getAnnotations(
+        Class<A> annotationType
+    ) {
+        return (List<A>) this.annotations()
+            .getOrDefault(annotationType, Collections.emptyList());
+    }
+
+    /**
+     * 是否存在注解
+     *
+     * @param annotationType 注解类型
+     * @return 是否存在
+     */
+    default boolean hasAnnotation(
+        final Class<? extends Annotation> annotationType
+    ) {
+        return this.annotations().containsKey(annotationType);
+    }
+
+    /**
+     * 是否不存在注解
+     *
+     * @param annotationType 注解类型
+     * @return 是否不存在
+     */
+    default boolean notAnnotation(Class<? extends Annotation> annotationType) {
+        return !this.hasAnnotation(annotationType);
+    }
+
+    /**
+     * 是否包含多个相同类型的注解
+     *
+     * @param annotationType 注解类型
+     * @return 是否包含
+     */
+    default boolean hasMultiAnnotation(
+        final Class<? extends Annotation> annotationType
+    ) {
+        return (
+            this.annotations().containsKey(annotationType) &&
+            this.annotations().get(annotationType).size() != 1
+        );
+    }
+
+    /**
+     * 添加注解
+     *
+     * @param annotation 注解
+     */
+    default void addAnnotation(Annotation annotation) {
+        throw new UnsupportedOperationException(
+            "Unsupported add annotation to merge annotation"
+        );
+    }
+
+    /**
+     * 删除注解
+     *
+     * @param annotationType 注解类型
+     */
+    default void removeAnnotation(Class<? extends Annotation> annotationType) {
+        throw new UnsupportedOperationException(
+            "Unsupported remove annotation to merge annotation"
+        );
+    }
+
+    /**
+     * 删除注解
+     *
+     * @param annotationType 注解类型
+     * @param index          索引
+     */
+    default void removeAnnotation(
+        Class<? extends Annotation> annotationType,
+        int index
+    ) {
+        throw new UnsupportedOperationException(
+            "Unsupported add annotation to merge annotation"
+        );
+    }
+
+    /**
+     * 获取注解值
+     *
+     * @param annotationType 注解类型
+     * @return 注解值
+     */
+    default Object get(Class<? extends Annotation> annotationType) {
+        return this.get(annotationType, VALUE);
+    }
+
+    /**
+     * 获取注解值
+     *
+     * @param annotationType 注解类型
+     * @param name           方法名称
+     * @return 注解值
+     */
+    default Object get(
+        Class<? extends Annotation> annotationType,
+        String name
+    ) {
+        return this.get(annotationType, name, Object.class);
+    }
+
+    /**
+     * 获取注解值
+     *
+     * @param annotationType 注解类型
+     * @return 注解值
+     */
+    default <T> T get(
+        Class<? extends Annotation> annotationType,
+        Class<T> returnType
+    ) {
+        return this.get(annotationType, VALUE, returnType);
+    }
+
+    /**
+     * 获取注解值
+     *
+     * @param annotationType 注解类型
+     * @param name           方法名称
+     * @param returnType     返回类型
+     * @param <T>            注解值类型
+     * @return 注解值
+     */
+    default <T> T get(
+        Class<? extends Annotation> annotationType,
+        String name,
+        Class<T> returnType
+    ) {
+        return this.get(annotationType, name, returnType, 0);
+    }
+
+    /**
+     * 获取注解值
+     *
+     * @param annotationType 注解类型
+     * @param name           方法名称
+     * @param returnType     返回类型
+     * @param index          索引
+     * @param <T>            注解值类型
+     * @return 注解值
+     */
+    default <T> T get(
+        Class<? extends Annotation> annotationType,
+        String name,
+        Class<T> returnType,
+        int index
+    ) {
+        final Annotation annotation = this.getAnnotation(annotationType, index);
+        final Method method = ReflectUtil.getMethodByName(annotationType, name);
+        if (annotation == null || method == null) {
+            return null;
+        }
+        return Convert.convert(
+            returnType,
+            ReflectUtil.invoke(annotation, method)
+        );
+    }
+
+    static MergedAnnotation from(AnnotatedElement element) {
+        return new MergedAnnotationImpl(element);
+    }
+
+    static boolean has(
+        AnnotatedElement element,
+        Class<? extends Annotation> annotationType
+    ) {
+        return from(element).getAnnotation(annotationType) != null;
+    }
+}
+```
+
+然后就是实现类：
+
+```java
+public class MergedAnnotationImpl implements MergedAnnotation {
+
+    private final Map<Class<? extends Annotation>, List<Annotation>> annotations;
+
+    public MergedAnnotationImpl(final AnnotatedElement element) {
+        this.annotations = AnnotationUtils.mergeAnnotation(element);
+    }
+
+    @Override
+    public Map<Class<? extends Annotation>, List<Annotation>> annotations() {
+        return this.annotations;
+    }
+}
+```
+
+到这里我们自己的组合注解就实现完成了，让我们来使用下吧：
+
+```java
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Parent(name = "123")
+public @interface Children1 {
+}
+```
+
+```java
+@Children1
+class MergedAnnotationTest {
+
+    @Test
+    void from() {
+        final MergedAnnotation annotation = MergedAnnotation.from(
+            MergedAnnotationTest.class
+        );
+        final Parent parent = annotation.getAnnotation(Parent.class);
+        assertEquals("123", parent.name());
+        assertEquals("123", parent.value());
+    }
+}
+```
+
+## 结语
+
+组合注解简单化注解配置，用很少的注解来标注特定含义的多个元注解，同时提供了很好的扩展性，可以根据实际需要灵活的自定义注解。经过组合注解的重构后，我们就不再需要写很多注解处理器，避免了重复，同时也不易出错。

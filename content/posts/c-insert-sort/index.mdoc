@@ -1,0 +1,74 @@
+---
+title: C 插入排序
+status: publish
+published_time: 2018-11-20T00:00
+modified_time: 2021-07-28T07:38
+layout: post
+categories:
+  - 折腾记录
+tags:
+  - 算法
+  - Develop
+  - C
+---
+
+> 懒得写开头了(\_　\_)。゜ z ｚＺ，继续下一个排序算法
+
+```c
+#include <stdio.h>
+#define N 10  //定义要排序的数组长度
+
+//插入排序控制Demo
+//插入排序结果和方式
+//结果：输出排序的数组
+//方式：类似遍历比较
+
+//本例排序从低到高
+
+//插入排序函数
+int* Ins_Sort(int n, int nums[])
+{
+    int i, j, temp;
+    for(i = 1; i < n; i++) //外层循环控制循环轮数，从一开始代表第一个元素默认已经排序
+    {
+        for(j = i - 1; j >= 0; j--) //内层循环控制循环比较的轮数
+        {
+            //在下标 i 左边的元素已经排列，所以只要判断当原 i 的元素已经比第 j 个元素小，即完成此轮排列
+            if(nums[j + 1] >= nums[j])
+            {
+                //完成排列时跳出，防止执行无用的步骤
+                break;
+            }
+            else
+            {
+                //交换数据
+                temp = nums[j + 1];
+                nums[j + 1] = nums[j];
+                nums[j] = temp;
+            }
+        }
+    }
+    //返回数组，其实也可以不用返回，因为操作的就是原数组
+    return nums;
+}
+
+int main(int argc, char const *argv[])
+{
+    //要进行排序的数组，这里就不写循环录入了，直接初始化
+    int nums[N] = {9, 2, 6, 1, 8, 5, 4, 3, 7, 10};
+    int i;
+    //调用函数进行排序
+    int *p = Ins_Sort(N, nums);
+    //循环输出排序好的数组，由小到大
+    for(i = 0; i < N; i++)
+    {
+        printf("%d ", p[i]);
+    }
+    printf("\n");
+    for(i = N - 1; i >= 0; i--)
+    {
+        printf("%d ", p[i]);
+    }
+    return 0;
+}
+```

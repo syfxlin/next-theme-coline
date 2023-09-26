@@ -1,0 +1,112 @@
+---
+title: Origami - 简洁轻快的WordPress主题
+status: publish
+published_time: 2019-02-05T00:00
+modified_time: 2021-07-28T07:21
+layout: post
+categories:
+  - 折腾记录
+tags:
+  - Web
+  - Develop
+  - WordPress
+thumbnail: images/2e345f04-6b4e-4c98-b3ea-a91818ad50a2.jpg
+---
+
+Origami v2 现已发布，增加了许多功能，目前已经可以在 WordPress 中直接升级。
+
+QQ 群已建立，794691511(没人用的 Origami)
+
+> 本主题谨献给在我博客道路上遇到的朋友们。
+
+# 前言
+
+其实我很早就想自己写个主题了，由于一些原因我没能把这个想法实现，直到我察觉到最近博客的访问速度变得很慢，迫不得已 才制作了这个主题，主题的 UI 和排版参考之前的主题（我实在不会设计/\_ \\） 现在大部分博主都将博客换成了 Hexo，我之所以还继续使用 WordPress 是因为 WordPress 的写文章和维护较为方便，而且我也不太熟悉 Markdown，另外也有非常多的插件加持，并且不需要第三方评论系统。现在更多的是因为 Gutenberg 编辑器才继续使用 WordPress。
+
+# Origami 主题
+
+Origami 即 折纸，为什么将这个主题称之为折纸主题呢？因为主题的风格偏向纸片化，大多元素都是方方正正的，扁平化设计，并且刚开始制作的时候期望它能像纸片一样轻盈。为什么我会喜欢这种风格呢？其实是我看腻了 MD 的设计，普通的扁平化设计又太“圆滑”，原主题的纸片化设计可以很好的维持长久的观看体验，但是也有比较大的缺点，就是配色不能太鲜艳，当时在调色的时候可头疼了＞︿＜
+
+Origami v2 参考了 [Aurora](https://github.com/chanshiyucx/aurora) 主题的设计改成了 **半透明 + 背景** 的风格，配色使用了 [Spectre.css](https://picturepan2.github.io/spectre/) 默认的配色。
+
+## Feature 特性
+
+- \[**独家**\] REST API 加载，发布评论
+- \[**独家**\] 评论者可在设置的时间内修改或删除评论，不必担心评论错误
+- \[**独家**\] Origami Markdown 区块(支持补全高亮，Gutenberg 区块)
+- \[**独家**\] Origami 代码区块(支持补全高亮，Gutenberg 区块)
+- Live Chat 实时聊天
+- REST API 实时搜索
+- 前端修改主题
+- 3 种布局风格
+- 侧栏右置 / 左置 / 不显示
+- 灵感 / 时光轴 / 友链模板
+- Markdown 评论
+- 流程图 / 时序图 / 甘特图 / Katex 支持
+- Lazyload
+- WorkBox 注册和卸载
+- OwO 表情
+- 页脚显示建站至今的时间
+- 评论者标注（站长，友链认证）
+- 6 个短代码，多种页面模板
+- 可视化编辑器和文本编辑器添加短代码
+- 阅读转移
+- 代码高亮
+- 文章目录
+- ImgBox
+- 评论页面选单
+- …
+
+## Loading speed 加载速度
+
+**Gtmetrix**：100% (Pagespeed) 97% (YSlow) 0.6s (加载时间)
+
+**Lighthouse**：100% (Desktop) 100% (Mobile)
+
+**web.dev**：99% **Loading time**：946ms (第一次加载) 187ms (第二次加载，即有缓存情况)
+
+## Demo 演示
+
+此博客即使用 Origami 主题（v2）
+
+[Origami 演示站（v2）](https://origami.ixk.me)
+
+## Docs 文档
+
+[Wiki](https://doc.ixk.me/origami/)
+
+## Features 功能
+
+请前往 [Origami 演示站](https://origami.ixk.me/) 查看
+
+## Install 安装
+
+前往 [Releases](https://github.com/syfxlin/origami/releases) 下载，若下载速度过慢可以到 [https://lab.ixk.me/wordpress/Origami-x.x.x.zip](https://lab.ixk.me/wordpress/Origami-x.x.x.zip) 进行下载（注意将 x.x.x 改为当前的版本号，此位置的 Origami 随时可能迁移），然后上传到 WordPress 中，确保主题文件夹名称为 Origami
+
+**首次安装请先将对主题进行设置，防止出现未知问题**
+
+**从 v1 版本升级请在升级后重新对主题进行设置**
+
+若要启用 WordBox，请先将主题文件夹下的 js 文件夹中的 sw.js 复制至 WordPress 根目录
+
+> 已经修复了 WorkBox 的缓存规则，这里说明一下，启用 WorkBox 会使用户的浏览器的请求完全被 WorkBox 接管，一旦启用后，页面的加载速度将得到质的提升，但是若要删除就必须加载卸载 WorkBox 的 js，否则用户访问的页面将不会更新
+
+> 若站点使用 https，同时又需要引用 http 的资源，请将功能设置中的阻止混合内容关闭
+
+## Github
+
+求 star =￣ ω ￣=
+
+## Maintainer 维护者
+
+Origami 主题 由 [Otstar Lin](https://ixk.me/) 和下列 [贡献者](https://github.com/syfxlin/origami/graphs/contributors) 的帮助下撰写和维护。
+
+> Otstar Lin -[Personal Website](https://ixk.me/)·[Blog](https://blog.ixk.me/)·[Github](https://github.com/syfxlin)
+
+## License 许可证
+
+根据 GPL V3.0 许可证开源。
+
+# 结语
+
+首先感谢你能看到最后，同时感谢你对该主题的兴趣。无论你是否已经完成建站，我都诚挚邀请你来尝试一下这个主题。 然后，这款主题是开发不久的，尽管我在发布的时候做了细致的测试，也难免存在 Bug，若你在使用中遇到问题，请及时联系我进行修复。 由于第一次接触这种“大型项目”，项目中的代码可能非常混乱，我会在未来继续优化代码 另外，Origami 主题是免费发布的，根据 GPL V3.0 许可证开源，你不需要为此付出任何费用，但是，你必须保留底部的 `Theme - Origami By Otstar Lin` 标识。

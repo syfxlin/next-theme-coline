@@ -1,0 +1,204 @@
+---
+title: 为WordPress启用WorkBox
+status: publish
+published_time: 2019-02-02T00:00
+modified_time: 2021-07-28T07:21
+layout: post
+categories:
+  - 折腾记录
+tags:
+  - WordPress
+  - Service-Worker
+  - WorkBox
+---
+
+> 若你是一个追求极致 Web 体验的站长，那你一定或多或少都听说过 Service Worker，而现在已经是 2019 年了，Service Worker 已经不是一项令人惊叹的技术了，Service Worker 会接管全站的请求，若一不留神用户说不定就再也无法看到站点最新的资讯了，不过 Google Chrome 团队推出了 Workbox，使编写缓存规则不再困难。
+
+本文是面向 WordPress 的教程，不适用于 Typecho
+
+# 使用方法
+
+## 注册 Service Worker
+
+在主题的 functions.php 加入以下代码
+
+```php
+function origami_setting_workbox()
+{
+    echo "<script>if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js');
+        });
+    }</script>";
+}
+add_action('wp_footer', 'origami_setting_workbox', '101');
+```
+
+## 引入 WorkBox 框架
+
+```javascript
+importScripts("https://cdn.jsdelivr.net/npm/workbox-cdn@3.6.3/workbox/workbox-sw.js");
+workbox.setConfig({
+  modulePathPrefix: "https://cdn.jsdelivr.net/npm/workbox-cdn@3.6.3/workbox/",
+});
+
+if (workbox) {
+  console.log(`Yay! Workbox is loaded ?`);
+} else {
+  console.log(`Boo! Workbox didn't load ?`);
+}
+```
+
+若成功引入就会在浏览器的控制台中输出`Yay! Workbox is loaded ?`
+
+同时可以在开发工具中的 Application 选项卡中的 Service Workers 中看到激活信息
+
+## 写入规则
+
+由于 WordPress 是动态博客，所以在写规则的就会遇到一些静态博客不会遇到的问题，比如静态博客的页面是已经渲染好的，只要缓存 html 等静态文件就可以实现离线访问，而 php 的页面是实时渲染的，并且有后台，还有评论系统，这些都不能进行缓存
+
+建议安装 WP Super Cache
+
+首先定义缓存的版本号和默认最大缓存数目（可以忽略，但后面的代码需要进行修改）
+
+```javascript
+let cacheSuffixVersion = "-181111";
+const maxEntries = 100;
+```
+
+然后限制必须使用网络的资源
+
+```javascript
+// 由于我的主题评论是使用Ajax获取然后由前端渲染的，所以要将其设置为网络优先
+workbox.routing.registerRoute(/.*\?action.*/, workbox.strategies.networkFirst());
+// Ajax评论设置为只使用网络
+workbox.routing.registerRoute(/.*&action.*/, workbox.strategies.networkOnly());
+// 后台也设置为只使用网络
+workbox.routing.registerRoute(/.*wp-admin.*/, workbox.strategies.networkOnly());
+// 将rss，sitemap等需要实时更新的页面设为只使用网络
+workbox.routing.registerRoute(/.*sitemap.*/, workbox.strategies.networkOnly());
+workbox.routing.registerRoute(/.*feed.*/, workbox.strategies.networkOnly());
+// 匹配html页面
+workbox.routing.registerRoute(
+  // 使用正则表达式匹配路由
+  /.*\.html'/,
+  workbox.strategies.cacheFirst({
+    // cache storage 名称和版本号
+    cacheName: "html-cache" + cacheSuffixVersion,
+    plugins: [
+      // 使用 expiration 插件实现缓存条目数目和时间控制
+      new workbox.expiration.Plugin({
+        // 最大保存项目
+        maxEntries,
+        // 缓存 30 天
+        maxAgeSeconds: 30 * 24 * 60 * 60,
+      }),
+      // 使用 cacheableResponse 插件缓存状态码为 0 的请求
+      new workbox.cacheableResponse.Plugin({
+        statuses: [0, 200],
+      }),
+    ],
+  })
+);
+// 全站缓存的关键代码
+workbox.routing.registerRoute(
+  // 此处需要更改为站点对应的URL
+  new RegExp("https://dev.ixk.me.*"),
+  workbox.strategies.staleWhileRevalidate({
+    cacheName: "blog-cache" + cacheSuffixVersion,
+    plugins: [
+      // 使用 expiration 插件实现缓存条目数目和时间控制
+      new workbox.expiration.Plugin({
+        // 最大保存项目
+        maxEntries,
+        // 缓存 30 天
+        maxAgeSeconds: 30 * 24 * 60 * 60,
+      }),
+      // 使用 cacheableResponse 插件缓存状态码为 0 的请求
+      new workbox.cacheableResponse.Plugin({
+        statuses: [0, 200],
+      }),
+    ],
+  })
+);
+// 图片，样式表，字体的缓存
+workbox.routing.registerRoute(
+  // Cache Image File
+  /.*\.(?:png|jpg|jpeg|svg|gif)/,
+  workbox.strategies.staleWhileRevalidate({
+    cacheName: "img-cache" + cacheSuffixVersion,
+    plugins: [
+      // 使用 expiration 插件实现缓存条目数目和时间控制
+      new workbox.expiration.Plugin({
+        // 最大保存项目
+        maxEntries,
+        // 缓存 30 天
+        maxAgeSeconds: 30 * 24 * 60 * 60,
+      }),
+      // 使用 cacheableResponse 插件缓存状态码为 0 的请求
+      new workbox.cacheableResponse.Plugin({
+        statuses: [0, 200],
+      }),
+    ],
+  })
+);
+
+workbox.routing.registerRoute(
+  // Cache CSS & JS files
+  /.*\.(css|js)/,
+  workbox.strategies.staleWhileRevalidate({
+    cacheName: "static-assets-cache",
+    plugins: [
+      // 使用 expiration 插件实现缓存条目数目和时间控制
+      new workbox.expiration.Plugin({
+        // 最大保存项目
+        maxEntries,
+        // 缓存 30 天
+        maxAgeSeconds: 30 * 24 * 60 * 60,
+      }),
+      // 使用 cacheableResponse 插件缓存状态码为 0 的请求
+      new workbox.cacheableResponse.Plugin({
+        statuses: [0, 200],
+      }),
+    ],
+  })
+);
+
+workbox.routing.registerRoute(
+  // Cache Fonts files
+  /.*\.(woff|woff2)/,
+  workbox.strategies.staleWhileRevalidate({
+    cacheName: "static-assets-cache",
+    plugins: [
+      // 使用 expiration 插件实现缓存条目数目和时间控制
+      new workbox.expiration.Plugin({
+        // 最大保存项目
+        maxEntries,
+        // 缓存 30 天
+        maxAgeSeconds: 30 * 24 * 60 * 60,
+      }),
+      // 使用 cacheableResponse 插件缓存状态码为 0 的请求
+      new workbox.cacheableResponse.Plugin({
+        statuses: [0, 200],
+      }),
+    ],
+  })
+);
+// 其他的默认规则
+workbox.routing.setDefaultHandler(
+  workbox.strategies.networkFirst({
+    options: [
+      {
+        // 超过 3s 请求没有响应则 fallback 到 cache
+        networkTimeoutSeconds: 3,
+      },
+    ],
+  })
+);
+```
+
+# 结尾
+
+至此站点除了后台，其他的页面应该就可以进行全站离线访问，但是由于使用了缓存，若站点未将评论分离的话，就会导致评论不能实时更新，这时候就可以使用第三方评论系统来代替默认评论，如 Disqus（国内处于被墙状态）
+
+我的新主题已经使用了 WorkBox，可以去尝试一下 [Link](https://dev.ixk.me/) 从缓存中的加载页面的速度可以达到惊人的 219ms。

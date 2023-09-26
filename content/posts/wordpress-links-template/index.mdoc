@@ -1,0 +1,174 @@
+---
+title: WordPress友情链接模板
+status: publish
+published_time: 2018-08-28T00:00
+modified_time: 2021-07-28T07:44
+layout: post
+categories:
+  - 折腾记录
+tags:
+  - PHP
+  - MySQL
+  - Web
+---
+
+> 没错又是一篇水文 （逃
+>
+> 使用此模板需要安装`Link Manager`插件，模板文件已上传至`Github`，可以直接取用。
+
+### 最终效果请自行查看本站`友情链接`页面
+
+## 代码部分
+
+```php
+
+<?php
+/\*
+ \* Template Name: 友情链接
+ \*/
+get\_header(); ?>
+
+<main class="container">
+	<div class="page-friends page-common row">
+		<?php if (have\_posts()): ?>
+			<?php while (have\_posts()) : the\_post(); ?>
+				<h1 class="page-title" style="margin-top:100px;text-align:center;font-size:37px;font-style:italic">
+                    <?php the\_title(); ?>
+                </h1>
+				<article class="page-content" style="text-align:center;">
+					<?php the\_content(); ?>
+				</article>
+			<?php endwhile;  ?>
+		<?php endif; ?>
+<style>
+    .clearfix {
+        zoom:1;
+    }
+
+    .clearfix:after {
+        content:”.”;
+        display:block;
+        visibility:hidden;
+        height:0;
+        clear:both;
+    }
+
+    .readers-list {
+        list-style:none;
+    }
+
+    .readers-list \*{
+        margin:0;
+        padding:0;
+    }
+
+    .readers-list li{
+        position:relative;
+        float:left;
+        margin:6px 6px;
+        height:205px;!important;
+    }
+
+    .readers-list li > a {
+        border: 1px solid #eee;
+        display: block;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition:all .5s;
+        -webkit-box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 1px 3px 0 rgba(0, 0, 0, .12);
+            box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 1px 3px 0 rgba(0, 0, 0, .12);
+    }
+
+    .readers-list li>a {
+        -webkit-transition: -webkit-box-shadow .25s cubic-bezier(.4, 0, .2, 1);
+            transition: -webkit-box-shadow .25s cubic-bezier(.4, 0, .2, 1);
+            transition:         box-shadow .25s cubic-bezier(.4, 0, .2, 1);
+            transition:         box-shadow .25s cubic-bezier(.4, 0, .2, 1), -webkit-box-shadow .25s cubic-bezier(.4, 0, .2, 1);
+        will-change: box-shadow;
+    }
+
+    .readers-list li>a:hover,
+    .readers-list li>a:focus {
+        -webkit-box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12);
+            box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12);
+    }
+
+    #links\_info {
+        position: absolute;
+        bottom: 0px;
+        padding-bottom: 10px;
+        background: #000;
+        width: 100%;
+        height: 200px;
+        -webkit-mask : -webkit-gradient(linear, center top, center bottom, from(rgba(0,0,0,0)), to(rgba(0,0,0,0.7)));
+    }
+
+    #links\_icon {
+        width: 70px;
+        height: 70px;
+        position: absolute;
+        border-radius: 50%;
+        top: 15px;
+        right: 15px;
+    }
+
+    .readers-list em{
+        position: absolute;
+        top: 110px;
+        left: 15px;
+        font-size: 25px;
+        color: #fff;
+    }
+
+    .readers-list span {
+        position: absolute;
+        top:155px;
+        font-size: 18px;
+        left: 15px;
+        width: auto;
+        color: #fff;
+        font-style: italic;
+    }
+
+    @media(min-width:750px){
+        .readers-list {margin: 0px auto;width:750px;}
+        .readers-list li{width:355px;}
+    }
+
+    @media(max-width:749px){
+        .readers-list {margin: 0px auto;width:375px;}
+        .readers-list li{width:355px;}
+    }
+
+</style>
+		<div>
+			<?php
+			    global $wpdb;
+                $qlink="select link\_url,link\_name,link\_image,link\_notes,link\_description,link\_rss from wp\_links where link\_visible='Y' order by link\_id";
+                $links = $wpdb->get\_results($qlink);
+                if(empty($links)) {
+                    echo '<p>暂无友链数据！</p>';
+                }
+                foreach ($links as $comment){
+                    $tmp = "<li><a rel=\\"nofollow\\" title=".$comment->link\_url." target=\\"\_blank\\" href=\\"$comment->link\_url\\" style=\\"background-image:url($comment->link\_image);background-size: cover;\\"><div id=\\"links\_info\\"></div><em>".$comment->link\_name."</em><span>".$comment->link\_notes."</span><img id=\\"links\_icon\\" src=\\"$comment->link\_rss\\"></img></a></li>";
+                    $output1 .= $tmp;
+                }
+                $output1 = "<ul class=\\"readers-list clearfix\\">".$output1."</ul>";
+                echo $output1;
+            ?>
+		</div>
+		<div style="text-align:center;font-size:18px;margin:10px 0px;">此页模板由<a href="https://www.ixk.me">Otstar-Lin</a>于2018制作,源码已上传至<a href="https://github.com/syfxlin/wp-links-template">Github</a></div>
+	</div>
+</main>
+
+<?php get\_footer(); ?>
+```
+
+## 使用方法
+
+安装`Link Manager`插件并激活，在主题模板的文件夹新建一个 PHP 文件，将上面的代码复制进去并保存，或者去`Github`下载已经弄好的文件，并确定文件权限无误，进入 WordPress 后台，添加一个页面，选择友情链接模板进行创建，之后就可以在链接菜单进行添加了。
+
+`图像地址`对应`背景图` `RSS地址`对应`友人头像` `备注`对应`友链简介`
+
+保留`the_content()`函数，可以在编辑器中添加内容。

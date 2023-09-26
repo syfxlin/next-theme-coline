@@ -1,0 +1,80 @@
+---
+title: PHP GD生成验证码
+status: publish
+published_time: 2019-02-14T00:00
+modified_time: 2021-07-28T07:20
+layout: post
+categories:
+  - 折腾记录
+tags:
+  - PHP
+  - PHP-GD
+---
+
+> 此验证码功能将会添加到 Origami 主题中
+
+```php
+/**
+ * 生成验证码
+ *
+ * @author Otstar Lin
+ *
+ * @param Integer $width 验证码宽度(px)
+ * @param Integer $height 验证码高度(px)
+ * @param Integer $num 验证码中字符个数
+ * @param Integer $type 验证码类型：1 纯数字，2 纯字母，3 数字和字母组合
+ * @param String $font_name 验证码字符使用的字体，字体需和该程序文件放置在同一个目录下
+ *
+ * @return String 返回生成验证码对应的字符串
+ */
+function verify_img($width = 100, $height = 40, $num = 5, $type = 3, $font_name = 'Roboto-Medium.ttf')
+{
+    // 创建画布，加载字体
+    $image = imagecreatetruecolor($width, $height);
+    putenv('GDFONTPATH=' . realpath('.'));
+    $font = $font_name;
+    // 创建颜色
+    global $light_c, $deep_c;
+    for($i=0; $i &lt; $num; $i++) {
+        $deep_c[] = imagecolorallocate($image, mt_rand(0, 120), mt_rand(0, 120), mt_rand(0, 120));
+    }
+    $line_c = imagecolorallocate($image, mt_rand(130, 180), mt_rand(130, 180), mt_rand(130, 180));
+    $bg = imagecolorallocate($image, 246, 246, 246);
+    imagefill($image, 0, 0, $bg);
+    // 创建字符
+    global $char_arr;
+    if($type == 1) {
+        $char_arr = range('0', '9');
+    } else if($type == 2) {
+        $char_arr = range('A', 'Z');
+    } else if($type == 3) {
+        $char_arr = range('0', '9');
+        $char_arr = array_merge($char_arr, range('A', 'Z'));
+    }
+    shuffle($char_arr);
+    $char_arr = array_slice($char_arr, 0, $num);
+    // 绘制字符
+    for($i=0; $i &lt; $num; $i++) {
+        imagettftext($image, 18, mt_rand(-30, 30), ($width - 20)/$num * $i + 10, ($height/2) + 18/2, $deep_c[$i], $font, $char_arr[$i]);
+    }
+    // 绘制干扰点
+    for($i=0;$i &lt; $width; $i = $i) {
+        $i += mt_rand(1, 5);
+        $y_num = mt_rand(1, 5);
+        for($j=0; $j &lt; $y_num; $j++) {
+            imagesetpixel($image, $i, mt_rand(0, $height), $deep_c[mt_rand(0, $num - 1)]);
+        }
+    }
+    // 绘制干扰线
+    for($i=0; $i &lt; $width; $i++) {
+        for($j=0; $j &lt; 3; $j++) {
+            imagesetpixel($image, $i, sin($i/50*M_PI)*3 + $height/2 + $j, $line_c);
+        }
+    }
+    header('content-type:image/jpeg');
+    imagejpeg($image);
+    imagedestroy($image);
+    return implode($char_arr);
+}
+verify_img();
+```

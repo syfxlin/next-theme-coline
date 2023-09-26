@@ -1,0 +1,168 @@
+---
+title: "PHP GD图片处理[转换格式-水印-缩略图]"
+status: publish
+published_time: 2019-02-14T00:00
+modified_time: 2021-07-28T07:20
+layout: post
+categories:
+  - 折腾记录
+tags:
+  - PHP
+  - PHP-GD
+---
+
+> 最近准备弄一个图床，既然是图床就需要能对图片进行一些常用的操作，比如水印，转换格式，生成缩略图等，前几天刚好接触了 PHP 的 GD 库，于是便花了点时间封装了这个简单的图片处理函数。
+
+```php
+/**
+ * 将图片转换为webp或其他格式，同时可以添加水印
+ *
+ * @author Otstar Lin
+ *
+ * @param String   $source            原图片地址
+ * @param String   $type              转换后图片格式
+ * @param String   $to                转换后图片地址 若为 null 则代表直接输出到浏览器
+ * @param Array    $thumbnail_size    缩略图尺寸
+ * @param Integer  $thum              要输出到浏览器的图片，当 $to == null 的时候生效, -1 代表使用原尺寸图，其他数字分别代表使用 $thumbnail_size 指定索引的尺寸图
+ * @param Boolean  $watermark         是否加水印
+ * @param Integer  $watermark_type    水印格式 1：文字 2：图片
+ * @param String   $watermark_content 水印内容，若为图片则是水印图片地址
+ * @param Integer  $position          水印位置
+ * @param Integer  $alpha             水印透明度
+ * @param Array    $color             水印内容颜色
+ * @param Integer  $font_size         水印文字大小
+ * @param String   $font_name         水印字体地址
+ */
+function image_change($source, $type='webp', $to = null, $thumbnail_size = [], $thum = -1,
+                      $watermark = false, $watermark_type = 1, $watermark_content = '', $position = 9,
+                      $alpha = 0, $color = [0, 0, 0], $font_size = 14, $font_name = 'Roboto-Medium.ttf')
+{
+    $image = imagecreatefromstring(file_get_contents($source));
+    // 生成水印
+    if($watermark) {
+        // 获取原图信息
+        $image_info = getimagesize($source);
+        // 设置颜色
+        $content_color = imagecolorallocatealpha($image, $color[0], $color[1], $color[2], $alpha);
+        // 载入字体
+        putenv('GDFONTPATH=' . realpath('.'));
+        $font = $font_name;
+        $left = 0;
+        $top = 0;
+        // 获取水印占据的空间大小
+        $watermark_content_info = [];
+        if($watermark_type == 1) {
+            $temp = imagettfbbox($font_size, 0, $font_name, $watermark_content);
+            $watermark_content_info[] = $temp[2] - $temp[0];
+            $watermark_content_info[] = $temp[1] - $temp[7];
+        } else {
+            $temp = getimagesize($watermark_content);
+            $watermark_content_info[] = $temp[0];
+            $watermark_content_info[] = $temp[1];
+        }
+        // 对水印进行定位
+        switch($position) {
+            case 1:
+                $left = 20;
+                $top = 20;
+                break;
+            case 2:
+                $left = $image_info[0]/2 - $watermark_content_info[0]/2;
+                $top = 20;
+                break;
+            case 3:
+                $left = $image_info[0] - $watermark_content_info[0] - 20;
+                $top = 20;
+                break;
+            case 4:
+                $left = 20;
+                $top = $image_info[1]/2 - $watermark_content_info[1]/2;
+                break;
+            case 5:
+                $left = $image_info[0]/2 - $watermark_content_info[0]/2;
+                $top = $image_info[1]/2 - $watermark_content_info[1]/2;
+                break;
+            case 6:
+                $left = $image_info[0] - $watermark_content_info[0] - 20;
+                $top = $image_info[1]/2 - $watermark_content_info[1]/2;
+                break;
+            case 7:
+                $left = 20;
+                $top = $image_info[1] - $watermark_content_info[1] - 20;
+                break;
+            case 8:
+                $left = $image_info[0]/2 - $watermark_content_info[0]/2;
+                $top = $image_info[1] - $watermark_content_info[1] - 20;
+                break;
+            case 9:
+                $left = $image_info[0] - $watermark_content_info[0] - 20;
+                $top = $image_info[1] - $watermark_content_info[1] - 20;
+                break;
+        }
+        // 对文字水印和图片水印进行不同的处理
+        if($watermark_type == 1) {
+            imagettftext($image, $font_size, 0, $left, $font_size + $top, $content_color, $font, $watermark_content);
+        } else {
+            $watermark_image = imagecreatefromstring(file_get_contents($watermark_content));
+            imagecopy($image, $watermark_image, $left, $top, 0, 0, $watermark_content_info[0], $watermark_content_info[1]);
+        }
+    }
+    // 获取图片文件名（去除后缀）
+    $image_pathinfo = pathinfo($source);
+    $image_name = str_replace('.'.$image_pathinfo['extension'], '', $image_pathinfo['basename']);
+    $path = null;
+    // 输出原图
+    if($to === null) {
+        header('Content-type:image/'.$type);
+    } else {
+        $path = $to.$image_name.'.'.$type;
+    }
+    if($type == 'jepg') {
+        if($thum == -1) imagejpeg($image, $path);
+    } else if($type == 'png') {
+        if($thum == -1) imagepng($image, $path);
+    } else {
+        if($thum == -1) imagewebp($image, $path);
+    }
+    // 输出缩略图
+    foreach ($thumbnail_size as $num =&gt; $size) {
+        $set = true;
+        if(!isset($size['height'])) {
+            $set = false;
+            $size['height'] = $size['width'] * $image_info[1]/$image_info[0];
+        }
+        $thum_img = imagecreatetruecolor($size['width'], $size['height']);
+        imagecopyresampled($thum_img, $image, 0, 0, 0, 0, $size['width'], $size['height'], $image_info[0], $image_info[1]);
+        if($to !== null) {
+            if($type == 'jepg') {
+                imagewebp($thum_img, $to.$image_name.'-'.$size['width'].'.'.$type);
+            } else if($type == 'png') {
+                imagewebp($thum_img, $to.$image_name.'-'.$size['width'].'.'.$type);
+            } else {
+                imagewebp($thum_img, $to.$image_name.'-'.$size['width'].'.'.$type);
+            }
+        } else {
+            if($num == $thum) {
+                if($type == 'jepg') {
+                    imagewebp($thum_img);
+                } else if($type == 'png') {
+                    imagewebp($thum_img);
+                } else {
+                    imagewebp($thum_img);
+                }
+            }
+        }
+    }
+}
+// 缩略图的尺寸
+$thum = [
+    [
+        'width' =&gt; 200,
+    ],
+    [
+        'width' =&gt; 400,
+        'height' =&gt; 200
+    ]
+];
+image_change('img.png', 'webp', '', $thum, -1, true, 1, 'Otstar Lin', 9, 0);
+```

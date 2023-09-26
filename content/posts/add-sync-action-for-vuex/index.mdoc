@@ -1,0 +1,187 @@
+---
+title: 为Vuex添加同步Action
+status: publish
+published_time: 2019-11-16T00:00
+modified_time: 2021-07-28T07:12
+layout: post
+categories:
+  - 折腾记录
+tags:
+  - Vue
+  - Vuex
+  - JavaScript
+---
+
+## 为什么要添加同步 Action？
+
+在某些操作中，如获取内存中的数据时，需要立即返回对应的值，而 Vuex 的 Action 规定了只能返回一个 Promise，这时，如果我们想获取返回值就需要使用 then 或者 await，代码就会变得不直观，而如果触发 Mutation 再从 State 获取值也是同理，所以如何能让 Action 不是异步的又能保持和 Vuex 的 Action 拥有一样的功能呢？
+
+## 添加同步 Action
+
+首先我们先看看 Vuex 的 Action 的结构是如何的：
+
+```javascript
+const actions = {
+  asyncAction(context, data) {
+    // do soming...
+  },
+};
+```
+
+可以看到，action 中传入了 context 和 data，所以我们添加的同步 action 也需要增加这两个参数，同时将 store 绑定到 action 的 this。
+
+```javascript
+const actions = {
+  asyncAction(context, data) {
+    // do soming...
+  },
+};
+
+export const syncActions = {
+  // 同时导出，以便后续的操作
+  syncActin(context, data) {
+    // do soming...
+    return val;
+  },
+};
+
+//...
+
+export default {
+  namespaced: true,
+  state,
+  getters,
+  actions,
+  mutations,
+};
+```
+
+在 index.js 导入对应的模块和同步 actions 对象，同时导出修改过的同步 action，用于 mapSyncActions，并为每个同步 action 绑定 this 和注入参数。
+
+```javascript
+import note, { syncActions as syncNote } from "./modules/note";
+import { dispatchSync } from "./syncActions";
+
+export const syncActions = {
+  note: syncNote,
+};
+
+for (const nKey in syncActions) {
+  let getters = {};
+  for (const gKey of Object.keys(store.getters)) {
+    let k = gKey.split("/");
+    if (k[0] === nKey) {
+      Object.defineProperty(getters, k[1], {
+        get() {
+          return store.getters[gKey];
+        },
+      });
+    }
+  }
+  for (const iKey in syncActions[nKey]) {
+    syncActions[nKey][iKey] = syncActions[nKey][iKey].bind(store, {
+      state: store.state[nKey],
+      rootState: store.state,
+      commit: function (type, payload = null, options = null) {
+        store.commit(nKey + "/" + type, payload, options);
+      }.bind(store),
+      dispatch: function (type, payload = null, options = { root: false }) {
+        let t = options.root ? type : nKey + "/" + type;
+        return store.dispatch(t, payload);
+      }.bind(store),
+      dispatchSync: function (type, payload = null, options = { root: false }) {
+        let t = options.root ? type : nKey + "/" + type;
+        return dispatchSync(t, payload);
+      }.bind(store),
+      rootGetters: store.getters,
+      getters: getters,
+    });
+  }
+}
+
+store.syncActions = syncActions;
+store.dispatchSync = dispatchSync;
+```
+
+然后，我们还要实现对应的 dispatch 方法和 mapActions 方法，来实现调用该 action，在 index.js 同级文件夹下添加一个 syncActions.js
+
+```javascript
+import { syncActions } from "./index";
+
+function addMethod(object, name, fn) {
+  var old = object[name];
+  object[name] = function () {
+    if (fn.length === arguments.length) {
+      return fn.apply(this, arguments);
+    } else if (typeof old === "function") {
+      return old.apply(this, arguments);
+    }
+  };
+}
+
+const mod = {};
+
+addMethod(mod, "mapSyncActions", (map) => {
+  let fn = {};
+  let namespace = "";
+  let action = "";
+  for (let i = 0; i < map.length; i++) {
+    [namespace, action] = map[i].split("/");
+    if (syncActions[namespace]) {
+      fn[action] = syncActions[namespace][action];
+    }
+  }
+  return fn;
+});
+
+addMethod(mod, "mapSyncActions", (namespace, map) => {
+  let fn = {};
+  for (let i = 0; i < map.length; i++) {
+    if (syncActions[namespace]) {
+      fn[map[i]] = syncActions[namespace][map[i]];
+    }
+  }
+  return fn;
+});
+
+export const mapSyncActions = mod.mapSyncActions;
+export function dispatchSync(type, payload = null) {
+  let namespace = "";
+  let action = "";
+  [namespace, action] = type.split("/");
+  if (syncActions[namespace]) {
+    return syncActions[namespace][action](payload);
+  }
+}
+```
+
+如果要在 Vuex 模块中使用，只需要导入 syncActions.js 然后同 Vuex 的 action 调用一样即可。
+
+```javascript
+import { dispatchSync } from "../syncActions";
+
+let info = dispatchSync("note/listOperate", {
+  operate: "get",
+  storage: storage,
+  path: path,
+});
+```
+
+若要在组件中使用，只需要同 mapActions 一样使用 mapSyncActions 即可，或者使用 dispatchSync。
+
+```javascript
+import { mapSyncActions } from "./store/syncActions";
+
+export default {
+  methods: {
+    ...mapSyncActions("note", ["listOperate"]),
+    fun() {
+      this.$store.dispatchSync("note/listOperate");
+    },
+  },
+};
+```
+
+## 结语
+
+说实在搞这个其实没啥用，因为用到的机会其实也很小，只是当初我把 XK-Note 重构到 Vuex 时，不想修改太多的代码逻辑搞出来的，本文的实例具体可以查看 XK-Note。

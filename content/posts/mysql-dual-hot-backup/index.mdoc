@@ -1,0 +1,177 @@
+---
+title: Mysql双机热备实战
+layout: post
+status: publish
+published_time: 2018-07-11T00:00
+modified_time: 2023-09-24T17:24
+categories:
+  - 折腾记录
+tags:
+  - MySQL
+  - Web
+  - Develop
+---
+> 由于跟 [Tao.cat](https://tao.cat) 的博主合租一台 VPS，但由于 Vultr 还有余额并且以后会将博客迁出合租的服务器到时候迁移又很麻烦，所以便利用分区解析将国内的流量引到合租服务器，国外流量引到 Vultr 的服务器，但同步又是个大问题，冷备份会丢数据，所以经过一番思考决定采用热备份的方式同步数据。
+
+由于缓存插件带来了一些大坑，技术欠佳，暂时无法填上，所以博客放弃双机集群
+
+## 准备工作
+
+- 两台服务器，建议异地
+- 尽量使用 相同版本 的 Mysql
+- 确保两台服务器能互相交流
+- 确保 Mysql 端口（3306）是通的
+- 尽量先在测试服务器配置成功后再进行业务服务器配置
+
+---
+
+## 主服务器Ａ配置
+
+### 第一步：停止所有业务，避免有新的数据库写入
+
+强烈建议停用所有业务　因为后面有一步会涉及到动态数据，我第一次配置就是因为数据变化导致启用失败。
+
+停用方案比如 WHMCS 和 WordPress 的维护模式
+
+### 第二步：导出数据库
+
+命令行或者 phpmysql 都可以
+
+```bash
+mysqldump -u 用户 -p 密码 数据库 > backup.sql
+```
+
+以下是一个事例（假设用户是 root ，密码是 1234 ，需要备份的数据库是 wordpress ）
+
+```bash
+mysqldump -uroot-p1234 wordpress > backup.sql
+```
+
+### 第三步：修改主服务器 A 的 mysql 配置文件
+
+一般情况，配置 mysql 的位置文件在 /etc/my.cnf
+
+在 [mysqld] 标签下增加以下内容
+
+```ini
+#一般配置文件已经有了，开启日志
+log-bin = mysql-bin #一般配置文件自带了
+binlog_format = mixed #随便写但 主从的数字不可相同
+server-id = 1 #备份的数据库名称
+binlog-do-db = wordpress #集群的服务器数量，看你一共想要多少台热备份
+auto-increment-increment = 2
+#auto_increment_offset ＝ 1 设置步长,这里设置为 1,这样 Master 的 auto_increment 字段产生的数值是:1, 3, 5, 7, …等奇数 ID，不高于上面这个参数
+auto-increment-offset = 1
+```
+
+设置完后请重启 mysql 服务，以便设置生效
+
+```bash
+service mysql restart
+```
+
+### 第四步：在主服务器 A 连上 mysql
+
+```bash
+mysql -u 用户 -p 密码
+```
+
+mysql 的连接命令为 mysql -uroot -p1234 (这里假设用户是 root,密码是 1234)需要注意的是,u 和用户,p 和密码之间没有空格。
+
+![](/image/posts/mysql-dual-hot-backup/34c3df0d-6cf8-4565-af3a-c11fcdea23fa.570x156.jpg)
+
+### 第五步：在主服务器 A 上创建用于备份的用户
+
+该命令需要在上步连接 mysql 后，运行于 mysql 的命令行模式
+
+```sql
+grant replication slave on \*.\* to '用户名'@'从服务器 B 的 IP' identified by '用户密码';
+```
+
+需要在把上面命令的用户名，密码和从服务器的 IP 换成你自己的。下面是一个例子：
+
+```sql
+grant replication slave on \*.\* to 'slave1'@'192.168.1.1' identified by '1234';
+```
+
+该命令的意思就是：创建一个用于备份的用户，用户名是 slave1，密码是 1234，这个用户只允许从 192.168.1.1 这个 IP 的机子上登陆。
+
+![](/image/posts/mysql-dual-hot-backup/32d342bc-224d-419e-a17a-ed0b23b958b9.757x121.jpg)
+
+### 第六步：取得主服务器 A 的 mysql 目前的状态
+
+```sql
+show slave status\\G
+```
+
+目的是使同步初始化，该从那行开始执行同步。
+
+![](/image/posts/mysql-dual-hot-backup/99a909f9-bdad-4b34-ad61-cafed394bbd6.469x120.jpg)
+
+**请记下这个 File 和 Position 的内容！**
+
+## 从服务器 B 配置
+
+一般情况，配置 mysql 的位置文件在 /etc/my.cnf
+
+在 [mysqld] 标签下增加以下内容
+
+```ini
+#一般默认都有了，开启 log
+log-bin = mysql-bin #一般默认都有了
+binlog_format = mixed #随便写但 主从的数字不可相同
+server-id = 2 #进行镜像处理的数据库
+replicate-do-db = wordpress #这行照抄
+relay_log = mysqld-relay-bin #用从属服务器上的日志功能
+log-slave-updates = ON
+```
+
+### 第三步：连接上从服务器 B 的 mysql 命令行模式
+
+```bash
+mysql -u 用户 -p 密码
+```
+
+### 第四步：给从服务器 B 设置主服务器的相关信息
+
+在命令行模式下运行下列命令：
+
+```sql
+CHANGE MASTER TO MASTER_HOST = '主服务器 A 的 IP', MASTER_USER = '备份的用户名', MASTER_PASSWORD = '备份用户的密码', MASTER_LOG_FILE='填入上面获取 File 的内容',MASTER_LOG_POS=同样填入 Position 内容;
+```
+
+下面是一个例子：
+
+```sql
+CHANGE MASTER TO MASTER_HOST = '192.168.1.1', MASTER_USER = 'slave1', MASTER_PASSWORD = '1234', MASTER_LOG_FILE='mysql-bin.000005',MASTER_LOG_POS=327;
+```
+
+### 第五步：启动 slave
+
+在 mysql 的命令行模式下输入：
+
+```sql
+start slave;
+```
+
+![](/image/posts/mysql-dual-hot-backup/39bb3d70-0cd6-4646-9aff-e2363dbd4cc4.277x45.jpg)
+
+### 第六步：查看从服务器是否正常运行
+
+在 mysql 的命令行模式下，运行以下命令：
+
+```sql
+show slave status\\G
+```
+
+请务必确保 Slave_IO_Running 和 Slave_SQL_Running 的值都是 yes ，就表示成功了，如果任何一个是 NO 那就说明没有成功。博主由于没有将 WordPress 进入维护模式，所以 File 和 Position 数值变化导致启动失败。
+
+![](/image/posts/mysql-dual-hot-backup/cc1c6dc1-f567-4ab9-9db0-b8e472c77955.543x362.jpg)
+
+### 第七步：测试是否同步
+
+这步很简单，进入 A 服务器的 phpmyadmin 随便改一下数值然后进 B 服务器查看，若数值变为你更改的数值，即确保 A 和 B 处于备份状态。
+
+### 第八步：双机互相同步
+
+就是将 A 服务器看作从服务器，B 服务器看作是主服务器配置一遍就行。

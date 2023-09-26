@@ -1,0 +1,295 @@
+---
+title: C链表实现重制版
+status: publish
+published_time: 2018-12-26T00:00
+modified_time: 2021-07-28T07:24
+layout: post
+categories:
+  - 折腾记录
+tags:
+  - 算法
+  - C
+---
+
+> 重写了 C 链表的算法，将原本多个函数整合成一个函数，并且保留原本功能的函数，只不过现在是通过调用父函数实现，也就是子函数通过调用一个集成了多种功能的父函数实现部分父函数功能，减少了大量的代码，另外目前新算法是在之前写的 Java 链表的基础上写的，并且改进了部分代码，重新看了一遍自己写的 Java 链表才发现还有许多不足，不久后将会在这个算法上修改自己写的 Java 链表，(￣ ▽ ￣)"
+>
+> Coding 了两个小时终于将排序部分弄完了，这次加入了快速排序，链表的排序不再缓慢，这是不可能的，其实快速排序在某些情况下的速度会降到 O(N^2)，正常情况下的时间复杂度是 O(NlogN)，还加入了两个获取数据的函数
+
+```c
+#include <stdio.h>
+#include <malloc.h>
+#include <time.h>
+//数据块
+typedef struct Data
+{
+    int intData;
+    char charData;
+} Data,*pData;
+
+//链表结构
+typedef struct Node
+{
+    // 指向上一个节点的指针
+    struct Node *prev;
+    // 数据域
+    struct Data *data;
+    // 指向下一个节点的指针
+    struct Node *next;
+} Node,*pNode;
+
+// 头节点
+pNode head = NULL;
+// 尾节点
+pNode end = NULL;
+// 链表长度
+int len = 0;
+
+//添加节点函数，传入一个链表
+void Add(int i/*插入的位置，若为 -1 则代表从尾插入*/, pData data/*传入数据域*/, pNode havaNode) {
+    len++;
+    // 定位
+    int j;
+    // 定义新节点
+    pNode newNode = NULL;
+    if(havaNode == NULL) { // 判断是创建新节点还是，已有节点
+        // 创建新节点
+        newNode = (pNode)malloc(sizeof(Node));
+        // 将新节点的数据域指向传入的数据域
+        newNode->data = data;
+    } else { // 若为已有节点就将已有节点定义为newNode
+        newNode = havaNode;
+    }
+    // 设置新节点的指针域，防止形成野指针
+    newNode->prev = NULL;
+    newNode->next = NULL;
+    // 创建定位节点，指向链表头节点
+    pNode indexNode = head;
+
+    if(head == NULL) { // 判断链表是否为空，若为空只需将新节点设为头节点和尾节点即可
+        // 设置新节点为头节点和尾节点
+        head = newNode;
+        end = newNode;
+        return;
+    }
+
+    if(i == 0) { // 判断是否是插入到第一个节点
+        // 将新节点添加至头节点前
+        newNode->next = head;
+        head->prev = newNode;
+        // 设置新节点为头节点
+        head = newNode;
+        return;
+    } else if(i == -1) { // 判断是否添加至最后一个节点
+        // 定位到尾节点
+        while(indexNode->next != NULL) {
+            indexNode = indexNode->next;
+        }
+    }
+
+    // 若在中间插入，则将定位节点定位到该节点的上一个节点
+    for(j = 0; j < i-1 && indexNode != NULL; j++) {
+        indexNode = indexNode->next;
+    }
+
+    // 判断目前的节点是否是最后一个节点，也就是插入节点是否是插在尾部，i=-1 的插入操作也是在这完成的
+    if(indexNode->next == NULL) {
+        // 插入新节点到链表尾部
+        indexNode->next = newNode;
+        newNode->prev = indexNode;
+        // 重新设置end节点
+        end = newNode;
+        return;
+    }
+
+    // 下方是新节点插入中间的情况
+    // 创建临时节点，指向定位节点的下一个节点，结构和步骤和Java链表相同，这里就不写注释了
+    pNode tempNode = indexNode->next;
+    indexNode->next = newNode;
+    newNode->next = tempNode;
+    newNode->prev = indexNode;
+    tempNode->prev = newNode;
+    return;
+}
+
+void AddFirst(pData data) {
+    Add(0, data, NULL);
+}
+
+void AddLast(pData data) {
+    Add(-1, data, NULL);
+}
+
+void Insert(int i, pNode havaNode) {
+    Add(i, NULL, havaNode);
+}
+
+void Delete(int i/*删除的位置*/) {
+    len--;
+    // 判断是否是删除第一个节点
+    if (i == 0) {
+        // 将头节点指向第二个节点，然后将头节点的prev设置为NULL，这样就屏蔽掉了第一个节点
+        head = head->next;
+        head->prev = NULL;
+        return;
+    }
+    // 若是删除最后一个节点，那只需将尾节点移到倒数第二个节点即可
+    else if (i == -1) {
+        end = end->prev;
+        end->next = NULL;
+        return;
+    }
+
+    // 递增定位
+    int j;
+    // 创建定位节点，将其指向头节点
+    pNode indexNode = head;
+    // 将定位节点移至要删除节点的上一个节点
+    for (j = 0; j < i - 1 && indexNode != NULL; j++) {
+        indexNode = indexNode->next;
+    }
+    // 判断要删除节点是否是最后一个节点
+    if (indexNode->next->next == NULL) {
+        // 操作方式同删除头节点与
+        end = end->prev;
+        end->next = NULL;
+        return;
+    }
+    // 要删除节点的下一个节点prev设置为要删除节点的上一个节点
+    indexNode->next->next->prev = indexNode;
+    // 将要删除节点的上一个节点的next设置为要删除节点的下一个节点
+    indexNode->next = indexNode->next->next;
+}
+
+void Clear() {
+    len = 0;
+    free(head);
+    head = NULL;
+    end = NULL;
+}
+
+void Resever() {
+    // 创建临时节点用来临时存储指向数据
+    pNode tempNode = NULL;
+    // 将头节点与尾节点交换
+    tempNode = head;
+    head = end;
+    end = tempNode;
+    // 创建定位节点
+    pNode indexNode = head;
+    // 循环交换next和prev数据
+    while (indexNode->prev != NULL && (indexNode->next != NULL || indexNode == head)) {
+        tempNode = indexNode->next;
+        indexNode->next = indexNode->prev;
+        indexNode->prev = tempNode;
+        indexNode = indexNode->next;
+    }
+    // 设置最后一个节点的next为null
+    end->next = NULL;
+    // 设置最后一个节点的prev数据
+    end->prev = tempNode->next;
+}
+
+pData GetData(int i) {
+    if(i < len/2) {
+        pNode indexNode = head;
+        for(int j = 0; j < i && indexNode != NULL; j++) {
+            indexNode = indexNode->next;
+        }
+        return indexNode->data;
+    } else {
+        pNode indexNode = end;
+        for(int j = len - 2; j >= i && indexNode != NULL; j--) {
+            indexNode = indexNode->prev;
+        }
+        return indexNode->data;
+    }
+}
+
+pNode GetNode(int i) {
+    if(i < len/2) {
+        pNode indexNode = head;
+        for(int j = 0; j < i && indexNode != NULL; j++) {
+            indexNode = indexNode->next;
+        }
+        return indexNode;
+    } else {
+        pNode indexNode = end;
+        for(int j = len - 2; j >= i && indexNode != NULL; j--) {
+            indexNode = indexNode->prev;
+        }
+        return indexNode;
+    }
+}
+
+//链表排序-从小到大
+void Bubble_Sort()
+{
+    //定义排序个数和下标的变量
+    int i, j, k;
+    //定义判断链表个数的链表和用来判断大小的链表
+    pNode p = head, temp;
+    //外层循环控制循环轮数
+    for(i = 0; i < len - 1; i++)
+    {
+        //内层循环控制每轮比较次数
+        for(j = 0; j < len - i - 1; j++)
+        {
+            temp = GetNode(j);
+            if(temp->data->intData > temp->next->data->intData)
+            {
+                //交换的方式是先删除大数据的节点，然后在添加回链表
+                //删除大数据的节点
+                Delete(j);
+                //将删除后的节点添加会链表的下一个节点
+                Insert(j+1,temp);
+            }
+        }
+    }
+}
+
+//快速排序函数
+void Quick_Sort(pNode left, pNode pivot, int l, int p)
+{
+    int r = p - 1;
+    pNode right = pivot->prev;
+    int l_temp = l;
+    pNode left_temp = left;
+    pData tempData;
+    while(l < r) {
+        while(left->data->intData < pivot->data->intData) {
+            l++;
+            left = left->next;
+            if(l > r) break;
+        }
+        while(right->data->intData > pivot->data->intData) {
+            r--;
+            right = right->prev;
+            if(l > r) break;
+        }
+        if(l >= r) break;
+        tempData = left->data;
+        left->data = right->data;
+        right->data = tempData;
+    }
+    if(left->data->intData >= pivot->data->intData) {
+        tempData = left->data;
+        left->data = pivot->data;
+        pivot->data = tempData;
+    }
+    if(l_temp < l - 1) Quick_Sort(left_temp, left->prev, l_temp, l - 1);
+    if(l + 1 < p) Quick_Sort(left->next, pivot, l + 1, p);
+}
+
+int main() {
+    for(int i = 0;i <= 5;i++) {
+        pData data = (pData)malloc(sizeof(Data));
+        scanf("%d",&data->intData);
+        AddFirst(data);
+    }
+    // Resever();
+    // Bubble_Sort();
+    Quick_Sort(head, end, 0, len - 1);
+    // pNode node2 = GetNode(3);
+    return 0;
+}
+```
