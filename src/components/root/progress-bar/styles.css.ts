@@ -1,3 +1,3 @@
 import { theme } from "../../../theme/theme.css";
 
-export const color = theme.color.primary.text;
+export const color = theme.color.text.primary;

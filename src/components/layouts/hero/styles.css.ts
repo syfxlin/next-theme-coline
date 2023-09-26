@@ -21,12 +21,12 @@ export const author = styled.css`
   line-height: ${theme.lineHeight.default};
   font-weight: ${theme.fontWeight.default};
   margin: ${theme.spacing.calc(2)} 0 0 0;
-  color: ${theme.color.text.x1};
+  color: ${theme.color.text.title};
 `;
 
 export const description = styled.css`
   font-size: ${theme.fontSize.calc(1)};
   line-height: ${theme.lineHeight.default};
-  color: ${theme.color.text.x3};
+  color: ${theme.color.text.description};
   margin: 0;
 `;

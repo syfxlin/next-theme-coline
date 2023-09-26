@@ -7,7 +7,7 @@ export const container = styled.css`
   overflow: hidden;
   position: relative;
   padding: ${theme.spacing.calc(5)} ${theme.spacing.calc(6)};
-  background: ${theme.color.background.x2};
+  background: ${theme.color.background.card};
   margin-top: ${theme.spacing.calc(4)};
   margin-bottom: ${theme.spacing.calc(4)};
   font-size: ${theme.fontSize.calc(1)};
@@ -34,8 +34,8 @@ export const container = styled.css`
 export const section = styled.css`
   display: flex;
   align-items: center;
-  color: ${theme.color.text.x3};
-  fill: ${theme.color.text.x3};
+  color: ${theme.color.text.description};
+  fill: ${theme.color.text.description};
   font-size: ${theme.fontSize.calc(0.9)};
 `;
 

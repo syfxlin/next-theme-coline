@@ -81,11 +81,9 @@ export default async function ArchivesPage() {
             {[...data.categories]
               .sort((i1, i2) => i2.count - i1.count)
               .map((i) => (
-                <li key={`category-${i.name}`}>
-                  <Link tippy aria-label={`分类：${i.name}`} href={i.link}>
-                    {i.name} ({i.count})
-                  </Link>
-                </li>
+                <Link key={`category-${i.name}`} tippy aria-label={`分类：${i.name}`} href={i.link}>
+                  {i.name} ({i.count})
+                </Link>
               ))}
           </List>
         </section>
@@ -97,11 +95,9 @@ export default async function ArchivesPage() {
             {[...data.archives]
               .sort((i1, i2) => i2.name.localeCompare(i1.name))
               .map((i) => (
-                <li key={`archive-${i.name}`}>
-                  <Link tippy aria-label={`归档：${i.name}`} href={i.link}>
-                    {i.name} ({i.count})
-                  </Link>
-                </li>
+                <Link key={`archive-${i.name}`} tippy aria-label={`归档：${i.name}`} href={i.link}>
+                  {i.name} ({i.count})
+                </Link>
               ))}
           </List>
         </section>
@@ -113,11 +109,9 @@ export default async function ArchivesPage() {
             {[...data.tags]
               .sort((i1, i2) => i1.name.localeCompare(i2.name))
               .map((i) => (
-                <li key={`tag-${i.name}`}>
-                  <Link tippy aria-label={`标签：${i.name}`} href={i.link}>
-                    #{i.name} ({i.count})
-                  </Link>
-                </li>
+                <Link key={`tag-${i.name}`} tippy aria-label={`标签：${i.name}`} href={i.link}>
+                  #{i.name} ({i.count})
+                </Link>
               ))}
           </List>
         </section>

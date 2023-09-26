@@ -11,8 +11,8 @@ export const container = styled.css`
 `;
 
 export const svg = styled.css`
-  color: ${theme.color.primary.text};
-  fill: ${theme.color.primary.text};
+  color: ${theme.color.text.primary};
+  fill: ${theme.color.text.primary};
   width: ${theme.size.calc(8)};
   height: ${theme.size.calc(8)};
 `;

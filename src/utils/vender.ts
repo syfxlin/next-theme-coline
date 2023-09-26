@@ -3,6 +3,13 @@ export const ago = (before: Date, after: Date) => {
   return Math.ceil(Math.abs((after.getTime() - before.getTime()) / day));
 };
 
+export const date = (time: Date) => {
+  const year = time.getFullYear();
+  const month = time.getMonth().toString().padStart(2, "0");
+  const day = time.getDate().toString().padStart(2, "0");
+  return `${year}/${month}/${day}`;
+};
+
 export const range = (start: number, end: number) => {
   return Array.from({ length: end - start + 1 }).map((a, i) => start + i);
 };

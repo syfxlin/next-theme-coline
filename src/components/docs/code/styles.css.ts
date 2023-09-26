@@ -8,12 +8,12 @@ export const container = styled.css`
   line-height: ${theme.lineHeight.none};
   letter-spacing: ${theme.letterSpacing.default};
   padding: 0 !important;
-  background: ${theme.color.background.x2} !important;
+  background: ${theme.color.background.card} !important;
   margin-top: ${theme.spacing.calc(4)};
   margin-bottom: ${theme.spacing.calc(4)};
 
   &::before {
-    color: ${theme.color.primary.text};
+    color: ${theme.color.text.primary};
     opacity: 1;
     content: attr(data-language);
     font-size: ${theme.fontSize.calc(1)};

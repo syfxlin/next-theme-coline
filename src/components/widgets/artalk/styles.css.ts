@@ -5,12 +5,12 @@ export const container = styled.css`
   margin: ${theme.spacing.calc(4)} 0;
 
   &.artalk {
-    --at-color-main: ${theme.color.primary.text};
-    --at-color-bg: ${theme.color.background.x1};
-    --at-color-font: ${theme.color.text.x2};
-    --at-color-deep: ${theme.color.text.x2};
-    --at-color-sub: ${theme.color.text.x3};
-    --at-color-grey: ${theme.color.text.x3};
-    --at-color-meta: ${theme.color.text.x3};
+    --at-color-main: ${theme.color.text.primary};
+    --at-color-bg: ${theme.color.background.full};
+    --at-color-font: ${theme.color.text.paragraph};
+    --at-color-deep: ${theme.color.text.paragraph};
+    --at-color-sub: ${theme.color.text.description};
+    --at-color-grey: ${theme.color.text.description};
+    --at-color-meta: ${theme.color.text.description};
   }
 `;

@@ -21,7 +21,7 @@ export const title = styled.css`
   padding: 0 ${theme.spacing.calc(4)};
 
   &:first-of-type {
-    border-right: ${theme.borderWidth.calc(1)} ${theme.borderStyle.default} ${theme.color.text.x3};
+    border-right: ${theme.borderWidth.calc(1)} ${theme.borderStyle.default} ${theme.color.text.description};
   }
 `;
 

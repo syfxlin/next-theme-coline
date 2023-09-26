@@ -59,8 +59,8 @@ export const header = styled.css`
   max-width: ${theme.fontSize.calc(40)};
   border-top-left-radius: ${theme.borderRadius.calc(1)};
   border-top-right-radius: ${theme.borderRadius.calc(1)};
-  background-color: ${theme.color.background.x1};
-  border-bottom: ${theme.borderWidth.default} ${theme.borderStyle.default} ${theme.color.text.x3};
+  background-color: ${theme.color.background.full};
+  border-bottom: ${theme.borderWidth.default} ${theme.borderStyle.default} ${theme.color.text.description};
   padding: ${theme.spacing.calc(4)};
   gap: ${theme.spacing.calc(2)};
   width: 100%;
@@ -69,7 +69,7 @@ export const header = styled.css`
 `;
 
 export const icon = styled.css`
-  color: ${theme.color.primary.text};
+  color: ${theme.color.text.primary};
   margin-right: ${theme.spacing.calc(0.5)};
   display: flex;
   justify-content: center;
@@ -83,17 +83,17 @@ export const input = styled.css`
   line-height: ${theme.lineHeight.default};
   width: 100%;
   background: transparent;
-  color: ${theme.color.text.x2};
+  color: ${theme.color.text.paragraph};
 
   &::placeholder {
-    color: ${theme.color.text.x3};
+    color: ${theme.color.text.description};
   }
 `;
 
 export const section = styled.css`
   border-bottom-left-radius: ${theme.borderRadius.calc(0.8)};
   border-bottom-right-radius: ${theme.borderRadius.calc(0.8)};
-  background-color: ${theme.color.background.x1};
+  background-color: ${theme.color.background.full};
   padding: ${theme.spacing.calc(1)} ${theme.spacing.calc(7)};
   max-width: ${theme.fontSize.calc(40)};
   width: 100%;

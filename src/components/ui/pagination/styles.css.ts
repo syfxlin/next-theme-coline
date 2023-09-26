@@ -15,8 +15,8 @@ export const gap = styled.css`
 `;
 
 export const active = styled.css`
-  background-color: ${theme.color.primary.text} !important;
-  color: ${theme.color.background.x1} !important;
+  background-color: ${theme.color.text.primary} !important;
+  color: ${theme.color.background.full} !important;
 `;
 
 export const more = styled.css`

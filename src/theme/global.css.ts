@@ -13,8 +13,8 @@ styled.global`
     margin: 0;
     padding: 0;
     font-family: ${theme.fontFamily.sans};
-    color: ${theme.color.text.x2};
-    background-color: ${theme.color.background.x1};
+    color: ${theme.color.text.paragraph};
+    background-color: ${theme.color.background.full};
     font-size: ${theme.fontSize.default};
     font-weight: ${theme.fontWeight.default};
     line-height: ${theme.lineHeight.default};

@@ -1,7 +1,7 @@
 import * as styles from "./styles.css";
 import React from "react";
 import { Link } from "../../ui/link";
-import { resolve } from "../../../utils/vender";
+import { date, resolve } from "../../../utils/vender";
 import { ArticleList } from "../../../contents/types";
 import { fetcher } from "../../../contents";
 
@@ -30,8 +30,8 @@ export const Copyright: React.FC<CopyrightProps> = async (props) => {
         </li>
         <li>
           <p className={styles.item}>发布于</p>
-          <p className={styles.content} aria-label={`发布于：${props.data.published.toLocaleDateString()}`}>
-            {props.data.published.toLocaleDateString()}
+          <p className={styles.content} aria-label={`发布于：${date(props.data.published)}`}>
+            {date(props.data.published)}
           </p>
         </li>
       </ul>

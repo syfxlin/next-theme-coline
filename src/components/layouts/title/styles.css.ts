@@ -8,7 +8,7 @@ export const container = styled.css`
 `;
 
 export const title = styled.css`
-  color: ${theme.color.text.x1};
+  color: ${theme.color.text.title};
   font-size: ${theme.fontSize.calc(1.8)};
   font-weight: ${theme.fontWeight.default};
   line-height: ${theme.lineHeight.default};
@@ -16,7 +16,7 @@ export const title = styled.css`
 `;
 
 export const description = styled.css`
-  color: ${theme.color.text.x3};
+  color: ${theme.color.text.description};
   font-size: ${theme.fontSize.calc(0.8)};
   font-weight: ${theme.fontWeight.default};
   line-height: ${theme.lineHeight.default};

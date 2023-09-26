@@ -12,11 +12,11 @@ export const container = styled.css`
   }
 
   tr {
-    border-top: ${theme.borderWidth.default} ${theme.borderStyle.default} ${theme.color.text.x3};
-    border-bottom: ${theme.borderWidth.default} ${theme.borderStyle.default} ${theme.color.text.x3};
+    border-top: ${theme.borderWidth.default} ${theme.borderStyle.default} ${theme.color.text.description};
+    border-bottom: ${theme.borderWidth.default} ${theme.borderStyle.default} ${theme.color.text.description};
   }
 
   thead {
-    background-color: ${theme.color.primary.hover};
+    background-color: ${theme.color.background.hover};
   }
 `;

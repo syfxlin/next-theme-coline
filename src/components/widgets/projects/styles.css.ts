@@ -23,7 +23,7 @@ export const name = styled.css`
   line-height: ${theme.lineHeight.default};
   font-size: ${theme.fontSize.calc(1)};
   font-weight: ${theme.fontWeight.semibold};
-  color: ${theme.color.text.x2};
+  color: ${theme.color.text.paragraph};
 
   span:nth-child(1) {
     display: block;
@@ -40,7 +40,7 @@ export const text = styled.css`
   overflow: hidden;
   line-height: ${theme.lineHeight.default};
   font-size: ${theme.fontSize.calc(0.8)};
-  color: ${theme.color.text.x2};
+  color: ${theme.color.text.paragraph};
 
   @supports (-webkit-line-clamp: 2) {
     display: -webkit-box;
@@ -53,7 +53,7 @@ export const text = styled.css`
 `;
 
 export const component = styled.css`
-  color: ${theme.color.text.x3};
+  color: ${theme.color.text.description};
   width: ${theme.fontSize.calc(0.9)};
   height: ${theme.fontSize.calc(0.9)};
 `;
@@ -67,7 +67,7 @@ export const right = styled.css`
 `;
 
 export const icon = styled.css`
-  color: ${theme.color.text.x3};
+  color: ${theme.color.text.description};
   width: ${theme.fontSize.calc(1.4)} !important;
   height: ${theme.fontSize.calc(1.4)} !important;
 `;
@@ -77,7 +77,7 @@ export const github = styled.css`
   justify-content: center;
   align-items: center;
   gap: ${theme.spacing.calc(0.5)};
-  color: ${theme.color.text.x3};
+  color: ${theme.color.text.description};
   font-size: ${theme.fontSize.calc(0.5)};
   line-height: ${theme.lineHeight.none};
   min-width: calc(4ch + ${theme.fontSize.calc(1.4)});

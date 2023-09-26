@@ -23,7 +23,7 @@ export const container = styled.css`
   p,
   a,
   span {
-    color: ${theme.color.text.x3};
+    color: ${theme.color.text.description};
     font-size: ${theme.fontSize.calc(0.875)};
   }
 `;

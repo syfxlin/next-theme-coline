@@ -13,6 +13,8 @@ import {
   slateA,
   slateDark,
   slateDarkA,
+  violetA,
+  violetDarkA,
   yellowA,
   yellowDarkA,
 } from "@radix-ui/colors";
@@ -159,19 +161,17 @@ export const theme = createReveTheme({
   dynamic: {
     [`:root, [data-theme="light"]`]: {
       color: {
-        primary: {
-          text: slateA.slateA10,
-          hover: slateA.slateA3,
-          focus: slateA.slateA6,
-        },
         text: {
-          x1: slateA.slateA12,
-          x2: slateA.slateA11,
-          x3: slateA.slateA10,
+          primary: violetA.violetA9,
+          title: slateA.slateA12,
+          paragraph: slateA.slateA11,
+          description: slateA.slateA10,
         },
         background: {
-          x1: slate.slate1,
-          x2: slateA.slateA2,
+          full: slate.slate1,
+          card: slateA.slateA2,
+          hover: violetA.violetA2,
+          focus: violetA.violetA5,
         },
         image: {
           filter: "none",
@@ -200,19 +200,17 @@ export const theme = createReveTheme({
     },
     [`[data-theme="dark"]`]: {
       color: {
-        primary: {
-          text: slateDarkA.slateA10,
-          hover: slateDarkA.slateA3,
-          focus: slateDarkA.slateA6,
-        },
         text: {
-          x1: slateDarkA.slateA12,
-          x2: slateDarkA.slateA11,
-          x3: slateDarkA.slateA10,
+          primary: violetDarkA.violetA9,
+          title: slateDarkA.slateA12,
+          paragraph: slateDarkA.slateA11,
+          description: slateDarkA.slateA10,
         },
         background: {
-          x1: slateDark.slate1,
-          x2: slateDarkA.slateA3,
+          full: slateDark.slate1,
+          card: slateDarkA.slateA3,
+          hover: violetDarkA.violetA2,
+          focus: violetDarkA.violetA5,
         },
         image: {
           filter: "brightness(0.7)",

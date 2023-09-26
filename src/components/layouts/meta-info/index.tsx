@@ -2,7 +2,7 @@ import * as styles from "./styles.css";
 import React, { ReactNode } from "react";
 import { Link } from "../../ui/link";
 import { Divider } from "../../ui/divider";
-import { ago } from "../../../utils/vender";
+import { ago, date } from "../../../utils/vender";
 import { ArticleList } from "../../../contents/types";
 
 export type MetaInfoProps = {
@@ -13,7 +13,7 @@ export const MetaInfo: React.FC<MetaInfoProps> = ({ data }) => {
   return (
     <div className={styles.container}>
       <Link tippy href={data.archives.link} className={styles.link} aria-label={`归档：${data.archives.name}`}>
-        {data.published.toLocaleDateString()}
+        {date(data.published)}
       </Link>
       {ago(data.published, data.modified) > 1 && (
         <Link

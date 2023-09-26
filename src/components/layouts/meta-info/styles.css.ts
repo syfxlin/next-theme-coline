@@ -5,7 +5,7 @@ export const container = styled.css`
   font-size: ${theme.fontSize.calc(0.8)};
   font-weight: ${theme.fontWeight.default};
   line-height: ${theme.lineHeight.default};
-  color: ${theme.color.text.x3};
+  color: ${theme.color.text.description};
   margin: 0;
   position: relative;
 `;

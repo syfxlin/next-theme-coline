@@ -17,7 +17,7 @@ export const button = styled.css`
   font-size: ${theme.fontSize.default};
   padding: ${theme.spacing.calc(2)} ${theme.spacing.calc(2.5)};
   border-radius: ${theme.borderRadius.default};
-  color: ${theme.color.primary.text};
+  color: ${theme.color.text.primary};
   cursor: pointer;
   transition:
     color 0.3s,
@@ -26,12 +26,12 @@ export const button = styled.css`
 
   &:hover,
   &.active {
-    background-color: ${theme.color.primary.hover};
+    background-color: ${theme.color.background.hover};
   }
 
   &:focus,
   &:active {
-    box-shadow: 0 0 0 ${theme.borderWidth.calc(2)} ${theme.color.primary.focus};
+    box-shadow: 0 0 0 ${theme.borderWidth.calc(2)} ${theme.color.background.focus};
   }
 
   > .iconify {

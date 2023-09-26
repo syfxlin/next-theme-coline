@@ -4,7 +4,7 @@ import React, { ReactNode } from "react";
 import { Code } from "./code";
 import { List } from "./list";
 import { Link } from "../ui/link";
-import { Image } from "../ui/image";
+import { Image } from "./image";
 import { Table } from "./table";
 import { Katex } from "./katex";
 import { Github } from "./github";

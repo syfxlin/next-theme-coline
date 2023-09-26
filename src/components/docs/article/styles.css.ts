@@ -7,7 +7,7 @@ export const container = styled.css`
   overflow: hidden;
   position: relative;
   padding: ${theme.spacing.calc(5)} ${theme.spacing.calc(6)};
-  background: ${theme.color.background.x2};
+  background: ${theme.color.background.card};
   margin-top: ${theme.spacing.calc(4)};
   margin-bottom: ${theme.spacing.calc(4)};
   font-size: ${theme.fontSize.calc(1)};

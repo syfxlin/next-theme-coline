@@ -6,7 +6,7 @@ export const container = styled.css`
   width: ${theme.fontSize.calc(0.2)};
   height: ${theme.fontSize.calc(0.2)};
   border-radius: ${theme.borderRadius.calc("half")};
-  background-color: ${theme.color.text.x2};
+  background-color: ${theme.color.text.paragraph};
   margin: 0 ${theme.spacing.calc(2)};
   vertical-align: middle;
   text-align: center;

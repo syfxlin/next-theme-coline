@@ -7,8 +7,8 @@ export const container = styled.css`
   height: ${theme.borderWidth.calc(2)};
   background-image: linear-gradient(
     to right,
-    ${theme.color.primary.hover},
-    ${theme.color.primary.focus},
-    ${theme.color.primary.hover}
+    ${theme.color.background.hover},
+    ${theme.color.background.focus},
+    ${theme.color.background.hover}
   );
 `;

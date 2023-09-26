@@ -39,7 +39,7 @@ export const icon = styled.css`
   ${iconify.css("ri:menu-2-fill")}
 
   margin: ${theme.spacing.calc(2)};
-  color: ${theme.color.text.x2};
+  color: ${theme.color.text.paragraph};
   height: ${theme.fontSize.calc(1.5)};
   width: ${theme.fontSize.calc(1.5)};
 `;
@@ -61,7 +61,7 @@ export const item = styled.css`
     overflow-x: hidden;
     font-size: ${theme.fontSize.calc(0.9)};
     margin: 0 ${theme.spacing.calc(2.5)};
-    color: ${theme.color.text.x3};
+    color: ${theme.color.text.description};
     transition:
       color 0.3s,
       border 0.3s;
@@ -70,8 +70,8 @@ export const item = styled.css`
     &:hover,
     &:focus,
     &:active {
-      color: ${theme.color.text.x2};
-      border-bottom-color: ${theme.color.text.x2};
+      color: ${theme.color.text.paragraph};
+      border-bottom-color: ${theme.color.text.paragraph};
     }
   }
 `;

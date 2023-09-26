@@ -21,7 +21,7 @@ export const horizontal = styled.css`
   flex-wrap: wrap;
   margin: 0;
   padding: 0;
-  gap: ${theme.spacing.calc(4)} ${theme.spacing.calc(6)};
+  gap: ${theme.spacing.calc(2)} ${theme.spacing.calc(3)};
 `;
 
 export const vertical = styled.css`
@@ -31,5 +31,5 @@ export const vertical = styled.css`
   flex-wrap: wrap;
   margin: 0;
   padding: 0;
-  gap: ${theme.spacing.calc(4)} ${theme.spacing.calc(6)};
+  gap: ${theme.spacing.calc(2)} ${theme.spacing.calc(3)};
 `;
