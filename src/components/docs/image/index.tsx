@@ -1,4 +1,4 @@
-import * as styles from "./styles.css.ts";
+import * as styles from "./styles.css";
 import React from "react";
 import { Image as UImage } from "../../ui/image";
 
