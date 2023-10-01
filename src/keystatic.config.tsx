@@ -1,9 +1,9 @@
 import { collection, component, config, singleton } from "@keystatic/core";
 import { fields } from "./contents/fields";
-import { Katex } from "./components/docs/katex/dynamic";
-import { Github } from "./components/docs/github/dynamic";
-import { Article } from "./components/docs/article/dynamic";
-import { Message } from "./components/docs/message/dynamic";
+import { Katex } from "./components/docs/katex/preview";
+import { Github } from "./components/docs/github/preview";
+import { Article } from "./components/docs/article/preview";
+import { Message } from "./components/docs/message/preview";
 
 const body = (path: string) => {
   return fields.document({

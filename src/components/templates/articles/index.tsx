@@ -9,8 +9,8 @@ import { metadata as generateMetadata } from "../../layouts/root/metadata";
 import { Hero } from "../../layouts/hero";
 import { ArticleInfo } from "../../layouts/article-info";
 import { Pagination } from "../../ui/pagination";
-import { Renderer } from "../../docs/index.tsx";
-import { LinkButton } from "../../ui/button/index.tsx";
+import { Renderer } from "../../docs/index";
+import { LinkButton } from "../../ui/button/index";
 
 export type TemplateHomeComponentProps = {
   document: DocumentData;

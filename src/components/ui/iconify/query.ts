@@ -3,13 +3,14 @@ import ri from "@iconify/json/json/ri.json";
 import ph from "@iconify/json/json/ph.json";
 import la from "@iconify/json/json/la.json";
 import uil from "@iconify/json/json/uil.json";
+import carbon from "@iconify/json/json/carbon.json";
 import tabler from "@iconify/json/json/tabler.json";
 import lucide from "@iconify/json/json/lucide.json";
 import simple from "@iconify/json/json/simple-icons.json";
 import material from "@iconify/json/json/material-symbols.json";
 import { getIconData, iconToHTML, iconToSVG } from "@iconify/utils";
 
-const icons = [ri, ph, la, uil, tabler, lucide, simple, material];
+const icons = [ri, ph, la, uil, carbon, tabler, lucide, simple, material];
 
 const svg = (icon: string) => {
   const [prefix, target] = icon.split(":");
