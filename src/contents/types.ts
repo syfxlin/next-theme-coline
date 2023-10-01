@@ -75,6 +75,11 @@ export interface LicenseData {
   link: string;
 }
 
+export interface HomeData {
+  display: "list" | "document";
+  content?: DocumentData;
+}
+
 export interface FriendsData {
   display: "hidden" | "none" | "top" | "bottom";
   content?: DocumentData;

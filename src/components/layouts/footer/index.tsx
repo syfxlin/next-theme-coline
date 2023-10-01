@@ -1,14 +1,19 @@
 import * as styles from "./styles.css";
-import React from "react";
+import React, { ReactNode } from "react";
 import { Divider } from "../../ui/divider";
 import { Link } from "../../ui/link";
 import { fetcher } from "../../../contents";
 
-export const Footer: React.FC = async () => {
+export type FooterProps = {
+  children?: ReactNode;
+};
+
+export const Footer: React.FC<FooterProps> = async ({ children }) => {
   const [seo, author, footer] = await Promise.all([fetcher.seo(), fetcher.author(), fetcher.footer()]);
   return (
     <footer className={styles.container}>
       <p>
+        {children}
         {footer.main.map((item, index) => (
           <React.Fragment key={item.link}>
             {index !== 0 && <Divider orientation="vertical" />}

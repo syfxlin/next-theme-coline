@@ -14,6 +14,7 @@ import {
   GroupData,
   GroupPageData,
   HeaderData,
+  HomeData,
   LicenseData,
   PageData,
   ProjectsData,
@@ -129,6 +130,17 @@ const license: () => SingletonResult<LicenseData> = React.cache(async () => {
     return { name: "BY-NC-SA", link: "https://creativecommons.org/licenses/by-nc-sa/4.0/" };
   }
   return info as LicenseData;
+});
+
+const home: () => SingletonResult<HomeData> = React.cache(async () => {
+  const info = await reader.singletons.home.read();
+  if (!info) {
+    return { display: "list" };
+  }
+  return {
+    display: info.display,
+    content: document(await info.content()),
+  } as HomeData;
 });
 
 const friends: () => SingletonResult<FriendsData> = React.cache(async () => {
@@ -411,6 +423,7 @@ export const fetcher = {
   header,
   footer,
   license,
+  home,
   friends,
   projects,
   pages,

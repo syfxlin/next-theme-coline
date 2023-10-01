@@ -1,11 +1,11 @@
 import React from "react";
-import { fetcher } from "../../contents";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { metadataArticles, TemplateArticles } from "../../components/templates/articles";
+import { fetcher } from "../../contents";
+import { metadataArticles, metadataHome, TemplateArticles, TemplateHome } from "../../components/templates/articles";
 
 type Props = {
-  params: {
+  params?: {
     index?: string;
   };
 };
@@ -13,7 +13,7 @@ type Props = {
 const query = async ({ params }: Props) => {
   try {
     const query = await fetcher.posts();
-    const index = params.index ? parseInt(params.index) : 1;
+    const index = params?.index ? parseInt(params.index) : 1;
     const value = query.pages;
     if (!value || value.pages < index) {
       return undefined;
@@ -30,21 +30,31 @@ const query = async ({ params }: Props) => {
 };
 
 export const generateMetadata = async (props: Props): Promise<Metadata> => {
-  const result = await query(props);
-  if (!result) {
+  const home = await fetcher.home();
+  if (home.display === "document" && !props.params?.index) {
+    return metadataHome();
+  }
+
+  const data = await query(props);
+  if (!data) {
     return notFound();
   }
   return metadataArticles({
-    index: result.index,
-    pages: result.pages,
-    total: result.total,
+    index: data.index,
+    pages: data.pages,
+    total: data.total,
   });
 };
 
 export default async function ArticlesPage(props: Props) {
-  const result = await query(props);
-  if (!result) {
+  const home = await fetcher.home();
+  if (home.display === "document" && !props.params?.index) {
+    return <TemplateHome document={home.content} />;
+  }
+
+  const data = await query(props);
+  if (!data) {
     return notFound();
   }
-  return <TemplateArticles index={result.index} pages={result.pages} total={result.total} items={result.items} />;
+  return <TemplateArticles index={data.index} pages={data.pages} total={data.total} items={data.items} />;
 }
