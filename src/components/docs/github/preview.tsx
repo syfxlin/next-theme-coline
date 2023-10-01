@@ -1,10 +1,4 @@
 "use client";
-import React from "react";
-import { GithubInner } from "./inner";
-import { useAdapter } from "../../../adapters/use-adapter";
-import { GithubRequest, GithubResponse } from "../../../adapters/github-adapter";
+import dynamic from "next/dynamic";
 
-export const Github: React.FC<GithubRequest> = React.memo((props) => {
-  const query = useAdapter<GithubRequest, GithubResponse>("/api/github", props);
-  return <GithubInner {...query} />;
-});
+export const Github = dynamic(() => import("./client").then((mod) => mod.Github));

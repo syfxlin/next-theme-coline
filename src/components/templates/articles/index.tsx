@@ -13,7 +13,7 @@ import { Renderer } from "../../docs/index";
 import { LinkButton } from "../../ui/button/index";
 
 export type TemplateHomeComponentProps = {
-  document: DocumentData;
+  document?: DocumentData;
 };
 
 export type TemplateArticlesMetadataProps = {

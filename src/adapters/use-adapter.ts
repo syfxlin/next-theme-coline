@@ -9,6 +9,7 @@ export const fetcher = async <P = any, R = any>([path, params]: [string, P]): Pr
 };
 
 export const useAdapter = <P = any, R = any>(path: string, params: P): AdapterResponse<P, R> => {
+  // @ts-ignore
   const query = useSWR<R>([path, params], fetcher);
   return useMemo(
     () => ({

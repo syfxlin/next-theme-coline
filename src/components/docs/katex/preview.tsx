@@ -1,2 +1,4 @@
 "use client";
-export * from "./index";
+import dynamic from "next/dynamic";
+
+export const Katex = dynamic(() => import("./index").then((mod) => mod.Katex));
