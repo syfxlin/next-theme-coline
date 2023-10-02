@@ -40,7 +40,7 @@ export const TemplateHome: React.FC<TemplateHomeComponentProps> = (props) => {
   return (
     <>
       <Header>
-        <LinkButton tippy aria-label="博客" href="/">
+        <LinkButton tippy aria-label="博客" href={resolve("page", 1)}>
           博客
         </LinkButton>
       </Header>
