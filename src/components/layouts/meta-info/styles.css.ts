@@ -11,6 +11,6 @@ export const container = styled.css`
 `;
 
 export const link = styled.css`
-  position: relative;
-  z-index: 1;
+  position: relative !important;
+  z-index: 1 !important;
 `;

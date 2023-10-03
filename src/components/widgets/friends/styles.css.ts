@@ -2,19 +2,19 @@ import { theme } from "../../../theme/theme.css";
 import { styled } from "@syfxlin/reve";
 
 export const link = styled.css`
-  display: flex;
-  text-align: left;
-  gap: ${theme.spacing.calc(4)};
-  padding: ${theme.spacing.calc(4)};
-  border-bottom: none;
+  display: flex !important;
+  text-align: start !important;
+  gap: ${theme.spacing.calc(4)} !important;
+  padding: ${theme.spacing.calc(4)} !important;
+  border-bottom: none !important;
 `;
 
 export const avatar = styled.css`
-  overflow: hidden;
-  width: ${theme.size.calc(15)};
-  height: ${theme.size.calc(15)};
-  flex-basis: ${theme.size.calc(15)};
-  border-radius: ${theme.borderRadius.half};
+  overflow: hidden !important;
+  width: ${theme.size.calc(15)} !important;
+  height: ${theme.size.calc(15)} !important;
+  flex-basis: ${theme.size.calc(15)} !important;
+  border-radius: ${theme.borderRadius.half} !important;
 `;
 
 export const section = styled.css`
@@ -25,6 +25,7 @@ export const section = styled.css`
 
 export const name = styled.css`
   display: block;
+  text-align: start;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -36,6 +37,7 @@ export const name = styled.css`
 
 export const text = styled.css`
   display: block;
+  text-align: start;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;

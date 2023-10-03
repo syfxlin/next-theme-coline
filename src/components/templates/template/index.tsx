@@ -10,7 +10,7 @@ import { TocData } from "../../../contents/types";
 
 export type TemplateProps = PropsWithChildren<{
   name: string;
-  slug: string;
+  link: string;
   desc?: ReactNode;
   before?: ReactNode;
   after?: ReactNode;
@@ -41,7 +41,7 @@ export const Template: React.FC<TemplateProps> = async (props) => {
         {(props.pagination?.prev || props.pagination?.next) && (
           <CursorPagination prev={props.pagination.prev} next={props.pagination.next} />
         )}
-        {props.artalk && <Artalk name={props.name} slug={props.slug} />}
+        {props.artalk && <Artalk name={props.name} link={props.link} />}
       </Main>
       <Footer />
     </>

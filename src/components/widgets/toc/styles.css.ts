@@ -4,7 +4,6 @@ import { iconify } from "../../ui/iconify/query";
 
 export const container = styled.css`
   position: fixed;
-  overflow-y: auto;
   top: 80px;
   left: ${theme.fontSize.calc(1)};
   padding: ${theme.spacing.calc(1)};
@@ -18,6 +17,8 @@ export const container = styled.css`
   > ul {
     margin: 0;
     padding: 0;
+    height: 100%;
+    overflow-y: auto;
     opacity: 0;
     transition: opacity 0.6s;
   }
@@ -55,7 +56,7 @@ export const list = styled.css`
 export const item = styled.css`
   a {
     display: inline;
-    text-align: left;
+    text-align: start;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow-x: hidden;

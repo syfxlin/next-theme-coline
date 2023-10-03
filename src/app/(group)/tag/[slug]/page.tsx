@@ -11,11 +11,11 @@ type Props = {
   };
 };
 
-const query = async ({ params }: Props) => {
+const query = React.cache(async (_slug: string, _index?: string) => {
   try {
     const query = await fetcher.tags();
-    const slug = slugger(params.slug);
-    const index = params.index ? parseInt(params.index) : 1;
+    const slug = slugger(_slug);
+    const index = _index ? parseInt(_index) : 1;
     const value = query.pages.find((i) => i.slug === slug);
     if (!value || value.pages < index) {
       return undefined;
@@ -32,10 +32,10 @@ const query = async ({ params }: Props) => {
   } catch (e) {
     return undefined;
   }
-};
+});
 
-export const generateMetadata = async (props: Props): Promise<Metadata> => {
-  const data = await query(props);
+export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
+  const data = await query(params.slug, params.index);
   if (!data) {
     return notFound();
   }
@@ -49,8 +49,8 @@ export const generateMetadata = async (props: Props): Promise<Metadata> => {
   });
 };
 
-export default async function TagPage(props: Props) {
-  const data = await query(props);
+export default async function TagPage({ params }: Props) {
+  const data = await query(params.slug, params.index);
   if (!data) {
     return notFound();
   }

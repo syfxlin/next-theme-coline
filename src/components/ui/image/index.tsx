@@ -31,7 +31,7 @@ export const Image = forwardRef<HTMLDivElement, ImageProps>(({ src, alt, ...prop
     <span
       {...props}
       ref={ref}
-      className={cx(props.className, styles.container)}
+      className={cx(styles.container, props.className)}
       style={sx(props.style, { maxWidth: parsed.sizes ? `${parsed.sizes.width}px` : `100%` })}
     >
       {parsed.sizes && (

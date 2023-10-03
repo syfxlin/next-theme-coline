@@ -8,7 +8,7 @@ import { Heading } from "../../../components/docs/heading";
 import { List } from "../../../components/docs/list";
 import { notFound } from "next/navigation";
 
-const query = async () => {
+const query = React.cache(async () => {
   const [posts, archives, categories, tags] = await Promise.all([
     fetcher.posts(),
     fetcher.archives(),
@@ -40,7 +40,7 @@ const query = async () => {
       count: i.items.length,
     })),
   };
-};
+});
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const data = await query();
@@ -71,7 +71,7 @@ export default async function ArchivesPage() {
   return (
     <Template
       name="归档"
-      slug="/archives"
+      link="/archives"
       desc={`${data.archives.length} 归档 × ${data.categories.length} 分类 × ${data.tags.length} 标签 × ${data.articles.length} 文章`}
     >
       {data.categories.length !== 0 && (

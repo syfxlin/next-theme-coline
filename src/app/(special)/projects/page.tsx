@@ -22,7 +22,7 @@ export default async function LinksPage() {
   return (
     <Template
       name="项目"
-      slug="/projects"
+      link="/projects"
       desc={`${data.categories?.length ?? 0} 分类 × ${data.categories?.reduce((a, i) => a + i.projects.length, 0) ?? 0} 项目`}
       artalk={true}
     >

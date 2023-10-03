@@ -1,6 +1,6 @@
 import colors from "gh-lang-colors";
 import { Adapter, AdapterError } from "./adapter";
-import { COLINE_GITHUB_TOKEN } from "../env/private";
+import { COLINE_GITHUB_TOKEN } from "../env/private.mjs";
 
 export type GithubRequest = {
   repo: string;

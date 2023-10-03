@@ -76,7 +76,7 @@ export interface LicenseData {
 }
 
 export interface HomeData {
-  display: "list" | "document";
+  display: "articles" | "document";
   content?: DocumentData;
 }
 

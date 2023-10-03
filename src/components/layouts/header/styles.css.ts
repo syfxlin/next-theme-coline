@@ -9,17 +9,17 @@ export const container = styled.css`
 `;
 
 export const logo = styled.css`
-  display: flex;
-  overflow: hidden;
-  width: ${theme.fontSize.calc(2)};
-  height: ${theme.fontSize.calc(2)};
-  border-radius: ${theme.borderRadius.half};
+  display: flex !important;
+  overflow: hidden !important;
+  width: ${theme.fontSize.calc(2)} !important;
+  height: ${theme.fontSize.calc(2)} !important;
+  border-radius: ${theme.borderRadius.half} !important;
 `;
 
 export const left = styled.css`
-  display: flex;
-  gap: ${theme.spacing.calc(1)};
-  margin: 0 ${theme.spacing.calc(4)};
+  display: flex !important;
+  gap: ${theme.spacing.calc(1)} !important;
+  margin: 0 ${theme.spacing.calc(4)} !important;
 `;
 
 export const right = styled.css`
@@ -29,63 +29,63 @@ export const right = styled.css`
 `;
 
 export const always = styled.css`
-  display: inline-flex;
+  display: inline-flex !important;
 
   > :nth-child(1) {
-    display: inline;
+    display: inline !important;
   }
 
   > :nth-child(2) {
-    display: none;
+    display: none !important;
   }
 `;
 
 export const elastic = styled.css`
-  display: inline-flex;
+  display: inline-flex !important;
 
   > :nth-child(1) {
-    display: inline;
+    display: inline !important;
   }
 
   > :nth-child(2) {
-    display: none;
+    display: none !important;
   }
 
   ${theme.media.md} {
     > :nth-child(1) {
-      display: none;
+      display: none !important;
     }
 
     > :nth-child(2) {
-      display: inline;
+      display: inline !important;
     }
   }
 `;
 
 export const always_icon = styled.css`
-  display: inline-flex;
+  display: inline-flex !important;
 
   > :nth-child(1) {
-    display: none;
+    display: none !important;
   }
 
   > :nth-child(2) {
-    display: inline;
+    display: inline !important;
   }
 `;
 
 export const elastic_icon = styled.css`
-  display: inline-flex;
+  display: inline-flex !important;
 
   > :nth-child(1) {
-    display: none;
+    display: none !important;
   }
 
   > :nth-child(2) {
-    display: inline;
+    display: inline !important;
   }
 
   ${theme.media.md} {
-    display: none;
+    display: none !important;
   }
 `;

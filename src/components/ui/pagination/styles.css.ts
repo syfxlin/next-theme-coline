@@ -11,7 +11,7 @@ export const container = styled.css`
 `;
 
 export const gap = styled.css`
-  gap: ${theme.spacing.calc(1)};
+  gap: ${theme.spacing.calc(1)} !important;
 `;
 
 export const active = styled.css`
@@ -32,12 +32,12 @@ export const cursor_container = styled.css`
 `;
 
 export const cursor_link = styled.css`
-  gap: ${theme.spacing.calc(1)};
-  padding: ${theme.spacing.calc(4)};
-  font-size: ${theme.fontSize.calc(1.2)};
-  flex: 1;
-  text-align: center;
-  justify-content: center;
+  gap: ${theme.spacing.calc(1)} !important;
+  padding: ${theme.spacing.calc(4)} !important;
+  font-size: ${theme.fontSize.calc(1.2)} !important;
+  flex: 1 !important;
+  text-align: center !important;
+  justify-content: center !important;
 `;
 
 export const icon_left = styled.css`

@@ -16,7 +16,7 @@ export type ScraperResponse = {
   thumbnail?: string;
 };
 
-const scraper = React.cache((link: string) => ogs({ url: link }));
+const scraper = React.cache(async (link: string) => ogs({ url: link }));
 
 export class ScraperAdapter extends Adapter<ScraperRequest, ScraperResponse> {
   async valid(params: ScraperRequest): Promise<boolean> {

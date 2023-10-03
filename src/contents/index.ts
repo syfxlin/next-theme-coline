@@ -1,10 +1,10 @@
 import React from "react";
 import config from "../keystatic.config";
 import Fuse from "fuse.js";
+import { slug } from "github-slugger";
 import { createReader } from "@keystatic/core/reader";
 import { pagination, resolve } from "../utils/vender";
-import { discover, slugger } from "./utils";
-import { IS_DEV } from "../env/public";
+import { IS_DEV } from "../env/public.mjs";
 import {
   ArticleData,
   AuthorData,
@@ -22,9 +22,11 @@ import {
   SingletonResult,
 } from "./types";
 
-export * from "./utils";
+export const slugger = (value: string) => {
+  return slug(decodeURIComponent(value.trim().toLowerCase()));
+};
 
-export const reader = createReader(discover(), config);
+export const reader = createReader(process.cwd(), config);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const document = (body: Array<any>) => {
@@ -135,7 +137,7 @@ const license: () => SingletonResult<LicenseData> = React.cache(async () => {
 const home: () => SingletonResult<HomeData> = React.cache(async () => {
   const info = await reader.singletons.home.read();
   if (!info) {
-    return { display: "list" };
+    return { display: "articles" };
   }
   return {
     display: info.display,

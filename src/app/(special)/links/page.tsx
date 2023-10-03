@@ -21,7 +21,7 @@ export default async function LinksPage() {
   return (
     <Template
       name="友邻"
-      slug="/links"
+      link="/links"
       desc={`${data.links?.length ?? 0} 友邻 × ${data.lost_links?.length ?? 0} 已失联友邻`}
       artalk={true}
     >

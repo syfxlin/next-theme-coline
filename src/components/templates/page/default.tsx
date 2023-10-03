@@ -23,7 +23,7 @@ export const TemplatePage: React.FC<TemplatePageProps> = async ({ data, prev, ne
   return (
     <Template
       name={data.title}
-      slug={data.slug}
+      link={data.link}
       desc={<MetaInfo data={data} />}
       artalk={true}
       headings={data.body.headings}

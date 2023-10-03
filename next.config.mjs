@@ -11,6 +11,7 @@ const withBundleAnalyzer = createBundleAnalyzer({ enabled: !IS_DEV && COLINE_ANA
 const config = {
   output: "standalone",
   experimental: {
+    appDir: true,
     serverActions: true,
     useDeploymentId: true,
     useDeploymentIdServerActions: true,

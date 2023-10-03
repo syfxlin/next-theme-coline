@@ -10,10 +10,10 @@ type Props = {
   };
 };
 
-const query = async ({ params }: Props) => {
+const query = React.cache(async (_slug: string) => {
   try {
     const query = await fetcher.pages();
-    const slug = decodeURIComponent(params.slug).toLowerCase();
+    const slug = decodeURIComponent(_slug).toLowerCase();
     const value = query.items.find((i) => i.slug === slug);
     if (!value) {
       return undefined;
@@ -22,18 +22,18 @@ const query = async ({ params }: Props) => {
   } catch (e) {
     return undefined;
   }
-};
+});
 
-export const generateMetadata = async (props: Props): Promise<Metadata> => {
-  const data = await query(props);
+export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
+  const data = await query(params.slug);
   if (!data) {
     return notFound();
   }
   return metadataPage({ data });
 };
 
-export default async function Page(props: Props) {
-  const data = await query(props);
+export default async function Page({ params }: Props) {
+  const data = await query(params.slug);
   if (!data) {
     return notFound();
   }

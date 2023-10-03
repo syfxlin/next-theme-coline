@@ -8,11 +8,11 @@ export const section = styled.css`
 export const avatar = styled.css`
   margin-left: 0 !important;
   margin-right: 0 !important;
-  width: ${theme.size.calc(25)};
-  height: ${theme.size.calc(25)};
-  border-radius: ${theme.borderRadius.half};
-  filter: ${theme.color.image.filter};
-  transition: filter 0.3s;
+  width: ${theme.size.calc(25)} !important;
+  height: ${theme.size.calc(25)} !important;
+  border-radius: ${theme.borderRadius.half} !important;
+  filter: ${theme.color.image.filter} !important;
+  transition: filter 0.3s !important;
 `;
 
 export const author = styled.css`

@@ -53,10 +53,10 @@ export const thumbnail = styled.css`
 `;
 
 export const link = styled.css`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  position: absolute !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
   background: none !important;
 `;

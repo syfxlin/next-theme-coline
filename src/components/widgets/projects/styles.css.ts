@@ -2,11 +2,11 @@ import { styled } from "@syfxlin/reve";
 import { theme } from "../../../theme/theme.css";
 
 export const link = styled.css`
-  display: flex;
-  text-align: left;
-  gap: ${theme.spacing.calc(2)};
-  padding: ${theme.spacing.calc(4)};
-  border-bottom: none;
+  display: flex !important;
+  text-align: start !important;
+  gap: ${theme.spacing.calc(2)} !important;
+  padding: ${theme.spacing.calc(4)} !important;
+  border-bottom: none !important;
 `;
 
 export const left = styled.css`
@@ -35,6 +35,7 @@ export const name = styled.css`
 
 export const text = styled.css`
   display: block;
+  text-align: start;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -53,9 +54,9 @@ export const text = styled.css`
 `;
 
 export const component = styled.css`
-  color: ${theme.color.text.description};
-  width: ${theme.fontSize.calc(0.9)};
-  height: ${theme.fontSize.calc(0.9)};
+  color: ${theme.color.text.description} !important;
+  width: ${theme.fontSize.calc(0.9)} !important;
+  height: ${theme.fontSize.calc(0.9)} !important;
 `;
 
 export const right = styled.css`
@@ -67,7 +68,7 @@ export const right = styled.css`
 `;
 
 export const icon = styled.css`
-  color: ${theme.color.text.description};
+  color: ${theme.color.text.description} !important;
   width: ${theme.fontSize.calc(1.4)} !important;
   height: ${theme.fontSize.calc(1.4)} !important;
 `;
@@ -84,8 +85,8 @@ export const github = styled.css`
   white-space: nowrap;
 
   svg {
-    margin-top: ${theme.fontSize.calc(0.1)};
-    width: ${theme.fontSize.calc(0.9)};
-    height: ${theme.fontSize.calc(0.9)};
+    margin-top: ${theme.fontSize.calc(0.1)} !important;
+    width: ${theme.fontSize.calc(0.9)} !important;
+    height: ${theme.fontSize.calc(0.9)} !important;
   }
 `;
