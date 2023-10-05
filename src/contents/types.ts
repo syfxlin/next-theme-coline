@@ -1,3 +1,13 @@
+import {
+  Collection,
+  ComponentSchema,
+  Config,
+  ObjectField,
+  Singleton,
+  SlugFormField,
+  ValueForReadingDeep,
+} from "@keystatic/core";
+
 export interface GroupData<V> {
   name: string;
   slug: string;
@@ -141,6 +151,42 @@ export interface ArticleData extends ArticleList {
   body: DocumentData;
 }
 
-export type SingletonResult<T> = Promise<T>;
+export type SingletonResult<T> = () => Promise<T>;
 
-export type CollectionResult<T, P> = Promise<{ items: Array<T>; pages: P }>;
+export type CollectionResult<T, P> = () => Promise<{ items: Array<T>; pages: P }>;
+
+// prettier-ignore
+export type CollectionReader<Schema extends Record<string, ComponentSchema>, SlugField extends string> = () => Promise<
+  Array<{
+    slug: string;
+    entry: {
+      [Key in keyof Schema]: SlugField extends Key
+        ? Schema[Key] extends SlugFormField<any, any, any, infer SlugSerializedValue>
+          ? SlugSerializedValue
+          : ValueForReadingDeep<Schema[Key]>
+        : ValueForReadingDeep<Schema[Key]>;
+    };
+  }>
+>;
+
+// prettier-ignore
+export type SingletonReader<Schema extends Record<string, ComponentSchema>> = () => Promise<
+  ValueForReadingDeep<ObjectField<Schema>> | null
+>;
+
+export type Reader<
+  Collections extends {
+    [key: string]: Collection<Record<string, ComponentSchema>, string>;
+  },
+  Singletons extends {
+    [key: string]: Singleton<Record<string, ComponentSchema>>;
+  },
+> = {
+  config: Config<Collections, Singletons>;
+  collections: {
+    [Key in keyof Collections]: CollectionReader<Collections[Key]["schema"], Collections[Key]["slugField"]>;
+  };
+  singletons: {
+    [Key in keyof Singletons]: SingletonReader<Singletons[Key]["schema"]>;
+  };
+};

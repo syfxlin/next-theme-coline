@@ -13,7 +13,7 @@
   "scripts": {
     "dev": "next dev",
     "start": "next start",
-    "build": "next build"
+    "build": "esno ./content/generate.ts && next build"
   },
   "dependencies": {
     "@iconify/json": "^2.2.122",
@@ -63,6 +63,7 @@
     "eslint-config-next": "13.5.2",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
+    "esno": "^0.17.0",
     "prettier": "^3.0.3",
     "typescript": "^5.2.2",
     "webpack": "^5.88.2"

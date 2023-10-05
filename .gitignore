@@ -248,8 +248,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# contentlayer
-.contentlayer
-/public/media/
+# content
+/content/generated.json
 /public/sw.js*
 /public/workbox-*.js*
