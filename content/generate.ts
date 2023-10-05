@@ -1,8 +1,9 @@
-// @ts-ignore
-process.env.NODE_ENV = "development";
 import fs from "fs-extra";
 import path from "path";
-import { reader } from "../src/contents/reader";
+import config from "../src/keystatic.config";
+import { makeReader } from "../src/contents/make-reader.dev";
+
+const reader = makeReader(config);
 
 fs.outputJsonSync(path.join(process.cwd(), "content", "generated.json"), {
   collections: Object.fromEntries(
