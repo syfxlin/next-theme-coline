@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
-import config from "../src/keystatic.config";
-import { makeReader } from "../src/contents/make-reader.dev";
+import config from "../keystatic.config";
+import { makeReader } from "./make-reader.dev";
 
 const reader = makeReader(config);
 

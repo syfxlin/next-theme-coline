@@ -13,7 +13,7 @@
   "scripts": {
     "dev": "next dev",
     "start": "next start",
-    "build": "esno ./content/generate.ts && next build"
+    "build": "esno ./src/contents/generate.ts && next build"
   },
   "dependencies": {
     "@iconify/json": "^2.2.122",
