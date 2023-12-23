@@ -1,11 +1,11 @@
-import "./client";
+import "./styles";
 import React, { ReactNode } from "react";
-import { Providers } from "../../../theme/providers";
-import { HelloWorldScript } from "../../scripts/hello-world-script";
+import { fetcher } from "../../../contents";
 import { Canvas } from "../../root/canvas";
 import { Analytics } from "../../root/analytics";
+import { Providers } from "../../../theme/providers";
 import { ProgressBar } from "../../root/progress-bar";
-import { fetcher } from "../../../contents";
+import { HelloWorld } from "../../root/hello-world";
 
 export type RootProps = {
   children: ReactNode;
@@ -17,11 +17,11 @@ export const Root: React.FC<RootProps> = async (props) => {
     <html lang={seo.language} data-theme="light" suppressHydrationWarning>
       <body>
         <Providers>
-          <HelloWorldScript />
           {props.children}
           <Canvas />
           <Analytics />
           <ProgressBar />
+          <HelloWorld />
         </Providers>
       </body>
     </html>

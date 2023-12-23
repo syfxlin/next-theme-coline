@@ -22,13 +22,6 @@ app.service(
     name: "blog",
     domain: "blog.ixk.me",
     tls: true,
-    nextjs: {
-      inject: {
-        dockerfile: `
-          COPY --from=builder /app/content /app/content
-        `,
-      },
-    },
   }),
 );
 

@@ -8,18 +8,19 @@ export type AdapterResponse<P = any, D = any, E = any> = {
 };
 
 export abstract class Adapter<P = any, R = any> {
-  public abstract valid(params: P): Promise<boolean> | boolean;
+  public abstract valid(params: P): Promise<string | null | undefined> | string | null | undefined;
 
   public abstract query(params: P): Promise<R> | R;
 
   public async route(request: NextRequest): Promise<NextResponse> {
     try {
       const params = await request.json();
-      if (this.valid(params)) {
+      const error = this.valid(params);
+      if (typeof error !== "string" || !error) {
         const data = await this.query(params);
         return NextResponse.json(data);
       } else {
-        return NextResponse.json({ code: 400, message: "Illegal parameters." }, { status: 400 });
+        return NextResponse.json({ code: 400, message: `Illegal parameters. cause=${error}` }, { status: 400 });
       }
     } catch (e: any) {
       const code = e.code ?? 500;
@@ -30,16 +31,32 @@ export abstract class Adapter<P = any, R = any> {
 
   public async component(params: P): Promise<AdapterResponse<P, R>> {
     try {
-      if (this.valid(params)) {
+      const error = this.valid(params);
+      if (typeof error !== "string" || !error) {
         const data = await this.query(params);
-        return { params, data, error: undefined, loading: false };
+        return {
+          params,
+          data,
+          error: undefined,
+          loading: false,
+        };
       } else {
-        return { params, data: undefined, error: { code: 400, message: "Illegal parameters." }, loading: false };
+        return {
+          params,
+          data: undefined,
+          error: { code: 400, message: `Illegal parameters. cause=${error}` },
+          loading: false,
+        };
       }
     } catch (e: any) {
       const code = e.code ?? 500;
       const message = e.message ?? "Internal Server Error";
-      return { params, data: undefined, error: { code, message }, loading: false };
+      return {
+        params,
+        data: undefined,
+        error: { code, message },
+        loading: false,
+      };
     }
   }
 }

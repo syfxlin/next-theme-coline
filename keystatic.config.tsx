@@ -1,12 +1,21 @@
 import { collection, component, config, singleton } from "@keystatic/core";
-import { fields } from "./contents/fields";
-import { Katex } from "./components/docs/katex/preview";
-import { Github } from "./components/docs/github/preview";
-import { Article } from "./components/docs/article/preview";
-import { Message } from "./components/docs/message/preview";
-import { IS_DEV } from "./env/public.mjs";
+import { fields } from "@syfxlin/reks";
+import { Katex } from "./src/components/docs/katex/preview";
+import { Github } from "./src/components/docs/github/preview";
+import { Article } from "./src/components/docs/article/preview";
+import { Message } from "./src/components/docs/message/preview";
+import { COLINE_GITHUB_REPO, IS_DEV } from "./src/env/private";
 
-const body = (path: string) => {
+const storage = () => {
+  if (IS_DEV || !COLINE_GITHUB_REPO) {
+    return { kind: "local" } as const;
+  } else {
+    const [name, repo] = COLINE_GITHUB_REPO.split("/");
+    return { kind: "github", repo: { owner: name, name: repo } } as const;
+  }
+};
+
+const content = (path: string) => {
   return fields.document({
     label: "内容",
     images: {
@@ -83,22 +92,12 @@ const body = (path: string) => {
 };
 
 export default config({
-  storage: IS_DEV
-    ? {
-        kind: "local",
-      }
-    : {
-        kind: "github",
-        repo: {
-          owner: "syfxlin",
-          name: "blog",
-        },
-      },
+  storage: storage(),
   collections: {
     pages: collection({
       label: "页面",
       slugField: "slug",
-      path: "content/pages/*/",
+      path: "public/content/pages/*/",
       entryLayout: "content",
       format: { contentField: "body" },
       schema: {
@@ -141,13 +140,13 @@ export default config({
           publicPath: "/image/pages",
           validation: { isRequired: false },
         }),
-        body: body("/pages"),
+        body: content("/pages"),
       },
     }),
     posts: collection({
       label: "文章",
       slugField: "slug",
-      path: "content/posts/*/",
+      path: "public/content/posts/*/",
       entryLayout: "content",
       format: { contentField: "body" },
       schema: {
@@ -212,7 +211,7 @@ export default config({
             validation: { length: { min: 0, max: 10 } },
           },
         ),
-        body: body("/posts"),
+        body: content("/posts"),
       },
     }),
   },
@@ -220,7 +219,7 @@ export default config({
     // config
     seo: singleton({
       label: "SEO",
-      path: "content/config/seo",
+      path: "public/content/config/seo",
       entryLayout: "form",
       format: { data: "yaml" },
       schema: {
@@ -270,7 +269,7 @@ export default config({
     }),
     author: singleton({
       label: "作者",
-      path: "content/config/author",
+      path: "public/content/config/author",
       entryLayout: "form",
       format: { data: "yaml" },
       schema: {
@@ -301,7 +300,7 @@ export default config({
     }),
     header: singleton({
       label: "页首",
-      path: "content/config/header",
+      path: "public/content/config/header",
       entryLayout: "form",
       format: { data: "yaml" },
       schema: {
@@ -340,7 +339,7 @@ export default config({
     }),
     footer: singleton({
       label: "页脚",
-      path: "content/config/footer",
+      path: "public/content/config/footer",
       entryLayout: "form",
       format: { data: "yaml" },
       schema: {
@@ -365,7 +364,7 @@ export default config({
     }),
     license: singleton({
       label: "协议",
-      path: "content/config/license",
+      path: "public/content/config/license",
       entryLayout: "form",
       format: { data: "yaml" },
       schema: {
@@ -382,7 +381,7 @@ export default config({
     // pages
     home: singleton({
       label: "首页",
-      path: "content/config/home",
+      path: "public/content/config/home",
       entryLayout: "form",
       format: { data: "yaml" },
       schema: {
@@ -394,12 +393,12 @@ export default config({
             { label: "内容文档", value: "document" },
           ],
         }),
-        content: body("config/home"),
+        content: content("config/home"),
       },
     }),
     friends: singleton({
       label: "友链",
-      path: "content/config/friends",
+      path: "public/content/config/friends",
       entryLayout: "form",
       format: { data: "yaml" },
       schema: {
@@ -413,7 +412,7 @@ export default config({
             { label: "禁用页面", value: "hidden" },
           ],
         }),
-        content: body("config/friends"),
+        content: content("config/friends"),
         links: fields.array(
           fields.object({
             name: fields.text({
@@ -464,7 +463,7 @@ export default config({
     }),
     projects: singleton({
       label: "项目",
-      path: "content/config/projects",
+      path: "public/content/config/projects",
       entryLayout: "form",
       format: { data: "yaml" },
       schema: {
@@ -478,7 +477,7 @@ export default config({
             { label: "禁用页面", value: "hidden" },
           ],
         }),
-        content: body("config/projects"),
+        content: content("config/projects"),
         categories: fields.array(
           fields.object({
             name: fields.text({

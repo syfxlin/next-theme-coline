@@ -10,9 +10,6 @@ import { Hero } from "../../layouts/hero";
 import { ArticleInfo } from "../../layouts/article-info";
 import { Pagination } from "../../ui/pagination";
 import { Renderer } from "../../docs";
-import { LinkButton } from "../../ui/button";
-import { Iconify } from "../../ui/iconify";
-import * as styles from "../../layouts/header/styles.css";
 
 export type TemplateArticlesProps =
   | {
@@ -46,20 +43,7 @@ export const metadataArticles = (props: TemplateArticlesProps): Promise<Metadata
 export const TemplateArticles: React.FC<TemplateArticlesProps> = (props) => {
   return (
     <>
-      <Header>
-        {props.display === "document" && (
-          <LinkButton tippy aria-label="博客" href={resolve("page", 1)} className={styles.elastic}>
-            <span>博客</span>
-            <Iconify icon="ri:article-line" />
-          </LinkButton>
-        )}
-        {props.display === "articles" && (
-          <LinkButton tippy aria-label="首页" href="/" className={styles.elastic}>
-            <span>首页</span>
-            <Iconify icon="ri:home-line" />
-          </LinkButton>
-        )}
-      </Header>
+      <Header />
       <Main>
         <Hero />
         {props.display === "document" && (

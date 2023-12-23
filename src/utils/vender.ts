@@ -56,14 +56,3 @@ export const resolve = (...paths: (string | number | undefined | null)[]) => {
     return `${prefix}${suffix}`.toLowerCase();
   }
 };
-
-export const pagination = <T = any>(size: number, elements: ReadonlyArray<T>) => {
-  if (size <= 0) {
-    throw new Error(`size must be greater than zero.`);
-  }
-  const pages: T[][] = [];
-  for (let i = 0; i < Math.ceil(elements.length / size); i++) {
-    pages.push(elements.slice(i * size, i * size + size));
-  }
-  return pages;
-};

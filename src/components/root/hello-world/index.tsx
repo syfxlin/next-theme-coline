@@ -1,6 +1,6 @@
 "use client";
 
-export const HelloWorldScript = () => {
+export const HelloWorld = () => {
   return (
     <script
       id="hello-world-script"

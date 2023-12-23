@@ -3,7 +3,7 @@ import "artalk/dist/Artalk.css";
 import * as styles from "./styles.css";
 import React, { useEffect } from "react";
 import ArtalkComment from "artalk";
-import { COLINE_ARTALK_SERVER_URL, COLINE_ARTALK_SITE_NAME } from "../../../env/public.mjs";
+import { COLINE_ARTALK_SERVER_URL, COLINE_ARTALK_SITE_NAME } from "../../../env/public";
 import { useTheme } from "next-themes";
 
 type Props = {
@@ -19,13 +19,6 @@ export const Artalk: React.FC<Props> = ({ name, link }) => {
         el: `#comment`,
         pageTitle: name,
         pageKey: link,
-        placeholder: "留下你的足迹 ∠( ᐛ 」∠)＿",
-        noComment: "快来成为第一个评论的人吧~",
-        pagination: {
-          readMore: true,
-          autoLoad: true,
-          pageSize: 15,
-        },
         darkMode: resolvedTheme === "dark",
         server: COLINE_ARTALK_SERVER_URL,
         site: COLINE_ARTALK_SITE_NAME,

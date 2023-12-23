@@ -10,20 +10,45 @@ import { stars } from "../../../utils/vender";
 
 const adapter = new GithubAdapter();
 
+export type IconsProps = {
+  link: string;
+};
+
+export const Icons: React.FC<IconsProps> = async (props) => {
+  const match = /https?:\/\/(?:www\.)?github\.com\/([^\/]+)\/([^\/]+)/.exec(props.link);
+  if (match) {
+    try {
+      const data = await adapter.component({ repo: `${match[1]}/${match[2]}` });
+      if (data?.data) {
+        return (
+          <>
+            <Iconify icon="uil:github" className={styles.icon} />
+            <span className={styles.github}>
+              <Iconify icon="ri:star-s-line" />
+              <span>{stars(data.data.stars)}</span>
+            </span>
+          </>
+        );
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return <Iconify icon="ri:link" className={styles.icon} />;
+};
+
 export type ProjectsProps = {
   data: Exclude<ProjectsData["categories"], undefined>;
 };
 
 export const Projects: React.FC<ProjectsProps> = async ({ data }) => {
-  return await Promise.all(
-    data.map(async (category) => (
-      <React.Fragment key={`category-${category.name}`}>
-        <Heading>{category.name}</Heading>
-        <Grid>
-          {await Promise.all(
-            category.projects.map(async (project) => {
-              const match = /https?:\/\/(?:www\.)?github\.com\/([^\/]+)\/([^\/]+)/.exec(project.link);
-              const github = match ? await adapter.component({ repo: `${match[1]}/${match[2]}` }) : undefined;
+  return (
+    <>
+      {data.map((category) => (
+        <React.Fragment key={`category-${category.name}`}>
+          <Heading>{category.name}</Heading>
+          <Grid>
+            {category.projects.map((project) => {
               return (
                 <LinkButton
                   key={`project-${project.link}`}
@@ -42,20 +67,14 @@ export const Projects: React.FC<ProjectsProps> = async ({ data }) => {
                     <span className={styles.text}>{project.description}</span>
                   </span>
                   <span className={styles.right}>
-                    <Iconify icon={match ? "uil:github" : "ri:link"} className={styles.icon} />
-                    {github?.data && (
-                      <span className={styles.github}>
-                        <Iconify icon="ri:star-s-line" />
-                        <span>{stars(github.data.stars)}</span>
-                      </span>
-                    )}
+                    <Icons link={project.link} />
                   </span>
                 </LinkButton>
               );
-            }),
-          )}
-        </Grid>
-      </React.Fragment>
-    )),
+            })}
+          </Grid>
+        </React.Fragment>
+      ))}
+    </>
   );
 };

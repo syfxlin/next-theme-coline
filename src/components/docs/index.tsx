@@ -18,6 +18,7 @@ import { DocumentRenderer } from "@keystatic/core/renderer";
 import { DocumentRendererProps } from "@keystatic/core/dist/declarations/src/renderer";
 import { Blockquote } from "./blockquote";
 import { cx } from "@syfxlin/reve";
+import { DocumentElement } from "@keystatic/core";
 
 export const renderers: DocumentRendererProps["renderers"] = {
   inline: {
@@ -44,7 +45,7 @@ export const components: DocumentRendererProps["componentBlocks"] = {
 };
 
 export type RendererProps = {
-  document?: any[];
+  document?: ReadonlyArray<DocumentElement>;
   position?: "none" | "top" | "bottom";
   children?: ReactNode;
 };

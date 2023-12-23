@@ -50,10 +50,6 @@ export const metadata = async (props?: MetadataProps): Promise<Metadata> => {
       description: props?.description ?? seo.description,
       images: resolve(seo.link, props?.thumbnail ?? seo.logo),
     },
-    themeColor: [
-      { media: "(prefers-color-scheme: dark)", color: "#000212" },
-      { media: "(prefers-color-scheme: light)", color: "#fafafa" },
-    ],
     icons: [
       {
         url: image(seo.logo, 16),

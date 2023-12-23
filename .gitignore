@@ -249,6 +249,5 @@ yarn-error.log*
 next-env.d.ts
 
 # content
-/content/generated.json
 /public/sw.js*
 /public/workbox-*.js*

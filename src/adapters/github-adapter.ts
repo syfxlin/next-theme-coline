@@ -1,6 +1,6 @@
 import colors from "gh-lang-colors";
 import { Adapter, AdapterError } from "./adapter";
-import { COLINE_GITHUB_TOKEN } from "../env/private.mjs";
+import { COLINE_GITHUB_TOKEN } from "../env/private";
 
 export type GithubRequest = {
   repo: string;
@@ -16,20 +16,23 @@ export type GithubResponse = {
 };
 
 export class GithubAdapter extends Adapter<GithubRequest, GithubResponse> {
-  async valid(params: GithubRequest): Promise<boolean> {
-    return params && !!params.repo;
+  async valid(params: GithubRequest): Promise<string | null> {
+    if (params && !!params.repo) {
+      return null;
+    } else {
+      return "repo parameter must be set";
+    }
   }
 
   async query(params: GithubRequest): Promise<GithubResponse> {
-    try {
-      const response = await fetch(`https://api.github.com/repos/${params.repo}`, {
-        headers: COLINE_GITHUB_TOKEN ? { Authorization: `token ${COLINE_GITHUB_TOKEN}` } : {},
-        next: { revalidate: 3600 },
-      });
+    const response = await fetch(`https://api.github.com/repos/${params.repo}`, {
+      headers: COLINE_GITHUB_TOKEN ? { Authorization: `Bearer ${COLINE_GITHUB_TOKEN}` } : {},
+      next: { revalidate: 43200 },
+    });
 
+    if (response.ok) {
       const json = await response.json();
       const data = json as any;
-
       return {
         repo: params.repo,
         description: data.description,
@@ -39,8 +42,11 @@ export class GithubAdapter extends Adapter<GithubRequest, GithubResponse> {
         // @ts-ignore
         color: colors[data.language] ?? "#fff",
       };
-    } catch (e) {
-      throw new AdapterError(502, "Fetch GitHub repository information failed.");
+    } else {
+      throw new AdapterError(
+        502,
+        `Fetch GitHub repository information failed. status=${response.status}, body=${await response.text()}`,
+      );
     }
   }
 }

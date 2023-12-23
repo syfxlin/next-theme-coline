@@ -1,8 +1,9 @@
 import React from "react";
 import { reader } from "./reader";
+import { IS_DEV } from "../env/public";
 import { slugger } from "./slugger";
-import { pagination, resolve } from "../utils/vender";
-import { IS_DEV } from "../env/public.mjs";
+import { resolve } from "../utils/vender";
+import { document, pagination } from "@syfxlin/reks";
 import {
   ArticleData,
   AuthorData,
@@ -20,57 +21,8 @@ import {
   SingletonResult,
 } from "./types";
 
-const document = (body: Array<any>) => {
-  const visit = (items: Array<any>) => {
-    const headings: Array<any> = [];
-    const contents: Array<string> = [];
-    for (const item of items) {
-      if (item.text) {
-        contents.push(item.text as string);
-      } else if (item.type === "heading") {
-        const results = visit(item.children as Array<any>);
-        const name = results.contents.join("");
-        const slug = name;
-        const link = `#${encodeURIComponent(name)}`;
-        const level = item.level;
-        headings.push({ name, slug, link, level });
-        headings.push(...results.headings);
-        contents.push(...results.contents);
-      } else if (item.children) {
-        const results = visit(item.children as Array<any>);
-        headings.push(...results.headings);
-        contents.push(...results.contents);
-      }
-    }
-    return { headings, contents };
-  };
-
-  const build = (headings: any[], parent: any = { level: 0, children: [] }) => {
-    parent.children = parent.children ?? [];
-    while (headings.length) {
-      const heading = headings.shift();
-      if (heading.level > parent.level) {
-        parent.children.push(build(headings, heading));
-      } else {
-        headings.unshift(heading);
-        return parent;
-      }
-    }
-    return parent;
-  };
-
-  const results = visit(body);
-
-  const document = body;
-  const headings = build(results.headings.map((h, i) => ({ ...h, step: i }))).children;
-  const contents = results.contents.join(" ");
-  const excerpts = contents.length <= 140 ? contents : contents.substring(0, 140) + "...";
-
-  return { document, headings, contents, excerpts };
-};
-
 const seo: SingletonResult<SeoData> = React.cache(async () => {
-  const info = await reader.singletons.seo();
+  const info = await reader.singletons.seo.read({ resolveLinkedFiles: true });
   if (!info) {
     throw new TypeError("No seo data configured.");
   }
@@ -87,7 +39,7 @@ const seo: SingletonResult<SeoData> = React.cache(async () => {
 });
 
 const author: SingletonResult<AuthorData> = React.cache(async () => {
-  const info = await reader.singletons.author();
+  const info = await reader.singletons.author.read({ resolveLinkedFiles: true });
   if (!info) {
     throw new TypeError("No author data configured.");
   }
@@ -102,7 +54,7 @@ const author: SingletonResult<AuthorData> = React.cache(async () => {
 });
 
 const header: SingletonResult<HeaderData> = React.cache(async () => {
-  const info = await reader.singletons.header();
+  const info = await reader.singletons.header.read({ resolveLinkedFiles: true });
   if (!info) {
     return { main: [] };
   }
@@ -110,7 +62,7 @@ const header: SingletonResult<HeaderData> = React.cache(async () => {
 });
 
 const footer: SingletonResult<FooterData> = React.cache(async () => {
-  const info = await reader.singletons.footer();
+  const info = await reader.singletons.footer.read({ resolveLinkedFiles: true });
   if (!info) {
     return { main: [] };
   }
@@ -118,7 +70,7 @@ const footer: SingletonResult<FooterData> = React.cache(async () => {
 });
 
 const license: SingletonResult<LicenseData> = React.cache(async () => {
-  const info = await reader.singletons.license();
+  const info = await reader.singletons.license.read({ resolveLinkedFiles: true });
   if (!info) {
     return { name: "BY-NC-SA", link: "https://creativecommons.org/licenses/by-nc-sa/4.0/" };
   }
@@ -126,7 +78,7 @@ const license: SingletonResult<LicenseData> = React.cache(async () => {
 });
 
 const home: SingletonResult<HomeData> = React.cache(async () => {
-  const info = await reader.singletons.home();
+  const info = await reader.singletons.home.read({ resolveLinkedFiles: true });
   if (!info) {
     return { display: "articles" };
   }
@@ -137,7 +89,7 @@ const home: SingletonResult<HomeData> = React.cache(async () => {
 });
 
 const friends: SingletonResult<FriendsData> = React.cache(async () => {
-  const info = await reader.singletons.friends();
+  const info = await reader.singletons.friends.read({ resolveLinkedFiles: true });
   if (!info) {
     return { display: "hidden" };
   }
@@ -150,7 +102,7 @@ const friends: SingletonResult<FriendsData> = React.cache(async () => {
 });
 
 const projects: SingletonResult<ProjectsData> = React.cache(async () => {
-  const info = await reader.singletons.projects();
+  const info = await reader.singletons.projects.read({ resolveLinkedFiles: true });
   if (!info) {
     return { display: "hidden" };
   }
@@ -164,7 +116,7 @@ const projects: SingletonResult<ProjectsData> = React.cache(async () => {
 const pages: CollectionResult<ArticleData, PageData<ArticleData>> = React.cache(async () => {
   const results: Array<ArticleData> = [];
 
-  for (const info of await reader.collections.pages()) {
+  for (const info of await reader.collections.pages.all({ resolveLinkedFiles: true })) {
     const entry = info.entry as Record<string, any>;
 
     if (!IS_DEV && entry.status !== "publish") {
@@ -201,19 +153,14 @@ const pages: CollectionResult<ArticleData, PageData<ArticleData>> = React.cache(
 
   return {
     items,
-    pages: {
-      page: (index: number) => pages[index - 1],
-      items: pages,
-      pages: pages.length,
-      total: items.length,
-    },
+    pages,
   };
 });
 
 const posts: CollectionResult<ArticleData, PageData<ArticleData>> = React.cache(async () => {
   const results: Array<ArticleData> = [];
 
-  for (const info of await reader.collections.posts()) {
+  for (const info of await reader.collections.posts.all({ resolveLinkedFiles: true })) {
     const entry = info.entry as Record<string, any>;
 
     if (!IS_DEV && entry.status !== "publish") {
@@ -262,12 +209,7 @@ const posts: CollectionResult<ArticleData, PageData<ArticleData>> = React.cache(
 
   return {
     items,
-    pages: {
-      page: (index: number) => pages[index - 1],
-      items: pages,
-      pages: pages.length,
-      total: items.length,
-    },
+    pages,
   };
 });
 
@@ -294,15 +236,11 @@ const categories: CollectionResult<GroupData<ArticleData>, Array<GroupPageData<A
 
   const pages: Array<GroupPageData<ArticleData>> = [];
   for (const item of items) {
-    const data = pagination(10, item.items);
     pages.push({
       name: item.name,
       slug: item.slug,
       link: item.link,
-      page: (index) => data[index - 1],
-      items: data,
-      pages: data.length,
-      total: item.items.length,
+      ...pagination(10, item.items),
     });
   }
 
@@ -335,15 +273,11 @@ const tags: CollectionResult<GroupData<ArticleData>, Array<GroupPageData<Article
 
   const pages: Array<GroupPageData<ArticleData>> = [];
   for (const item of items) {
-    const data = pagination(10, item.items);
     pages.push({
       name: item.name,
       slug: item.slug,
       link: item.link,
-      page: (index) => data[index - 1],
-      items: data,
-      pages: data.length,
-      total: item.items.length,
+      ...pagination(10, item.items),
     });
   }
 
@@ -374,15 +308,11 @@ const archives: CollectionResult<GroupData<ArticleData>, Array<GroupPageData<Art
 
   const pages: Array<GroupPageData<ArticleData>> = [];
   for (const item of items) {
-    const data = pagination(10, item.items);
     pages.push({
       name: item.name,
       slug: item.slug,
       link: item.link,
-      page: (index) => data[index - 1],
-      items: data,
-      pages: data.length,
-      total: item.items.length,
+      ...pagination(10, item.items),
     });
   }
 

@@ -9,7 +9,13 @@ declare global {
       NEXT_PUBLIC_COLINE_ARTALK_SERVER_URL?: string;
       // private
       COLINE_ANALYZE?: string;
+      COLINE_GITHUB_REPO?: string;
       COLINE_GITHUB_TOKEN?: string;
+      // keystatic
+      KEYSTATIC_SECRET?: string;
+      KEYSTATIC_GITHUB_CLIENT_ID?: string;
+      KEYSTATIC_GITHUB_CLIENT_SECRET?: string;
+      NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG?: string;
     }
   }
 }

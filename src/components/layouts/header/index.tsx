@@ -1,5 +1,5 @@
 import * as styles from "./styles.css";
-import React, { ReactNode } from "react";
+import React from "react";
 import { cx } from "@syfxlin/reve";
 import { fetcher } from "../../../contents";
 import { Image } from "../../ui/image";
@@ -8,12 +8,9 @@ import { Rss } from "./rss";
 import { Theme } from "./theme";
 import { Search } from "./search";
 import { Iconify } from "../../ui/iconify";
+import { Blog } from "./blog";
 
-export type HeaderProps = {
-  children?: ReactNode;
-};
-
-export const Header: React.FC<HeaderProps> = async ({ children }) => {
+export const Header: React.FC = async () => {
   const [seo, header] = await Promise.all([fetcher.seo(), fetcher.header()]);
   return (
     <header className={styles.container}>
@@ -21,7 +18,7 @@ export const Header: React.FC<HeaderProps> = async ({ children }) => {
         <Image className={styles.logo} src={seo.logo} alt="站点图标" />
       </LinkButton>
       <div className={styles.right}>
-        {children}
+        <Blog icon={<Iconify icon="ri:article-line" />} />
         {header.main.map((item) => (
           <LinkButton
             tippy

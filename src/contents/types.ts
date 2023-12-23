@@ -7,6 +7,9 @@ import {
   SlugFormField,
   ValueForReadingDeep,
 } from "@keystatic/core";
+import { DocumentData } from "@syfxlin/reks";
+
+export type { DocumentData, TocData, PaginationData } from "@syfxlin/reks";
 
 export interface GroupData<V> {
   name: string;
@@ -26,22 +29,6 @@ export interface GroupPageData<V> extends PageData<V> {
   name: string;
   slug: string;
   link: string;
-}
-
-export interface TocData {
-  name: string;
-  slug: string;
-  link: string;
-  step: number;
-  level: number;
-  children: ReadonlyArray<TocData>;
-}
-
-export interface DocumentData {
-  document: Array<any>;
-  headings: Array<TocData>;
-  contents: string;
-  excerpts: string;
 }
 
 export interface SeoData {

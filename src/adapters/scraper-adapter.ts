@@ -19,8 +19,12 @@ export type ScraperResponse = {
 const scraper = React.cache(async (link: string) => ogs({ url: link }));
 
 export class ScraperAdapter extends Adapter<ScraperRequest, ScraperResponse> {
-  async valid(params: ScraperRequest): Promise<boolean> {
-    return params && !!params.link;
+  async valid(params: ScraperRequest): Promise<string | null> {
+    if (params && !!params.link) {
+      return null;
+    } else {
+      return "link parameter must be set";
+    }
   }
 
   async query(params: ScraperRequest): Promise<ScraperResponse> {
@@ -45,8 +49,8 @@ export class ScraperAdapter extends Adapter<ScraperRequest, ScraperResponse> {
         }
       }
       return data;
-    } catch (e) {
-      throw new AdapterError(502, "Fetch open graph information failed.");
+    } catch (e: any) {
+      throw new AdapterError(502, `Fetch open graph information failed. message=${e.message}`);
     }
   }
 }

@@ -12,7 +12,7 @@ export default function ErrorPage(props: ErrorPageProps) {
   // prettier-ignore
   const url = useMemo(() => {
     const w = typeof window !== "undefined" ? window : {} as any;
-    const url = new URL("https://github.com/syfxlin/gatsby-theme-coline/issues/new");
+    const url = new URL("https://github.com/syfxlin/blog/issues/new");
     url.searchParams.set("title", `Uncaught exception on page: ${w?.location?.toString()}`);
     url.searchParams.set("labels", "bug");
     let body = "";
@@ -33,12 +33,7 @@ export default function ErrorPage(props: ErrorPageProps) {
   return (
     <ErrorFound code={500} message="Internal Error">
       页面出现了一些问题。如果您有空闲时间，麻烦您点击该&nbsp;
-      <Link
-        href={url}
-        aria-label="create syfxlin/gatsby-theme-coline issues"
-        target="_blank"
-        rel="nofollow noopener noreferrer"
-      >
+      <Link href={url} aria-label="create syfxlin/blog issues" target="_blank" rel="nofollow noopener noreferrer">
         链接
       </Link>
       &nbsp;创建一个 GitHub Issue ，非常感谢。

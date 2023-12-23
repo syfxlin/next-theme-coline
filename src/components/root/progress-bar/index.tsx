@@ -1,8 +1,7 @@
-"use client";
 import * as styles from "./styles.css";
 import React from "react";
-import { AppProgressBar } from "next-nprogress-bar";
+import NextTopLoader from "nextjs-toploader";
 
 export const ProgressBar: React.FC = () => {
-  return <AppProgressBar color={styles.color} shallowRouting />;
+  return <NextTopLoader color={styles.color} height={2} />;
 };

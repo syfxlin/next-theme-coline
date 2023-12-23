@@ -14,7 +14,7 @@ export type TemplateProps = PropsWithChildren<{
   desc?: ReactNode;
   before?: ReactNode;
   after?: ReactNode;
-  headings?: Array<TocData>;
+  headings?: ReadonlyArray<TocData>;
   artalk?: boolean;
   pagination?: {
     prev?: {

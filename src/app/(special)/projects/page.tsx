@@ -13,7 +13,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
   });
 };
 
-export default async function LinksPage() {
+export default async function ProjectsPage() {
   const data = await fetcher.projects();
   if (data.display === "hidden") {
     return notFound();
