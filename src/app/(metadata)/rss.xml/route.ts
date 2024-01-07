@@ -2,14 +2,15 @@ import RSS from "rss";
 import { fetcher } from "../../../contents";
 import { NextResponse } from "next/server";
 import { resolve } from "../../../utils/vender";
+import { COLINE_LANGUAGE } from "../../../env/public";
 
 export const GET = async () => {
   const [seo, author, posts] = await Promise.all([fetcher.seo(), fetcher.author(), fetcher.posts()]);
 
   const rss = new RSS({
+    language: COLINE_LANGUAGE,
     title: seo.title,
     description: seo.description,
-    language: seo.language,
     site_url: resolve(seo.link),
     feed_url: resolve(seo.link, "rss.xml"),
     image_url: resolve(seo.link, "opengraph-image.png"),

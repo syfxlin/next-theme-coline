@@ -2,16 +2,17 @@ display: none
 categories:
   - name: Focus
     projects:
-      - name: Reve
-        link: https://github.com/syfxlin/reve
+      - name: Depker
+        link: https://github.com/syfxlin/depker
         description: >-
-          Reve is a library of enhancements to vanilla-extract to improve the
-          experience of using vanilla-extract and reduce unnecessary time
-          consumption due to specific programming paradigms.
+          A deployment tool based on Docker, designed to lower the difficulty of
+          automating application deployment for low-performance self-hosted
+          servers, and provide continuous deployment capabilities.
         components:
+          - simple-icons:deno
           - simple-icons:typescript
-          - simple-icons:css3
-          - simple-icons:styledcomponents
+          - simple-icons:docker
+          - ri:server-line
   - name: Frameworks
     projects:
       - name: XKJava
@@ -33,17 +34,23 @@ categories:
           - simple-icons:php
   - name: Tools / Utility Libraries
     projects:
-      - name: Depker
-        link: https://github.com/syfxlin/depker
+      - name: Reve
+        link: https://github.com/syfxlin/reve
         description: >-
-          A deployment tool based on Docker, designed to lower the difficulty of
-          automating application deployment for low-performance self-hosted
-          servers, and provide continuous deployment capabilities.
+          Reve is a library of enhancements to vanilla-extract to improve the
+          experience of using vanilla-extract and reduce unnecessary time
+          consumption due to specific programming paradigms.
         components:
-          - simple-icons:deno
           - simple-icons:typescript
-          - simple-icons:docker
-          - ri:server-line
+          - simple-icons:css3
+          - simple-icons:styledcomponents
+      - name: Reks
+        link: https://github.com/syfxlin/reks
+        description: >-
+          Reks is a library of enhancements to reks to improve the experience of
+          using keystatic.
+        components:
+          - simple-icons:typescript
       - name: Ustyled
         link: https://github.com/syfxlin/ustyled
         description: A CSS-in-JS utility library based on Emotion.js.
@@ -109,6 +116,49 @@ categories:
           - simple-icons:vuedotjs
           - simple-icons:javascript
           - simple-icons:markdown
+  - name: Websites
+    projects:
+      - name: Home
+        link: https://github.com/syfxlin/home
+        description: Source code for Otstar's Space, personal home page.
+        components:
+          - simple-icons:nextdotjs
+          - simple-icons:typescript
+      - name: Blog
+        link: https://github.com/syfxlin/blog
+        description: >-
+          Otstar Lin's personal blog repository / Next.js / React / TypeScript /
+          Keystatic CMS
+        components:
+          - simple-icons:nextdotjs
+          - simple-icons:typescript
+  - name: Contributed
+    projects:
+      - name: vanilla-extract
+        link: https://github.com/vanilla-extract-css/vanilla-extract
+        description: >-
+          Zero-runtime Stylesheets-in-TypeScript. Write your styles in
+          TypeScript (or JavaScript) with locally scoped class names and CSS
+          Variables, then generate static CSS files at build time.
+        components:
+          - simple-icons:typescript
+          - simple-icons:css3
+          - simple-icons:webpack
+      - name: Artalk
+        link: https://github.com/ArtalkJS/Artalk
+        description: Your self-hosted comment system.
+        components:
+          - simple-icons:typescript
+          - simple-icons:go
+      - name: RSSHub
+        link: https://github.com/DIYgod/RSSHub
+        description: >-
+          RSSHub is an open source, easy to use, and extensible RSS feed
+          generator. It's capable of generating RSS feeds from pretty much
+          everything.
+        components:
+          - ri:rss-line
+          - simple-icons:javascript
   - name: Gatsby Ecosystem
     projects:
       - name: Coline Theme for Gatsby
@@ -162,47 +212,6 @@ categories:
         description: Toastr.js WordPress Plugin
         components:
           - simple-icons:wordpress
-          - simple-icons:javascript
-  - name: Websites
-    projects:
-      - name: Home
-        link: https://github.com/syfxlin/home
-        description: Source code for Otstar's Space, personal home page.
-        components:
-          - simple-icons:nextdotjs
-          - simple-icons:typescript
-          - simple-icons:decapcms
-          - simple-icons:mdx
-      - name: Blog
-        link: https://github.com/syfxlin/blog
-        description: >-
-          Otstar Lin's personal blog repository / Gatsby / React / TypeScript /
-          Netlify CMS
-        components:
-          - simple-icons:gatsby
-          - simple-icons:typescript
-          - simple-icons:decapcms
-          - simple-icons:mdx
-  - name: Contributed
-    projects:
-      - name: vanilla-extract
-        link: https://github.com/vanilla-extract-css/vanilla-extract
-        description: >-
-          Zero-runtime Stylesheets-in-TypeScript. Write your styles in
-          TypeScript (or JavaScript) with locally scoped class names and CSS
-          Variables, then generate static CSS files at build time.
-        components:
-          - simple-icons:typescript
-          - simple-icons:css3
-          - simple-icons:webpack
-      - name: RSSHub
-        link: https://github.com/DIYgod/RSSHub
-        description: >-
-          RSSHub is an open source, easy to use, and extensible RSS feed
-          generator. It's capable of generating RSS feeds from pretty much
-          everything.
-        components:
-          - ri:rss-line
           - simple-icons:javascript
   - name: Toys
     projects:

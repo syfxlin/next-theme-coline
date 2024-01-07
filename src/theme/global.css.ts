@@ -252,7 +252,14 @@ styled.global`
     display: none;
   }
 
-  /* slide-enter */
+  // medium-zoom
+  .medium-zoom-overlay,
+  .medium-zoom-image--opened {
+    z-index: 999;
+    background: ${theme.color.background.full} !important;
+  }
+
+  // slide-enter
   @keyframes slide-enter {
     0% {
       transform: translateY(10px);

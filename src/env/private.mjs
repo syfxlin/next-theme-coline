@@ -1,7 +1,6 @@
 export * from "./public.mjs";
 // private
 export const COLINE_ANALYZE = process.env.COLINE_ANALYZE;
-export const COLINE_GITHUB_REPO = process.env.COLINE_GITHUB_REPO;
 export const COLINE_GITHUB_TOKEN = process.env.COLINE_GITHUB_TOKEN;
 // keystatic
 export const KEYSTATIC_SECRET = process.env.KEYSTATIC_SECRET;

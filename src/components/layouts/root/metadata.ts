@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { image, resolve } from "../../../utils/vender";
 import { fetcher } from "../../../contents";
+import { COLINE_LANGUAGE } from "../../../env/public";
 
 export type MetadataProps = {
   link?: string;
@@ -35,7 +36,7 @@ export const metadata = async (props?: MetadataProps): Promise<Metadata> => {
     },
     openGraph: {
       type: "website",
-      locale: seo.language,
+      locale: COLINE_LANGUAGE,
       siteName: seo.title,
       url: resolve(seo.link, props?.link),
       title: props?.title ? `${props?.title} | ${seo.title}` : `${seo.title} - ${seo.subtitle}`,

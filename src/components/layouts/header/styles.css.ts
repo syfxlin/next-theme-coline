@@ -28,7 +28,7 @@ export const right = styled.css`
   margin: 0 ${theme.spacing.calc(4)};
 `;
 
-export const always = styled.css`
+export const view_text = styled.css`
   display: inline-flex !important;
 
   > :nth-child(1) {
@@ -40,7 +40,19 @@ export const always = styled.css`
   }
 `;
 
-export const elastic = styled.css`
+export const view_icon = styled.css`
+  display: inline-flex !important;
+
+  > :nth-child(1) {
+    display: none !important;
+  }
+
+  > :nth-child(2) {
+    display: inline !important;
+  }
+`;
+
+export const view_elastic = styled.css`
   display: inline-flex !important;
 
   > :nth-child(1) {
@@ -62,19 +74,23 @@ export const elastic = styled.css`
   }
 `;
 
-export const always_icon = styled.css`
+export const view_elastic_text = styled.css`
   display: inline-flex !important;
 
   > :nth-child(1) {
-    display: none !important;
+    display: inline !important;
   }
 
   > :nth-child(2) {
-    display: inline !important;
+    display: none !important;
+  }
+
+  ${theme.media.md} {
+    display: none !important;
   }
 `;
 
-export const elastic_icon = styled.css`
+export const view_elastic_icon = styled.css`
   display: inline-flex !important;
 
   > :nth-child(1) {

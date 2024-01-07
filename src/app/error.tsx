@@ -2,6 +2,7 @@
 import React, { useMemo } from "react";
 import { ErrorFound } from "../components/layouts/error-found";
 import { Link } from "../components/ui/link";
+import { t } from "../locales";
 
 export type ErrorPageProps = {
   error: Error;
@@ -32,11 +33,11 @@ export default function ErrorPage(props: ErrorPageProps) {
 
   return (
     <ErrorFound code={500} message="Internal Error">
-      页面出现了一些问题。如果您有空闲时间，麻烦您点击该&nbsp;
+      {t("error.before")}&nbsp;
       <Link href={url} aria-label="create syfxlin/blog issues" target="_blank" rel="nofollow noopener noreferrer">
-        链接
+        {t("error.link")}
       </Link>
-      &nbsp;创建一个 GitHub Issue ，非常感谢。
+      &nbsp;{t("error.after")}
     </ErrorFound>
   );
 }

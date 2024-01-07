@@ -4,7 +4,7 @@ import { Main } from "../../layouts/main";
 import { Title } from "../../layouts/title";
 import { Toc } from "../../widgets/toc";
 import { CursorPagination } from "../../ui/pagination";
-import { Artalk } from "../../widgets/artalk/dynamic";
+import { Artalk } from "../../widgets/artalk";
 import { Footer } from "../../layouts/footer";
 import { TocData } from "../../../contents/types";
 

@@ -5,7 +5,7 @@ export const ago = (before: Date, after: Date) => {
 
 export const date = (time: Date) => {
   const year = time.getFullYear();
-  const month = time.getMonth().toString().padStart(2, "0");
+  const month = (time.getMonth() + 1).toString().padStart(2, "0");
   const day = time.getDate().toString().padStart(2, "0");
   return `${year}/${month}/${day}`;
 };

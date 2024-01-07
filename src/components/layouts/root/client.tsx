@@ -7,10 +7,11 @@ import { HelloWorld } from "../../root/hello-world";
 import { Canvas } from "../../root/canvas";
 import { Analytics } from "../../root/analytics";
 import { ProgressBar } from "../../root/progress-bar";
+import { COLINE_LANGUAGE } from "../../../env/public";
 
 export const ClientRoot: React.FC<RootProps> = (props) => {
   return (
-    <html lang="zh" data-theme="light" suppressHydrationWarning>
+    <html lang={COLINE_LANGUAGE} data-theme="light" suppressHydrationWarning>
       <body>
         <Providers>
           {props.children}

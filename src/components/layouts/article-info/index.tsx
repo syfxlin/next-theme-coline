@@ -6,6 +6,7 @@ import { Image } from "../../ui/image";
 import { LinkButton } from "../../ui/button";
 import { ArticleList } from "../../../contents/types";
 import { cx } from "@syfxlin/reve";
+import { t } from "../../../locales";
 
 export type ArticleInfoProps = {
   step: number;
@@ -22,7 +23,7 @@ export const ArticleInfo: React.FC<ArticleInfoProps> = ({ step, data }) => {
         <p className={styles.excerpt}>{data.body.excerpts}</p>
         <MetaInfo data={data} />
       </section>
-      {data.thumbnail && <Image className={styles.thumbnail} src={data.thumbnail} alt={`缩略图：${data.title}`} />}
+      {data.thumbnail && <Image className={styles.thumbnail} src={data.thumbnail} alt={t("article.thumbnail")} />}
       <LinkButton href={data.link} aria-hidden={true} className={styles.link} />
     </article>
   );

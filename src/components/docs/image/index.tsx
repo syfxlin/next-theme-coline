@@ -11,7 +11,7 @@ export type ImageProps = {
 export const Image: React.FC<ImageProps> = (props) => {
   return (
     <figure className={styles.container}>
-      <UImage src={props.src} alt={props.alt} title={props.title} />
+      <UImage zoom src={props.src} alt={props.alt} title={props.title} className={styles.image} />
       {(props.title || props.alt) && <figcaption className={styles.caption}>{props.title || props.alt}</figcaption>}
     </figure>
   );

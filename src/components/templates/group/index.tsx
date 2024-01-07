@@ -9,6 +9,7 @@ import { ArticleList } from "../../../contents/types";
 import { Title } from "../../layouts/title";
 import { ArticleInfo } from "../../layouts/article-info";
 import { Pagination } from "../../ui/pagination";
+import { t } from "../../../locales";
 
 export type TemplateGroupMetadataProps = {
   type: string;
@@ -31,7 +32,7 @@ export type TemplateGroupComponentProps = {
 
 export const metadataGroup = async (props: TemplateGroupMetadataProps): Promise<Metadata> => {
   return generateMetadata({
-    title: `${props.type}：${props.name}${props.index === 1 ? `` : ` - 第 ${props.index} 页`}`,
+    title: `${props.type}：${props.name}${props.index === 1 ? `` : ` - ${t("pagination.curr", props.index)}`}`,
     link: props.index === 1 ? props.link : resolve(props.link, "page", props.index),
   });
 };
@@ -41,8 +42,10 @@ export const TemplateGroup: React.FC<TemplateGroupComponentProps> = (props) => {
     <>
       <Header />
       <Main>
-        <Title title={`${props.type}：${props.name}${props.index === 1 ? `` : ` - 第 ${props.index} 页`}`}>
-          {props.total} 文章
+        <Title
+          title={`${props.type}：${props.name}${props.index === 1 ? `` : ` - ${t("pagination.curr", props.index)}`}`}
+        >
+          {props.total} {t("articles.name")}
         </Title>
         <section>
           {props.items.map((item, index) => (

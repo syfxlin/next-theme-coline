@@ -16,10 +16,10 @@ export const avatar = styled.css`
 `;
 
 export const author = styled.css`
-  font-family: "Comic Sans MS", "Comic Sans", cursive !important;
-  font-size: ${theme.fontSize.calc(2)};
-  line-height: ${theme.lineHeight.default};
-  font-weight: ${theme.fontWeight.default};
+  font-size: ${theme.fontSize.calc(2.2)};
+  line-height: ${theme.lineHeight.tight};
+  letter-spacing: ${theme.letterSpacing.wider};
+  font-weight: ${theme.fontWeight.bold};
   margin: ${theme.spacing.calc(2)} 0 0 0;
   color: ${theme.color.text.title};
 `;

@@ -1,6 +1,7 @@
 import * as styles from "./styles.css";
 import React, { ReactNode } from "react";
 import { Link } from "../../ui/link";
+import { t } from "../../../locales";
 
 export type ErrorFoundProps = {
   code: number;
@@ -17,8 +18,8 @@ export const ErrorFound: React.FC<ErrorFoundProps> = (props) => {
       </section>
       {props.children && <section className={styles.content}>{props.children}</section>}
       <section>
-        <Link href="/" aria-label="返回首页">
-          返回首页
+        <Link href="/" aria-label={t("error.back")}>
+          {t("error.back")}
         </Link>
       </section>
     </main>

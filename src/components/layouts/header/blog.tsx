@@ -3,6 +3,7 @@ import React, { ReactNode } from "react";
 import { LinkButton } from "../../ui/button";
 import { resolve } from "../../../utils/vender";
 import * as styles from "./styles.css";
+import { t } from "../../../locales";
 
 export type RssProps = {
   icon: ReactNode;
@@ -10,8 +11,8 @@ export type RssProps = {
 
 export const Blog: React.FC<RssProps> = ({ icon }) => {
   return (
-    <LinkButton tippy aria-label="博客" href={resolve("page", 1)} className={styles.elastic}>
-      <span>博客</span>
+    <LinkButton tooltip aria-label={t("header.blog")} href={resolve("page", 1)} className={styles.view_elastic}>
+      <span>{t("header.blog")}</span>
       {icon}
     </LinkButton>
   );

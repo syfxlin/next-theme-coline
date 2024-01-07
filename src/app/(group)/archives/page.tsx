@@ -7,6 +7,7 @@ import { Template } from "../../../components/templates/template";
 import { Heading } from "../../../components/docs/heading";
 import { List } from "../../../components/docs/list";
 import { notFound } from "next/navigation";
+import { t } from "../../../locales";
 
 const query = React.cache(async () => {
   const [posts, archives, categories, tags] = await Promise.all([
@@ -53,7 +54,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
     return notFound();
   }
   return metadata({
-    title: "归档",
+    title: t("archives.name"),
     link: "/archives",
   });
 };
@@ -70,18 +71,18 @@ export default async function ArchivesPage() {
   }
   return (
     <Template
-      name="归档"
       link="/archives"
-      desc={`${data.archives.length} 归档 × ${data.categories.length} 分类 × ${data.tags.length} 标签 × ${data.articles.length} 文章`}
+      name={t("archives.name")}
+      desc={t("archives.desc", data.archives.length, data.categories.length, data.tags.length, data.articles.length)}
     >
       {data.categories.length !== 0 && (
         <section className="slide-enter" style={{ "--enter-step": 0 } as any}>
-          <Heading level={2}>分类</Heading>
+          <Heading level={2}>{t("category.name")}</Heading>
           <List type="unordered" direction="vertical">
             {[...data.categories]
               .sort((i1, i2) => i2.count - i1.count)
               .map((i) => (
-                <Link key={`category-${i.name}`} tippy aria-label={`分类：${i.name}`} href={i.link}>
+                <Link key={`category-${i.name}`} tooltip aria-label={t("category.desc", i.name)} href={i.link}>
                   {i.name} ({i.count})
                 </Link>
               ))}
@@ -90,12 +91,12 @@ export default async function ArchivesPage() {
       )}
       {data.archives.length !== 0 && (
         <section className="slide-enter" style={{ "--enter-step": 1 } as any}>
-          <Heading level={2}>归档</Heading>
+          <Heading level={2}>{t("archive.name")}</Heading>
           <List type="unordered" direction="vertical">
             {[...data.archives]
               .sort((i1, i2) => i2.name.localeCompare(i1.name))
               .map((i) => (
-                <Link key={`archive-${i.name}`} tippy aria-label={`归档：${i.name}`} href={i.link}>
+                <Link key={`archive-${i.name}`} tooltip aria-label={t("archive.desc", i.name)} href={i.link}>
                   {i.name} ({i.count})
                 </Link>
               ))}
@@ -104,12 +105,12 @@ export default async function ArchivesPage() {
       )}
       {data.tags.length !== 0 && (
         <section className="slide-enter" style={{ "--enter-step": 2 } as any}>
-          <Heading level={2}>标签</Heading>
+          <Heading level={2}>{t("tag.name")}</Heading>
           <List type="unordered" direction="horizontal">
             {[...data.tags]
               .sort((i1, i2) => i1.name.localeCompare(i2.name))
               .map((i) => (
-                <Link key={`tag-${i.name}`} tippy aria-label={`标签：${i.name}`} href={i.link}>
+                <Link key={`tag-${i.name}`} tooltip aria-label={t("tag.desc", i.name)} href={i.link}>
                   #{i.name} ({i.count})
                 </Link>
               ))}

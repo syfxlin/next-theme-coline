@@ -6,19 +6,19 @@ import Link, { LinkProps } from "next/link";
 import { cx } from "@syfxlin/reve";
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  tippy?: TippyProps | boolean;
+  tooltip?: TippyProps | boolean;
   unstyled?: boolean;
 };
 // prettier-ignore
 export type LinkButtonProps = AnchorHTMLAttributes<HTMLAnchorElement> & LinkProps & {
-  tippy?: TippyProps | boolean;
+  tooltip?: TippyProps | boolean;
   unstyled?: boolean;
 };
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(({ tippy, unstyled, ...props }, ref) => {
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(({ tooltip, unstyled, ...props }, ref) => {
   const element = <button {...props} className={cx(props.className, !unstyled && styles.button)} ref={ref} />;
-  return tippy ? (
-    <Tippy animation="shift-away" content={props["aria-label"]} {...(typeof tippy === "boolean" ? {} : tippy)}>
+  return tooltip ? (
+    <Tippy animation="shift-away" content={props["aria-label"]} {...(typeof tooltip === "boolean" ? {} : tooltip)}>
       {element}
     </Tippy>
   ) : (
@@ -26,26 +26,30 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(({ tippy, unsty
   );
 });
 
-export const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(({ tippy, unstyled, href, ...props }, ref) => {
-  if (typeof href === "string" && /^(https?:)?\/\/|^#|\.[\da-z]+$/i.test(href)) {
-    const element = <a {...props} className={cx(props.className, !unstyled && styles.button)} href={href} ref={ref} />;
-    return tippy ? (
-      <Tippy animation="shift-away" content={props["aria-label"]} {...(typeof tippy === "boolean" ? {} : tippy)}>
-        {element}
-      </Tippy>
-    ) : (
-      element
-    );
-  } else {
-    const element = (
-      <Link {...props} className={cx(props.className, !unstyled && styles.button)} href={href} ref={ref} />
-    );
-    return tippy ? (
-      <Tippy animation="shift-away" content={props["aria-label"]} {...(typeof tippy === "boolean" ? {} : tippy)}>
-        {element}
-      </Tippy>
-    ) : (
-      element
-    );
-  }
-});
+export const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
+  ({ tooltip, unstyled, href, ...props }, ref) => {
+    if (typeof href === "string" && /^(https?:)?\/\/|^#|\.[\da-z]+$/i.test(href)) {
+      const element = (
+        <a {...props} className={cx(props.className, !unstyled && styles.button)} href={href} ref={ref} />
+      );
+      return tooltip ? (
+        <Tippy animation="shift-away" content={props["aria-label"]} {...(typeof tooltip === "boolean" ? {} : tooltip)}>
+          {element}
+        </Tippy>
+      ) : (
+        element
+      );
+    } else {
+      const element = (
+        <Link {...props} className={cx(props.className, !unstyled && styles.button)} href={href} ref={ref} />
+      );
+      return tooltip ? (
+        <Tippy animation="shift-away" content={props["aria-label"]} {...(typeof tooltip === "boolean" ? {} : tooltip)}>
+          {element}
+        </Tippy>
+      ) : (
+        element
+      );
+    }
+  },
+);

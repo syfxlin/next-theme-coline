@@ -6,6 +6,7 @@ import { Image } from "../../ui/image";
 import { AspectRatio } from "../../ui/aspect-ratio";
 import { MetaInfo } from "../../layouts/meta-info";
 import { Copyright } from "../../widgets/copyright";
+import { t } from "../../../locales";
 
 export type TemplatePageProps = {
   data: ArticleData;
@@ -32,7 +33,7 @@ export const TemplatePage: React.FC<TemplatePageProps> = async ({ data, prev, ne
         <>
           {data.thumbnail && (
             <AspectRatio ratio={16 / 9}>
-              <Image src={data.thumbnail} alt={`缩略图：${data.title}`} />
+              <Image src={data.thumbnail} alt={t("article.thumbnail")} />
             </AspectRatio>
           )}
         </>

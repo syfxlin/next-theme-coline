@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { fetcher, slugger } from "../../../../contents";
 import { metadataGroup, TemplateGroup } from "../../../../components/templates/group";
+import { t } from "../../../../locales";
 
 type Props = {
   params: {
@@ -40,7 +41,7 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
     return notFound();
   }
   return metadataGroup({
-    type: "归档",
+    type: t("archive.name"),
     name: data.name,
     link: data.link,
     index: data.index,
@@ -56,7 +57,7 @@ export default async function ArchivePage({ params }: Props) {
   }
   return (
     <TemplateGroup
-      type="归档"
+      type={t("archive.name")}
       name={data.name}
       link={data.link}
       index={data.index}

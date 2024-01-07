@@ -4,6 +4,7 @@ import { Link } from "../../ui/link";
 import { date, resolve } from "../../../utils/vender";
 import { ArticleList } from "../../../contents/types";
 import { fetcher } from "../../../contents";
+import { t } from "../../../locales";
 
 export type CopyrightProps = {
   data: ArticleList;
@@ -17,25 +18,25 @@ export const Copyright: React.FC<CopyrightProps> = async (props) => {
       <Link href={resolve(seo.link, props.data.link)}>{resolve(seo.link, props.data.link)}</Link>
       <ul className={styles.list}>
         <li>
-          <p className={styles.item}>许可协议</p>
-          <p className={styles.content} aria-label={`许可协议：${license.name}`}>
+          <p className={styles.item}>{t("article.copyright.license.name")}</p>
+          <p className={styles.content} aria-label={t("article.copyright.license.desc", license.name)}>
             {license.name}
           </p>
         </li>
         <li>
-          <p className={styles.item}>本文作者</p>
-          <p className={styles.content} aria-label={`本文作者：${author.fullname}`}>
+          <p className={styles.item}>{t("article.copyright.author.name")}</p>
+          <p className={styles.content} aria-label={t("article.copyright.author.desc", author.fullname)}>
             {author.fullname}
           </p>
         </li>
         <li>
-          <p className={styles.item}>发布于</p>
-          <p className={styles.content} aria-label={`发布于：${date(props.data.published)}`}>
+          <p className={styles.item}>{t("article.copyright.published.name")}</p>
+          <p className={styles.content} aria-label={t("article.copyright.published.desc", date(props.data.published))}>
             {date(props.data.published)}
           </p>
         </li>
       </ul>
-      <p>转载或引用本文时请遵守许可协议，注明出处、不得用于商业用途！</p>
+      <p>{t("article.copyright.notice")}</p>
     </section>
   );
 };

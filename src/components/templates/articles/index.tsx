@@ -10,6 +10,7 @@ import { Hero } from "../../layouts/hero";
 import { ArticleInfo } from "../../layouts/article-info";
 import { Pagination } from "../../ui/pagination";
 import { Renderer } from "../../docs";
+import { t } from "../../../locales";
 
 export type TemplateArticlesProps =
   | {
@@ -34,7 +35,7 @@ export const metadataArticles = (props: TemplateArticlesProps): Promise<Metadata
     });
   } else {
     return generateMetadata({
-      title: props.articles.index !== 1 ? `文章列表：第 ${props.articles.index} 页` : undefined,
+      title: props.articles.index !== 1 ? t("articles.desc", t("pagination.curr", props.articles.index)) : undefined,
       link: props.articles.index !== 1 ? resolve("page", props.articles.index) : "/",
     });
   }

@@ -9,6 +9,7 @@ import { ArticleInfo } from "../../layouts/article-info";
 import { Pagination } from "../../ui/pagination";
 import { SearchResponse } from "../../../app/api/search/route";
 import { Iconify } from "../../ui/iconify/client";
+import { t } from "../../../locales";
 
 const fetcher = async ([path, page, search]: [string, number, string]) => {
   const url = new URL(path, location.href);
@@ -51,11 +52,11 @@ export const Spotlight: React.FC<SpotlightProps> = (props) => {
           <input
             className={styles.input}
             type="text"
-            placeholder="搜索..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            placeholder={t("spotlight.input")}
           />
-          <Button aria-label="关闭" onClick={() => props.setActive(false)}>
+          <Button aria-label={t("spotlight.close")} onClick={() => props.setActive(false)}>
             <Iconify icon={styles.icon_close} />
           </Button>
         </div>

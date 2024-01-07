@@ -9,7 +9,7 @@ export type RssProps = {
 
 export const Rss: React.FC<RssProps> = ({ icon }) => {
   return (
-    <LinkButton tippy aria-label="RSS" href="/rss.xml" className={styles.elastic_icon}>
+    <LinkButton tooltip aria-label="RSS" href="/rss.xml" className={styles.view_elastic_icon}>
       <span>RSS</span>
       {icon}
     </LinkButton>

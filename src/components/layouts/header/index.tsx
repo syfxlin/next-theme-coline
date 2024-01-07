@@ -9,27 +9,29 @@ import { Theme } from "./theme";
 import { Search } from "./search";
 import { Iconify } from "../../ui/iconify";
 import { Blog } from "./blog";
+import { t } from "../../../locales";
 
 export const Header: React.FC = async () => {
   const [seo, header] = await Promise.all([fetcher.seo(), fetcher.header()]);
   return (
     <header className={styles.container}>
-      <LinkButton className={styles.left} aria-label="首页" href="/">
-        <Image className={styles.logo} src={seo.logo} alt="站点图标" />
+      <LinkButton className={styles.left} aria-label={t("header.home")} href="/">
+        <Image className={styles.logo} src={seo.logo} alt={t("header.icon")} />
       </LinkButton>
       <div className={styles.right}>
         <Blog icon={<Iconify icon="ri:article-line" />} />
         {header.main.map((item) => (
           <LinkButton
-            tippy
+            tooltip
             key={`nav-${item.link}`}
             href={item.link}
             aria-label={item.title}
             className={cx(
-              item.view === "always" && styles.always,
-              item.view === "elastic" && styles.elastic,
-              item.view === "always-icon" && styles.always_icon,
-              item.view === "elastic-icon" && styles.elastic_icon,
+              item.view === "text" && styles.view_text,
+              item.view === "icon" && styles.view_icon,
+              item.view === "elastic" && styles.view_elastic,
+              item.view === "elastic-text" && styles.view_elastic_text,
+              item.view === "elastic-icon" && styles.view_elastic_icon,
             )}
           >
             <span>{item.title}</span>

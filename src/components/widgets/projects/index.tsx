@@ -54,8 +54,9 @@ export const Projects: React.FC<ProjectsProps> = async ({ data }) => {
                   key={`project-${project.link}`}
                   className={styles.link}
                   href={project.link}
-                  aria-label={`项目：${project.name}`}
+                  aria-label={project.name}
                   target="_blank"
+                  rel="nofollow noopener"
                 >
                   <span className={styles.left}>
                     <span className={styles.name}>

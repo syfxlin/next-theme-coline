@@ -18,6 +18,7 @@ export const button = styled.css`
   padding: ${theme.spacing.calc(2)} ${theme.spacing.calc(2.5)};
   border-radius: ${theme.borderRadius.default};
   color: ${theme.color.text.primary};
+  gap: ${theme.spacing.calc(1)};
   cursor: pointer;
   transition:
     color 0.3s,

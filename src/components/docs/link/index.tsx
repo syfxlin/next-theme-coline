@@ -11,10 +11,14 @@ export type LinkProps = {
 export const Link: React.FC<LinkProps> = (props) => {
   const pair = props.href.split("$$");
   if (pair.length <= 1) {
-    return <ULink href={props.href}>{props.children}</ULink>;
+    return (
+      <ULink href={props.href} target="_blank" rel="nofollow noopener">
+        {props.children}
+      </ULink>
+    );
   } else {
     return (
-      <ULink href={pair[1]} className={styles.link}>
+      <ULink href={pair[1]} target="_blank" rel="nofollow noopener" className={styles.link}>
         <Iconify icon={pair[0]} />
         {props.children}
       </ULink>

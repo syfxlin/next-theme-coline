@@ -5,10 +5,11 @@ import { Template } from "../../../components/templates/template";
 import { Renderer } from "../../../components/docs";
 import { Friends } from "../../../components/widgets/friends";
 import { notFound } from "next/navigation";
+import { t } from "../../../locales";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   return metadata({
-    title: "友邻",
+    title: t("links.name"),
     link: "/links",
   });
 };
@@ -20,10 +21,10 @@ export default async function LinksPage() {
   }
   return (
     <Template
-      name="友邻"
+      artalk
       link="/links"
-      desc={`${data.links?.length ?? 0} 友邻 × ${data.lost_links?.length ?? 0} 已失联友邻`}
-      artalk={true}
+      name={t("links.name")}
+      desc={t("links.desc", data.links?.length ?? 0, data.lost_links?.length ?? 0)}
     >
       <Renderer document={data.content?.document} position={data.display}>
         {data.links && <Friends data={data.links} />}

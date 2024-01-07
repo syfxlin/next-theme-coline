@@ -14,11 +14,11 @@ main:
   - title: 归档
     link: /archives
     icon: ri:archive-line
-    view: elastic
+    view: elastic-text
   - title: 留言
     link: /message-board
     icon: ri:message-3-line
-    view: elastic
+    view: elastic-text
   - title: GitHub
     link: https://github.com/syfxlin
     icon: uil:github-alt
