@@ -7,10 +7,6 @@ main:
     link: /links
     icon: ri:heart-line
     view: elastic
-  - title: 自述
-    link: /about
-    icon: ri:user-line
-    view: elastic
   - title: 归档
     link: /archives
     icon: ri:archive-line

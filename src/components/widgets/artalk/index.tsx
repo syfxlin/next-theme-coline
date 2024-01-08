@@ -17,22 +17,20 @@ export const Artalk: React.FC<Props> = ({ name, link }) => {
   const artalk = useRef<ArtalkComment>();
   const element = useRef<HTMLElement>(null);
   useEffect(() => {
-    if (COLINE_ARTALK_SITE_NAME && COLINE_ARTALK_SERVER_URL && element.current) {
-      import("artalk").then((mod) => {
-        if (element.current) {
-          artalk.current = new mod.default({
-            el: element.current,
-            pageTitle: name,
-            pageKey: link,
-            darkMode: resolvedTheme === "dark",
-            server: COLINE_ARTALK_SERVER_URL,
-            site: COLINE_ARTALK_SITE_NAME,
-          });
-        }
-      });
-    }
+    import("artalk").then((mod) => {
+      if (element.current) {
+        artalk.current = new mod.default({
+          el: element.current,
+          pageTitle: name,
+          pageKey: link,
+          darkMode: resolvedTheme === "dark",
+          server: COLINE_ARTALK_SERVER_URL,
+          site: COLINE_ARTALK_SITE_NAME,
+        });
+      }
+    });
     return () => {
-      if (COLINE_ARTALK_SITE_NAME && COLINE_ARTALK_SERVER_URL && artalk.current) {
+      if (artalk.current) {
         artalk.current?.destroy();
       }
     };
