@@ -1,6 +1,8 @@
 name: Sync Repo
 on:
   workflow_dispatch:
+  repository_dispatch:
+    types: [sync-repo]
 jobs:
   sync:
     name: Sync
