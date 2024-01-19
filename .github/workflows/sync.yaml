@@ -10,6 +10,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Sync
         run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           cd .. && git clone https://github.com/syfxlin/blog.git && cd blog
           rm -rf depker.config.ts
           rm -rf .git      && cp -rf ../next-theme-coline/.git      .
