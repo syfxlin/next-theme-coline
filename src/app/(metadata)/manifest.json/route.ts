@@ -1,9 +1,9 @@
 import { MetadataRoute } from "next";
-import { fetcher } from "../../../contents";
 import { NextResponse } from "next/server";
+import { fetcher } from "../../../contents";
 import { image } from "../../../utils/vender";
 
-export const GET = async () => {
+export async function GET() {
   const seo = await fetcher.seo();
 
   const manifest: MetadataRoute.Manifest = {
@@ -57,4 +57,4 @@ export const GET = async () => {
       "Cache-Control": "public, max-age=0, must-revalidate",
     },
   });
-};
+}

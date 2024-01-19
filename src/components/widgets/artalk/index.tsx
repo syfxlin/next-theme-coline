@@ -1,16 +1,16 @@
 "use client";
 import "artalk/dist/Artalk.css";
-import * as styles from "./styles.css";
 import React, { useEffect, useRef } from "react";
 import type ArtalkComment from "artalk";
-import { COLINE_ARTALK_SERVER_URL, COLINE_ARTALK_SITE_NAME } from "../../../env/public";
 import { useTheme } from "next-themes";
+import { COLINE_ARTALK_SERVER_URL, COLINE_ARTALK_SITE_NAME } from "../../../env/public";
 import { t } from "../../../locales";
+import * as styles from "./styles.css";
 
-type Props = {
+interface Props {
   name: string;
   link: string;
-};
+}
 
 export const Artalk: React.FC<Props> = ({ name, link }) => {
   const { resolvedTheme } = useTheme();
@@ -19,6 +19,7 @@ export const Artalk: React.FC<Props> = ({ name, link }) => {
   useEffect(() => {
     import("artalk").then((mod) => {
       if (element.current) {
+        // eslint-disable-next-line new-cap
         artalk.current = new mod.default({
           el: element.current,
           pageTitle: name,

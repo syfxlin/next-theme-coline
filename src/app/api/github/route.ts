@@ -3,6 +3,6 @@ import { GithubAdapter } from "../../../adapters/github-adapter";
 
 const adapter = new GithubAdapter();
 
-export const POST = async (request: NextRequest) => {
+export async function POST(request: NextRequest) {
   return adapter.route(request);
-};
+}

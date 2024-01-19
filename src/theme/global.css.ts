@@ -1,5 +1,5 @@
-import { theme } from "./theme.css";
 import { styled } from "@syfxlin/reve";
+import { theme } from "./theme.css";
 
 styled.global`
   *,

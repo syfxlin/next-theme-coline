@@ -1,5 +1,5 @@
-import { theme } from "../../../theme/theme.css";
 import { styled } from "@syfxlin/reve";
+import { theme } from "../../../theme/theme.css";
 
 export const section = styled.css`
   margin: ${theme.spacing.calc(4)} 0;

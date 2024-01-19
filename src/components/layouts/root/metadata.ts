@@ -3,14 +3,14 @@ import { image, resolve } from "../../../utils/vender";
 import { fetcher } from "../../../contents";
 import { COLINE_LANGUAGE } from "../../../env/public";
 
-export type MetadataProps = {
+export interface MetadataProps {
   link?: string;
   title?: string;
   description?: string;
   thumbnail?: string;
-};
+}
 
-export const metadata = async (props?: MetadataProps): Promise<Metadata> => {
+export async function metadata(props?: MetadataProps): Promise<Metadata> {
   const [seo, author] = await Promise.all([fetcher.seo(), fetcher.author()]);
   return {
     metadataBase: new URL(seo.link),
@@ -82,4 +82,4 @@ export const metadata = async (props?: MetadataProps): Promise<Metadata> => {
       },
     ],
   };
-};
+}

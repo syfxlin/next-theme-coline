@@ -2,10 +2,10 @@
 import React from "react";
 import { cx } from "@syfxlin/reve";
 
-export type IconifyProps = {
+export interface IconifyProps {
   icon: string;
   className?: string;
-};
+}
 
 export const Iconify: React.FC<IconifyProps> = (props) => {
   if (props.icon.startsWith("svg:")) {

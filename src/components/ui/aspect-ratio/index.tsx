@@ -1,7 +1,7 @@
 "use client";
-import * as styles from "./styles.css";
-import React, { forwardRef, HTMLAttributes } from "react";
+import React, { HTMLAttributes, forwardRef } from "react";
 import { cx, sx } from "@syfxlin/reve";
+import * as styles from "./styles.css";
 
 export type AspectRatioProps = HTMLAttributes<HTMLDivElement> & {
   ratio: number;

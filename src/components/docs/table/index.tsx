@@ -1,7 +1,7 @@
-import * as styles from "./styles.css";
 import React, { ReactNode } from "react";
+import * as styles from "./styles.css";
 
-export type TableProps = {
+export interface TableProps {
   head?: Array<{
     children: ReactNode;
     colSpan?: number;
@@ -14,7 +14,7 @@ export type TableProps = {
       rowSpan?: number;
     }>
   >;
-};
+}
 
 export const Table: React.FC<TableProps> = ({ head, body }) => {
   return (

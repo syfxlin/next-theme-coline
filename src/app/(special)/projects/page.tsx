@@ -1,25 +1,24 @@
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { metadata } from "../../../components/layouts/root/metadata";
 import { fetcher } from "../../../contents";
 import { Template } from "../../../components/templates/template";
 import { Renderer } from "../../../components/docs";
 import { Projects } from "../../../components/widgets/projects";
-import { notFound } from "next/navigation";
 import { t } from "../../../locales";
 
-export const generateMetadata = async (): Promise<Metadata> => {
+export async function generateMetadata(): Promise<Metadata> {
   return metadata({
     title: t("projects.name"),
     link: "/projects",
   });
-};
+}
 
 export default async function ProjectsPage() {
   const data = await fetcher.projects();
   if (data.display === "hidden") {
     return notFound();
   }
-  // prettier-ignore
   return (
     <Template
       artalk

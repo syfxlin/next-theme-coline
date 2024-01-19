@@ -8,15 +8,15 @@ import { Articles } from "./src/components/docs/articles/preview";
 import { COLINE_GITHUB_REPO, IS_DEV } from "./src/env/private";
 import { t } from "./src/locales";
 
-const storage = () => {
+function storage() {
   if (IS_DEV || !COLINE_GITHUB_REPO) {
     return { kind: "local" } as const;
   } else {
     return { kind: "github", repo: COLINE_GITHUB_REPO as `${string}/${string}` } as const;
   }
-};
+}
 
-const content = (path: string) => {
+function content(path: string) {
   return fields.document({
     label: t("keystatic.page.content"),
     images: {
@@ -97,7 +97,7 @@ const content = (path: string) => {
       }),
     },
   });
-};
+}
 
 export default config({
   storage: storage(),
@@ -204,7 +204,7 @@ export default config({
           }),
           {
             label: t("category.name"),
-            itemLabel: (props) => props.value,
+            itemLabel: props => props.value,
             validation: { length: { min: 0, max: 10 } },
           },
         ),
@@ -215,7 +215,7 @@ export default config({
           }),
           {
             label: t("tag.name"),
-            itemLabel: (props) => props.value,
+            itemLabel: props => props.value,
             validation: { length: { min: 0, max: 10 } },
           },
         ),
@@ -265,7 +265,7 @@ export default config({
           }),
           {
             label: t("keystatic.seo.keywords"),
-            itemLabel: (props) => props.value,
+            itemLabel: props => props.value,
             validation: { length: { min: 0 } },
           },
         ),
@@ -336,7 +336,7 @@ export default config({
           }),
           {
             label: t("keystatic.header.main"),
-            itemLabel: (props) => props.fields.title.value,
+            itemLabel: props => props.fields.title.value,
             validation: { length: { min: 0, max: 10 } },
           },
         ),
@@ -361,7 +361,7 @@ export default config({
           }),
           {
             label: t("keystatic.footer.main"),
-            itemLabel: (props) => props.fields.title.value,
+            itemLabel: props => props.fields.title.value,
             validation: { length: { min: 0, max: 10 } },
           },
         ),
@@ -443,7 +443,7 @@ export default config({
           }),
           {
             label: t("keystatic.friends.main"),
-            itemLabel: (props) => props.fields.name.value,
+            itemLabel: props => props.fields.name.value,
             validation: { length: { min: 0 } },
           },
         ),
@@ -460,7 +460,7 @@ export default config({
           }),
           {
             label: t("keystatic.friends.lost"),
-            itemLabel: (props) => props.fields.name.value,
+            itemLabel: props => props.fields.name.value,
             validation: { length: { min: 0 } },
           },
         ),
@@ -511,21 +511,21 @@ export default config({
                   }),
                   {
                     label: t("keystatic.projects.component"),
-                    itemLabel: (props) => props.value,
+                    itemLabel: props => props.value,
                     validation: { length: { min: 0 } },
                   },
                 ),
               }),
               {
                 label: t("keystatic.projects.main"),
-                itemLabel: (props) => props.fields.name.value,
+                itemLabel: props => props.fields.name.value,
                 validation: { length: { min: 1 } },
               },
             ),
           }),
           {
             label: t("keystatic.projects.category"),
-            itemLabel: (props) => props.fields.name.value,
+            itemLabel: props => props.fields.name.value,
             validation: { length: { min: 0 } },
           },
         ),

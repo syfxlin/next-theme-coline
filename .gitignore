@@ -251,3 +251,12 @@ next-env.d.ts
 # content
 /public/sw.js*
 /public/workbox-*.js*
+
+### VisualStudioCode template
+.vscode/*
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix

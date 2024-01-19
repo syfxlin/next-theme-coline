@@ -1,11 +1,11 @@
 import React from "react";
-import { iconify } from "./query";
 import { cx } from "@syfxlin/reve";
+import { iconify } from "./query";
 
-export type IconifyProps = {
+export interface IconifyProps {
   icon: string;
   className?: string;
-};
+}
 
 export const Iconify: React.FC<IconifyProps> = async (props) => {
   if (props.icon.startsWith("svg:")) {

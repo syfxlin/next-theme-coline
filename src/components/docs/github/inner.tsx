@@ -1,9 +1,9 @@
 import React from "react";
 import { AdapterResponse } from "../../../adapters/adapter";
 import { GithubRequest, GithubResponse } from "../../../adapters/github-adapter";
-import * as styles from "./styles.css";
 import { Link } from "../../ui/link";
 import { stars } from "../../../utils/vender";
+import * as styles from "./styles.css";
 
 export const GithubInner: React.FC<AdapterResponse<GithubRequest, GithubResponse>> = React.memo((query) => {
   return (

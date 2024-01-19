@@ -1,6 +1,6 @@
 import Fuse from "fuse.js";
-import { ArticleData } from "./types";
 import React from "react";
+import { ArticleData } from "./types";
 import { fetcher } from "./fetcher";
 
 export const searcher: () => Promise<Fuse<ArticleData>> = React.cache(async () => {

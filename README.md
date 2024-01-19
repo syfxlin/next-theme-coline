@@ -1,16 +1,16 @@
-# Coline - 轻快、简洁、优雅的 Next.js 模板
+# Coline - Light, clean and elegant Next.js template
 
-Coline（**co**nnect, **line**）是一个基于 Next.js App Router 开发的博客模板，建立在轻快与简洁的设计理念上，摒弃花里胡哨的界面，专注于内容创作。
+Coline (**co**nnect, **line**) is a blog template based on the Next.js App Router development, built on the concept of lightness and simplicity of design, eschewing fancy interfaces and focusing on content creation.
 
-## 设计理念
+## Design Concepts
 
-- **简洁清新**：人的注意力是有限的，为了使读者能聚焦于内容之上。Coline 仅保留了少量色彩，大范围使用中性色，鲜明的色彩仅用于特殊场景，同时任何与内容无关的信息都不应该出现。
-- **轻量快速**：人的容忍度是有限的，通常一个网站如果不能在 3 秒内加载出大部分内容，读者就会失去等待的耐心。Coline 在 LightHouse 中表现优秀，Performance > 98%，Best practice 100%。
-- **SEO 100%**：网站不仅要给人类看，还需要给机器看。Coline 在 LightHouse 中 SEO 评分达到了 100%。同时也支持了 RSS，使读者能够使用 RSS 阅读器订阅博客。
-- **无障碍支持**：不是所有人都是完美的，不应该歧视任何不完美的人。Coline 尽可能降低障碍人士使用难度，在 LightHouse 中 Accessibility > 90%。
-- **写作友好**：网站的内容是作者产出的，如果不能有良好的写作体验，那么其他都是泡沫。Coline 集成了 Keystatic CMS，支持可视化编辑，仅需 GitHub 与 Vercel 即可启动一个 Coline 站点。
+- **Simple, Clean**: The human attention span is limited, and to keep the reader focused on the content, Coline kept the colors to a minimum, using a wide range of neutrals, with bright colors used only for specific scenes, and no information that was not relevant to the content should be present.
+- **Light, Fast**: The human have a limited tolerance, and usually readers lose patience with a site that can't load most of its content in less than 3 seconds. Coline excels in LightHouse, with Performance > 98% and Best practice 100%.
+- **SEO 100%**: Websites are not just for humans, they need to be for machines as well. Coline has a 100% SEO score in LightHouse. RSS is also supported, allowing readers to subscribe to the blog using an RSS reader.
+- **Accessibility**: Not everyone is perfect, and there should be no discrimination against anyone who isn't.Coline makes it as easy as possible for people with disabilities to use. Coline has Accessibility > 90% in LightHouse.
+- **Writing-friendly**: The content of the website is written by the author, so it is equally important to have a good writing experience. Coline integrates with Keystatic CMS to support visual editing.
 
-## 技术栈
+## Technology Stacks
 
 - Next.js 14 (App Router)
 - Vanilla Extract
@@ -18,35 +18,87 @@ Coline（**co**nnect, **line**）是一个基于 Next.js App Router 开发的博
 - Artalk
 - Fuse.js
 
-## 使用方式
+## Examples
 
-1. 使用 create-next-app 初始化站点文件
+- [My Blog](https://blog.ixk.me)
+
+## Installation
+
+### Requirements
+
+- You have registered [GitHub](https://github.com/) account.
+- You have registered [Vercel](https://vercel.com) account (optional, deployed with Vercel).
+- You have registered [Google Analytics](https://analytics.google.com/) (optional, analytics features).
+- You have installed [Artalk](https://github.com/ArtalkJS/Artalk) (optional, comment feature)
+
+### Prepare Environments
+
+**Create GitHub Token**
+
+![Create GitHub Token](https://github.com/syfxlin/static/raw/master/next-theme-coline/create-github-token.2853x1564.gif)
+
+**Create Keystatic GitHub App**
+
+- The GitHub App name can be anything you want.
+- Please replace blog.ixk.me with your own domain name.
+- Please check the Callback URL after creation, if there is something missing, you need to add it again.
+- Please keep the GitHub App Name, Client ID, Client Secret after creation, it will be used later.
+
+![Create GitHub App](https://github.com/syfxlin/static/raw/master/next-theme-coline/create-github-app.2853x1564.gif)
+
+**Google Analytics、Artalk**
+
+- [Google Analytics](https://analytics.google.com)
+- [Artalk](https://artalk.js.org)
+
+### Environment Variables
+
+- **NEXT_PUBLIC_COLINE_LANGUAGE**: Configuration language, optional values `zh-Hans`, `zh-Hant`, `en`.
+- **NEXT_PUBLIC_COLINE_GOOGLE_ANALYTICS**: Google Analytics Measurement ID, if you don't fill in this variable, Google Analytics will be disabled.
+- **NEXT_PUBLIC_COLINE_ARTALK_SITE_NAME**: Artalk site name, if you don't fill in this variable, Artalk will be disabled.
+- **NEXT_PUBLIC_COLINE_ARTALK_SERVER_URL**: Artalk server address, if you don't fill in this variable, Artalk will be disabled.
+- **NEXT_PUBLIC_COLINE_GITHUB_REPO**: GitHub repository for your site
+- **COLINE_GITHUB_TOKEN**: GitHub Personal Access Token, the steps to create it are given above.
+- **KEYSTATIC_SECRET**: 80-bit hex random string, which can be obtained using the `require("crypto").randomBytes(40).toString('hex')` script.
+- **KEYSTATIC_GITHUB_CLIENT_ID**: GitHub Client ID, the steps to create it are given above.
+- **KEYSTATIC_GITHUB_CLIENT_SECRET**: GitHub Client Secret, the steps to create it are given above.
+- **NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG**: GitHub App Name, the steps to create it are given above.
+
+### Deployment with Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fsyfxlin%2Fnext-theme-coline&env=NEXT_PUBLIC_COLINE_LANGUAGE,NEXT_PUBLIC_COLINE_GOOGLE_ANALYTICS,NEXT_PUBLIC_COLINE_ARTALK_SITE_NAME,NEXT_PUBLIC_COLINE_ARTALK_SERVER_URL,NEXT_PUBLIC_COLINE_GITHUB_REPO,COLINE_GITHUB_TOKEN,KEYSTATIC_SECRET,KEYSTATIC_GITHUB_CLIENT_ID,KEYSTATIC_GITHUB_CLIENT_SECRET,NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG&project-name=blog&repository-name=blog)
+
+### Deployment with Node.js
+
+**Initializing site project with create-next-app**
 
 ```shell
-pnpm dlx create-next-app --example https://github.com/syfxlin/blog
+pnpm dlx create-next-app --example https://github.com/syfxlin/next-theme-coline
 ```
 
-2. 配置 env 文件
+**Configuring the env file**
 
 ```shell
 cp .env.example .env
+# Write environment variables to the .env file
 ```
 
-> - **NEXT_PUBLIC_COLINE_LANGUAGE**：配置站点语言，支持 zh-Hans、zh-Hant、en
-> - **NEXT_PUBLIC_COLINE_GOOGLE_ANALYTICS**：配置 Google Analysis
-> - **NEXT_PUBLIC_COLINE_ARTALK_SITE_NAME** 和 **NEXT_PUBLIC_COLINE_ARTALK_SERVER_URL** 配置 [Artalk](https://github.com/ArtalkJS/Artalk)
-> - **NEXT_PUBLIC_COLINE_GITHUB_REPO**：配置站点仓库的地址
-> - **COLINE_GITHUB_TOKEN**：配置你的 GitHub Token，用于 Projects 页面，建议只给 public_repo 权限
-> - **KEYSTATIC_SECRET**、**KEYSTATIC_GITHUB_CLIENT_ID**、**KEYSTATIC_GITHUB_CLIENT_SECRET**、**NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG** 具体可以看 [Keystatic 的文档](https://keystatic.com/docs/github-mode)
-
-4. 启动站点
+**Launch project**
 
 ```shell
 pnpm dev
 ```
 
-5. 构建站点
+**Building project**
 
-``shell
+```shell
 pnpm build
-``
+```
+
+## Maintainer
+
+**@syfxlin/next-theme-coline** is written and maintained with the help of [Otstar Lin](https://github.com/syfxlin) and the following [contributors](https://github.com/syfxlin/next-theme-coline/graphs/contributors).
+
+## License
+
+Released under the [Apache-2.0](https://opensource.org/licenses/Apache-2.0) License.

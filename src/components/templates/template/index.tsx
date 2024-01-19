@@ -1,4 +1,5 @@
 import React, { PropsWithChildren, ReactNode } from "react";
+import { TocData } from "@syfxlin/reks";
 import { Header } from "../../layouts/header";
 import { Main } from "../../layouts/main";
 import { Title } from "../../layouts/title";
@@ -6,7 +7,6 @@ import { Toc } from "../../widgets/toc";
 import { CursorPagination } from "../../ui/pagination";
 import { Artalk } from "../../widgets/artalk";
 import { Footer } from "../../layouts/footer";
-import { TocData } from "../../../contents/types";
 
 export type TemplateProps = PropsWithChildren<{
   name: string;

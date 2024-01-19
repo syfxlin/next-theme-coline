@@ -11,16 +11,16 @@ import { ArticleInfo } from "../../layouts/article-info";
 import { Pagination } from "../../ui/pagination";
 import { t } from "../../../locales";
 
-export type TemplateGroupMetadataProps = {
+export interface TemplateGroupMetadataProps {
   type: string;
   name: string | number;
   link: string;
   index: number;
   pages: number;
   total: number;
-};
+}
 
-export type TemplateGroupComponentProps = {
+export interface TemplateGroupComponentProps {
   type: string;
   name: string | number;
   link: string;
@@ -28,14 +28,14 @@ export type TemplateGroupComponentProps = {
   pages: number;
   total: number;
   items: ReadonlyArray<ArticleList>;
-};
+}
 
-export const metadataGroup = async (props: TemplateGroupMetadataProps): Promise<Metadata> => {
+export async function metadataGroup(props: TemplateGroupMetadataProps): Promise<Metadata> {
   return generateMetadata({
     title: `${props.type}：${props.name}${props.index === 1 ? `` : ` - ${t("pagination.curr", props.index)}`}`,
     link: props.index === 1 ? props.link : resolve(props.link, "page", props.index),
   });
-};
+}
 
 export const TemplateGroup: React.FC<TemplateGroupComponentProps> = (props) => {
   return (

@@ -1,8 +1,8 @@
 "use client";
-import * as styles from "./styles.css";
 import React, { useEffect, useRef } from "react";
-import { render } from "../../../utils/canvas";
 import { useTheme } from "next-themes";
+import { render } from "../../../utils/canvas";
+import * as styles from "./styles.css";
 
 export const Canvas: React.FC = () => {
   const ref = useRef<HTMLCanvasElement>(null);

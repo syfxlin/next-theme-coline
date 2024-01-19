@@ -1,20 +1,20 @@
-import { fetcher } from "../../../contents";
 import React from "react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { fetcher } from "../../../contents";
 import { layouts, metadataPage } from "../../../components/templates/page";
 
-type Props = {
+interface Props {
   params: {
     slug: string;
   };
-};
+}
 
 const query = React.cache(async (_slug: string) => {
   try {
     const query = await fetcher.pages();
     const slug = decodeURIComponent(_slug).toLowerCase();
-    const value = query.items.find((i) => i.slug === slug);
+    const value = query.items.find(i => i.slug === slug);
     if (!value) {
       return undefined;
     }
@@ -24,13 +24,13 @@ const query = React.cache(async (_slug: string) => {
   }
 });
 
-export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const data = await query(params.slug);
   if (!data) {
     return notFound();
   }
   return metadataPage({ data });
-};
+}
 
 export default async function Page({ params }: Props) {
   const data = await query(params.slug);

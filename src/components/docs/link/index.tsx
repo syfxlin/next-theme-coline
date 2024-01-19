@@ -1,12 +1,12 @@
-import * as styles from "./styles.css";
 import React, { ReactNode } from "react";
 import { Iconify } from "../../ui/iconify";
 import { Link as ULink } from "../../ui/link";
+import * as styles from "./styles.css";
 
-export type LinkProps = {
+export interface LinkProps {
   href: string;
   children: ReactNode;
-};
+}
 
 export const Link: React.FC<LinkProps> = (props) => {
   const pair = props.href.split("$$");

@@ -1,6 +1,10 @@
 // @ts-nocheck
-import * as styles from "./styles.css";
 import React, { ReactNode } from "react";
+import { DocumentRenderer } from "@keystatic/core/renderer";
+import { DocumentRendererProps } from "@keystatic/core/dist/declarations/src/renderer";
+import { cx } from "@syfxlin/reve";
+import { DocumentElement } from "@keystatic/core";
+import * as styles from "./styles.css";
 import { Code } from "./code";
 import { List } from "./list";
 import { Link } from "./link";
@@ -14,11 +18,7 @@ import { Divider } from "./divider";
 import { Heading } from "./heading";
 import { Paragraph } from "./paragraph";
 import { InlineCode } from "./inline-code";
-import { DocumentRenderer } from "@keystatic/core/renderer";
-import { DocumentRendererProps } from "@keystatic/core/dist/declarations/src/renderer";
 import { Blockquote } from "./blockquote";
-import { cx } from "@syfxlin/reve";
-import { DocumentElement } from "@keystatic/core";
 import { Layout } from "./layout";
 import { Articles } from "./articles";
 
@@ -48,11 +48,11 @@ export const components: DocumentRendererProps["componentBlocks"] = {
   articles: Articles,
 };
 
-export type RendererProps = {
+export interface RendererProps {
   document?: ReadonlyArray<DocumentElement>;
   position?: "none" | "top" | "bottom";
   children?: ReactNode;
-};
+}
 
 export const Renderer: React.FC<RendererProps> = React.memo(({ document, position, children }) => {
   return (

@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export type AdapterResponse<P = any, D = any, E = any> = {
+export interface AdapterResponse<P = any, D = any, E = any> {
   params: P;
   loading: boolean;
   data: D | undefined;
   error: E | undefined;
-};
+}
 
 export abstract class Adapter<P = any, R = any> {
   public abstract valid(params: P): Promise<string | null | undefined> | string | null | undefined;

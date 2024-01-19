@@ -1,10 +1,10 @@
 import React from "react";
 import { AdapterResponse } from "../../../adapters/adapter";
 import { ScraperRequest, ScraperResponse } from "../../../adapters/scraper-adapter";
-import * as styles from "./styles.css";
 import { Link } from "../../ui/link";
 import { AspectRatio } from "../../ui/aspect-ratio";
 import { t } from "../../../locales";
+import * as styles from "./styles.css";
 
 export const ArticleInner: React.FC<AdapterResponse<ScraperRequest, ScraperResponse>> = React.memo((query) => {
   return (
@@ -18,7 +18,6 @@ export const ArticleInner: React.FC<AdapterResponse<ScraperRequest, ScraperRespo
       {query.data?.thumbnail && (
         <div className={styles.right}>
           <AspectRatio ratio={1}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={query.data.thumbnail} alt={t("article.thumbnail")} />
           </AspectRatio>
         </div>

@@ -1,17 +1,16 @@
-import * as styles from "./styles.css";
 import React, { ReactNode } from "react";
 import { Link } from "../../ui/link";
 import { Divider } from "../../ui/divider";
 import { ago, date } from "../../../utils/vender";
 import { ArticleList } from "../../../contents/types";
 import { t } from "../../../locales";
+import * as styles from "./styles.css";
 
-export type MetaInfoProps = {
+export interface MetaInfoProps {
   data: ArticleList;
-};
+}
 
 export const MetaInfo: React.FC<MetaInfoProps> = ({ data }) => {
-  // prettier-ignore
   return (
     <div className={styles.container}>
       <Link
@@ -35,7 +34,7 @@ export const MetaInfo: React.FC<MetaInfoProps> = ({ data }) => {
       {!!data.categories?.length && <Divider orientation="vertical" />}
       {data.categories
         ?.slice(0, 2)
-        .map((i) => (
+        .map(i => (
           <Link
             key={`category-${i.link}`}
             tooltip
@@ -56,7 +55,7 @@ export const MetaInfo: React.FC<MetaInfoProps> = ({ data }) => {
       {!!data.tags?.length && <Divider orientation="vertical" />}
       {data.tags
         ?.slice(0, 3)
-        .map((i) => (
+        .map(i => (
           <Link
             key={`tag-${i.link}`}
             tooltip
@@ -64,7 +63,7 @@ export const MetaInfo: React.FC<MetaInfoProps> = ({ data }) => {
             aria-label={t("tag.desc", i.name)}
             className={styles.link}
           >
-            {i.name}
+            #{i.name}
           </Link>
         ))
         .reduce((all: ReactNode[], item, index) => {

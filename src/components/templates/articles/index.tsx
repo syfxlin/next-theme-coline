@@ -14,20 +14,20 @@ import { t } from "../../../locales";
 
 export type TemplateArticlesProps =
   | {
-      display: "document";
-      document?: DocumentData;
-    }
+    display: "document";
+    document?: DocumentData;
+  }
   | {
-      display: "articles";
-      articles: {
-        index: number;
-        pages: number;
-        total: number;
-        items: ReadonlyArray<ArticleList>;
-      };
+    display: "articles";
+    articles: {
+      index: number;
+      pages: number;
+      total: number;
+      items: ReadonlyArray<ArticleList>;
     };
+  };
 
-export const metadataArticles = (props: TemplateArticlesProps): Promise<Metadata> => {
+export function metadataArticles(props: TemplateArticlesProps): Promise<Metadata> {
   if (props.display === "document") {
     return generateMetadata({
       title: undefined,
@@ -39,7 +39,7 @@ export const metadataArticles = (props: TemplateArticlesProps): Promise<Metadata
       link: props.articles.index !== 1 ? resolve("page", props.articles.index) : "/",
     });
   }
-};
+}
 
 export const TemplateArticles: React.FC<TemplateArticlesProps> = (props) => {
   return (

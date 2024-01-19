@@ -1,17 +1,17 @@
-import * as styles from "./styles.css";
 import React from "react";
 import Link from "next/link";
+import { cx } from "@syfxlin/reve";
 import { MetaInfo } from "../meta-info";
 import { Image } from "../../ui/image";
 import { LinkButton } from "../../ui/button";
 import { ArticleList } from "../../../contents/types";
-import { cx } from "@syfxlin/reve";
 import { t } from "../../../locales";
+import * as styles from "./styles.css";
 
-export type ArticleInfoProps = {
+export interface ArticleInfoProps {
   step: number;
   data: ArticleList;
-};
+}
 
 export const ArticleInfo: React.FC<ArticleInfoProps> = ({ step, data }) => {
   return (

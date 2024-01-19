@@ -1,19 +1,19 @@
 import colors from "gh-lang-colors";
-import { Adapter, AdapterError } from "./adapter";
 import { COLINE_GITHUB_TOKEN } from "../env/private";
+import { Adapter, AdapterError } from "./adapter";
 
-export type GithubRequest = {
+export interface GithubRequest {
   repo: string;
-};
+}
 
-export type GithubResponse = {
+export interface GithubResponse {
   repo: string;
   description: string;
   color: string;
   language: string;
   stars: number;
   forks: number;
-};
+}
 
 export class GithubAdapter extends Adapter<GithubRequest, GithubResponse> {
   async valid(params: GithubRequest): Promise<string | null> {
@@ -39,7 +39,7 @@ export class GithubAdapter extends Adapter<GithubRequest, GithubResponse> {
         language: data.language,
         stars: data.stargazers_count,
         forks: data.forks_count,
-        // @ts-ignore
+        // @ts-expect-error
         color: colors[data.language] ?? "#fff",
       };
     } else {

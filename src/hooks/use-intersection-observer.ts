@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-export const useIntersectionObserver = (setActiveId: (id: string) => void) => {
+export function useIntersectionObserver(setActiveId: (id: string) => void) {
   const headingElementsRef = useRef<Record<string, IntersectionObserverEntry>>({});
   useEffect(() => {
     const callback = (headings: IntersectionObserverEntry[]) => {
@@ -12,10 +12,13 @@ export const useIntersectionObserver = (setActiveId: (id: string) => void) => {
       const visibleHeadings: IntersectionObserverEntry[] = [];
       Object.keys(headingElementsRef.current).forEach((key) => {
         const headingElement = headingElementsRef.current[key];
-        if (headingElement.isIntersecting) visibleHeadings.push(headingElement);
+        if (headingElement.isIntersecting) {
+          visibleHeadings.push(headingElement);
+        }
       });
 
-      const getIndexFromId = (id: string) => headingElements.findIndex((heading) => heading.id === id);
+      // eslint-disable-next-line ts/no-use-before-define
+      const getIndexFromId = (id: string) => headingElements.findIndex(heading => heading.id === id);
 
       if (visibleHeadings.length === 1) {
         setActiveId(visibleHeadings[0].target.id);
@@ -33,8 +36,8 @@ export const useIntersectionObserver = (setActiveId: (id: string) => void) => {
 
     const headingElements = Array.from(document.querySelectorAll("h2, h3"));
 
-    headingElements.forEach((element) => observer.observe(element));
+    headingElements.forEach(element => observer.observe(element));
 
     return () => observer.disconnect();
   }, [setActiveId]);
-};
+}

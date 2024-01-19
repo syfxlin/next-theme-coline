@@ -1,18 +1,18 @@
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { metadata } from "../../../components/layouts/root/metadata";
 import { fetcher } from "../../../contents";
 import { Template } from "../../../components/templates/template";
 import { Renderer } from "../../../components/docs";
 import { Friends } from "../../../components/widgets/friends";
-import { notFound } from "next/navigation";
 import { t } from "../../../locales";
 
-export const generateMetadata = async (): Promise<Metadata> => {
+export async function generateMetadata(): Promise<Metadata> {
   return metadata({
     title: t("links.name"),
     link: "/links",
   });
-};
+}
 
 export default async function LinksPage() {
   const data = await fetcher.friends();

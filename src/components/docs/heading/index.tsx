@@ -1,25 +1,25 @@
+import React, { JSX, ReactNode, isValidElement } from "react";
 import * as styles from "./styles.css";
-import React, { isValidElement, JSX, ReactNode } from "react";
 
-const visit = (node: any): string => {
+function visit(node: any): string {
   if (node.text) {
     return node.text;
   }
-  if (node.children instanceof Array) {
+  if (Array.isArray(node.children)) {
     return node.children.map((item: any) => visit(item)).join("");
   }
   return "";
-};
+}
 
-const parse = (node: ReactNode): string => {
+function parse(node: ReactNode): string {
   if (typeof node === "string") {
     return node;
   }
   if (typeof node === "number") {
     return String(node);
   }
-  if (node instanceof Array) {
-    return node.map((item) => parse(item)).join("");
+  if (Array.isArray(node)) {
+    return node.map(item => parse(item)).join("");
   }
   if (isValidElement(node)) {
     if (node.props?.node) {
@@ -29,12 +29,12 @@ const parse = (node: ReactNode): string => {
     }
   }
   return "";
-};
+}
 
-export type HeadingProps = {
+export interface HeadingProps {
   level: 1 | 2 | 3 | 4 | 5 | 6;
   children: ReactNode;
-};
+}
 
 export const Heading: React.FC<HeadingProps> = (props) => {
   const id = parse(props.children);

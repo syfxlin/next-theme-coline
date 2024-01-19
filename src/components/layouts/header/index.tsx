@@ -1,15 +1,15 @@
-import * as styles from "./styles.css";
 import React from "react";
 import { cx } from "@syfxlin/reve";
 import { fetcher } from "../../../contents";
 import { Image } from "../../ui/image";
 import { LinkButton } from "../../ui/button";
+import { Iconify } from "../../ui/iconify";
+import { t } from "../../../locales";
 import { Rss } from "./rss";
 import { Theme } from "./theme";
 import { Search } from "./search";
-import { Iconify } from "../../ui/iconify";
 import { Blog } from "./blog";
-import { t } from "../../../locales";
+import * as styles from "./styles.css";
 
 export const Header: React.FC = async () => {
   const [seo, header] = await Promise.all([fetcher.seo(), fetcher.header()]);
@@ -20,7 +20,7 @@ export const Header: React.FC = async () => {
       </LinkButton>
       <div className={styles.right}>
         <Blog icon={<Iconify icon="ri:article-line" />} />
-        {header.main.map((item) => (
+        {header.main.map(item => (
           <LinkButton
             tooltip
             key={`nav-${item.link}`}

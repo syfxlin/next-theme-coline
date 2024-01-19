@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { ArticleList } from "../../../contents/types";
 import { searcher } from "../../../contents";
 
-export type SearchResponse = {
+export interface SearchResponse {
   total: number;
   items: Array<ArticleList>;
-};
+}
 
-export const GET = async (request: NextRequest) => {
+export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
   const query = params.get("query");
   const page = params.get("page");
@@ -19,10 +19,10 @@ export const GET = async (request: NextRequest) => {
       return NextResponse.json({ code: 400, message: "Illegal parameters." }, { status: 400 });
     }
     if (page) {
-      pagination.page = parseInt(page);
+      pagination.page = Number.parseInt(page);
     }
     if (size) {
-      pagination.size = parseInt(size);
+      pagination.size = Number.parseInt(size);
     }
     if (pagination.page <= 0) {
       return NextResponse.json({ code: 400, message: "Illegal parameters." }, { status: 400 });
@@ -56,4 +56,4 @@ export const GET = async (request: NextRequest) => {
     })),
   };
   return NextResponse.json(results);
-};
+}

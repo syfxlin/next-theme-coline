@@ -7,9 +7,9 @@ import { ProgressBar } from "../../root/progress-bar";
 import { HelloWorld } from "../../root/hello-world";
 import { COLINE_LANGUAGE } from "../../../env/public";
 
-export type RootProps = {
+export interface RootProps {
   children: ReactNode;
-};
+}
 
 export const Root: React.FC<RootProps> = async (props) => {
   return (

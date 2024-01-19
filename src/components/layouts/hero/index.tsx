@@ -1,10 +1,10 @@
-import * as styles from "./styles.css";
 import React from "react";
 import { Caveat } from "next/font/google";
-import { Image } from "../../ui/image";
 import { cx } from "@syfxlin/reve";
+import { Image } from "../../ui/image";
 import { fetcher } from "../../../contents";
 import { t } from "../../../locales";
+import * as styles from "./styles.css";
 
 const caveat = Caveat({ subsets: ["latin"] });
 

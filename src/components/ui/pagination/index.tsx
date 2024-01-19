@@ -1,18 +1,18 @@
 "use client";
-import * as styles from "./styles.css";
 import React from "react";
 import { LinkButton } from "../button";
 import { range, resolve } from "../../../utils/vender";
 import { Iconify } from "../iconify/client";
 import { t } from "../../../locales";
+import * as styles from "./styles.css";
 
-export type PaginationProps = {
+export interface PaginationProps {
   index: number;
   pages: number;
   links?: string;
   onLink?: (page: number) => string;
   onPage?: (page: number) => void;
-};
+}
 
 export const Pagination: React.FC<PaginationProps> = ({ index, pages, links, onLink, onPage }) => {
   return (
@@ -40,8 +40,8 @@ export const Pagination: React.FC<PaginationProps> = ({ index, pages, links, onL
       )}
       {index >= 3 && <span className={styles.more}>...</span>}
       {range(index - 1, index + 1)
-        .filter((i) => i > 1 && i < pages)
-        .map((i) => (
+        .filter(i => i > 1 && i < pages)
+        .map(i => (
           <LinkButton
             className={index === i ? styles.active : ""}
             aria-label={t("pagination.curr", i)}
@@ -78,7 +78,7 @@ export const Pagination: React.FC<PaginationProps> = ({ index, pages, links, onL
   );
 };
 
-export type CursorPaginationProps = {
+export interface CursorPaginationProps {
   prev?: {
     name: string;
     link: string;
@@ -87,7 +87,7 @@ export type CursorPaginationProps = {
     name: string;
     link: string;
   };
-};
+}
 
 export const CursorPagination: React.FC<CursorPaginationProps> = (props) => {
   return (

@@ -1,10 +1,10 @@
-import * as styles from "./styles.css";
 import React, { ReactNode } from "react";
+import * as styles from "./styles.css";
 
-export type ParagraphProps = {
+export interface ParagraphProps {
   textAlign: "center" | "end" | undefined;
   children: ReactNode;
-};
+}
 
 export const Paragraph: React.FC<ParagraphProps> = (props) => {
   return (

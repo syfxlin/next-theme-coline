@@ -1,17 +1,17 @@
 "use client";
-import * as styles from "./styles.css";
 import React, { useState } from "react";
 import useSWR from "swr";
-import { Button } from "../../ui/button";
 import { useDebounce } from "react-use";
+import { Button } from "../../ui/button";
 import { Loading } from "../../ui/loading";
 import { ArticleInfo } from "../../layouts/article-info";
 import { Pagination } from "../../ui/pagination";
 import { SearchResponse } from "../../../app/api/search/route";
 import { Iconify } from "../../ui/iconify/client";
 import { t } from "../../../locales";
+import * as styles from "./styles.css";
 
-const fetcher = async ([path, page, search]: [string, number, string]) => {
+async function fetcher([path, page, search]: [string, number, string]) {
   const url = new URL(path, location.href);
   url.searchParams.set("page", String(page));
   url.searchParams.set("size", String(10));
@@ -20,14 +20,14 @@ const fetcher = async ([path, page, search]: [string, number, string]) => {
   const json = await response.json();
   const data = json as SearchResponse;
   const total = data.total;
-  const items = data.items.map((i) => ({ ...i, published: new Date(i.published), modified: new Date(i.modified) }));
+  const items = data.items.map(i => ({ ...i, published: new Date(i.published), modified: new Date(i.modified) }));
   return { total, items };
-};
+}
 
-export type SpotlightProps = {
+export interface SpotlightProps {
   active: boolean;
   setActive: (active: boolean) => void;
-};
+}
 
 export const Spotlight: React.FC<SpotlightProps> = (props) => {
   const [page, setPage] = useState<number>(1);
@@ -53,7 +53,7 @@ export const Spotlight: React.FC<SpotlightProps> = (props) => {
             className={styles.input}
             type="text"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={e => setSearch(e.target.value)}
             placeholder={t("spotlight.input")}
           />
           <Button aria-label={t("spotlight.close")} onClick={() => props.setActive(false)}>
@@ -67,7 +67,7 @@ export const Spotlight: React.FC<SpotlightProps> = (props) => {
               <ArticleInfo key={`search-${item.link}`} data={item} step={index} />
             ))}
             {query.data && (
-              <Pagination index={page} pages={Math.ceil(query.data.total / 10)} onPage={(page) => setPage(page)} />
+              <Pagination index={page} pages={Math.ceil(query.data.total / 10)} onPage={page => setPage(page)} />
             )}
           </div>
         )}

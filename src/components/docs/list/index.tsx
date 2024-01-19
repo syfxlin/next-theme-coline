@@ -1,12 +1,12 @@
-import * as styles from "./styles.css";
 import React, { ReactElement } from "react";
 import { cx } from "@syfxlin/reve";
+import * as styles from "./styles.css";
 
-export type ListProps = {
+export interface ListProps {
   type: "ordered" | "unordered";
   direction?: "default" | "horizontal" | "vertical";
   children: ReactElement[];
-};
+}
 
 export const List: React.FC<ListProps> = (props) => {
   if (props.type === "ordered") {

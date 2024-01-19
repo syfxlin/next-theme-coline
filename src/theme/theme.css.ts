@@ -1,5 +1,4 @@
 import { createReveTheme } from "@syfxlin/reve";
-import { breakpoints } from "./tokens";
 import {
   blueA,
   blueDarkA,
@@ -18,8 +17,9 @@ import {
   yellowA,
   yellowDarkA,
 } from "@radix-ui/colors";
+import { breakpoints } from "./tokens";
 
-const values = <V extends Record<string, string> = Record<string, string>>(def: string | number, values: V) => {
+function values<V extends Record<string, string> = Record<string, string>>(def: string | number, values: V) {
   const calc = (value?: string | number | undefined | null) => {
     const val = value ?? def;
     if (values[val] !== undefined && values[val] !== null) {
@@ -34,15 +34,15 @@ const values = <V extends Record<string, string> = Record<string, string>>(def: 
       ) {
         idx++;
       }
-      const s = typeof val === "number" ? val : parseFloat(val);
-      const v = parseFloat(values.unit.substring(0, idx));
+      const s = typeof val === "number" ? val : Number.parseFloat(val);
+      const v = Number.parseFloat(values.unit.substring(0, idx));
       const u = values.unit.substring(idx);
       return s * v + u;
     }
     throw new Error(`Unknown computed value: ${value}, allow values: ${values}`);
   };
   return Object.assign(values, { calc });
-};
+}
 
 export const theme = createReveTheme({
   static: {

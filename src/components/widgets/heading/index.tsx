@@ -1,6 +1,6 @@
-import * as styles from "./styles.css";
-import React, { forwardRef, HTMLAttributes, PropsWithChildren } from "react";
+import React, { HTMLAttributes, PropsWithChildren, forwardRef } from "react";
 import { cx } from "@syfxlin/reve";
+import * as styles from "./styles.css";
 
 export type HeadingProps = PropsWithChildren<HTMLAttributes<HTMLHeadingElement>>;
 

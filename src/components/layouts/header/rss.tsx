@@ -3,9 +3,9 @@ import React, { ReactNode } from "react";
 import { LinkButton } from "../../ui/button";
 import * as styles from "./styles.css";
 
-export type RssProps = {
+export interface RssProps {
   icon: ReactNode;
-};
+}
 
 export const Rss: React.FC<RssProps> = ({ icon }) => {
   return (

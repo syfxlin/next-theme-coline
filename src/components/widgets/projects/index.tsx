@@ -1,4 +1,3 @@
-import * as styles from "./styles.css";
 import React from "react";
 import { ProjectsData } from "../../../contents/types";
 import { Grid } from "../../layouts/grid";
@@ -7,12 +6,13 @@ import { Iconify } from "../../ui/iconify";
 import { GithubAdapter } from "../../../adapters/github-adapter";
 import { Heading } from "../heading";
 import { stars } from "../../../utils/vender";
+import * as styles from "./styles.css";
 
 const adapter = new GithubAdapter();
 
-export type IconsProps = {
+export interface IconsProps {
   link: string;
-};
+}
 
 export const Icons: React.FC<IconsProps> = async (props) => {
   const match = /https?:\/\/(?:www\.)?github\.com\/([^\/]+)\/([^\/]+)/.exec(props.link);
@@ -37,14 +37,14 @@ export const Icons: React.FC<IconsProps> = async (props) => {
   return <Iconify icon="ri:link" className={styles.icon} />;
 };
 
-export type ProjectsProps = {
+export interface ProjectsProps {
   data: Exclude<ProjectsData["categories"], undefined>;
-};
+}
 
 export const Projects: React.FC<ProjectsProps> = async ({ data }) => {
   return (
     <>
-      {data.map((category) => (
+      {data.map(category => (
         <React.Fragment key={`category-${category.name}`}>
           <Heading>{category.name}</Heading>
           <Grid>
@@ -61,7 +61,7 @@ export const Projects: React.FC<ProjectsProps> = async ({ data }) => {
                   <span className={styles.left}>
                     <span className={styles.name}>
                       <span>{project.name}</span>
-                      {project.components.map((component) => (
+                      {project.components.map(component => (
                         <Iconify key={`component-${component}`} icon={component} className={styles.component} />
                       ))}
                     </span>

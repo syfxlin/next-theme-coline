@@ -1,10 +1,10 @@
-import * as styles from "./styles.css";
 import React, { ReactNode } from "react";
+import * as styles from "./styles.css";
 
-export type TitleProps = {
+export interface TitleProps {
   title: ReactNode;
   children: ReactNode;
-};
+}
 
 export const Title: React.FC<TitleProps> = (props) => {
   return (

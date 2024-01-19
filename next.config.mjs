@@ -1,7 +1,7 @@
 import createPwaPlugin from "next-pwa";
 import createBundleAnalyzer from "@next/bundle-analyzer";
-import { COLINE_ANALYZE, IS_DEV } from "./src/env/private.mjs";
 import { createVanillaExtractPlugin } from "@vanilla-extract/next-plugin";
+import { COLINE_ANALYZE, IS_DEV } from "./src/env/private.mjs";
 
 const withPwa = createPwaPlugin({ dest: "public" });
 const withVanillaExtract = createVanillaExtractPlugin();

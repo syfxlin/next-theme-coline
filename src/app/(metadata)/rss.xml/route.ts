@@ -1,10 +1,10 @@
 import RSS from "rss";
-import { fetcher } from "../../../contents";
 import { NextResponse } from "next/server";
+import { fetcher } from "../../../contents";
 import { resolve } from "../../../utils/vender";
 import { COLINE_LANGUAGE } from "../../../env/public";
 
-export const GET = async () => {
+export async function GET() {
   const [seo, author, posts] = await Promise.all([fetcher.seo(), fetcher.author(), fetcher.posts()]);
 
   const rss = new RSS({
@@ -25,7 +25,7 @@ export const GET = async () => {
       url: resolve(seo.link, post.link),
       date: post.published,
       author: author.fullname,
-      categories: post.categories?.map((i) => i.name),
+      categories: post.categories?.map(i => i.name),
       enclosure: post.thumbnail ? { url: resolve(seo.link, post.thumbnail) } : undefined,
     });
   }
@@ -36,4 +36,4 @@ export const GET = async () => {
       "Cache-Control": "public, max-age=0, must-revalidate",
     },
   });
-};
+}

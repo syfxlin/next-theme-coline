@@ -1,12 +1,10 @@
 import { random, range } from "./vender";
 
-export const init = (canvas: HTMLCanvasElement, width: number, height: number) => {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+export function init(canvas: HTMLCanvasElement, width: number, height: number) {
   const ctx = canvas.getContext("2d")!;
 
   const dpr = window.devicePixelRatio || 1;
-  // prettier-ignore
-  // @ts-ignore
+  // @ts-expect-error
   const bsr = ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1;
 
   const dpi = dpr / bsr;
@@ -18,9 +16,9 @@ export const init = (canvas: HTMLCanvasElement, width: number, height: number) =
   ctx.scale(dpi, dpi);
 
   return { ctx, canvas, dpi };
-};
+}
 
-export const render = (canvas: HTMLCanvasElement, width: number, height: number, color: string, weight: number) => {
+export function render(canvas: HTMLCanvasElement, width: number, height: number, color: string, weight: number) {
   const { ctx } = init(canvas, width, height);
 
   const length = Math.min(width, height) / 2;
@@ -53,4 +51,4 @@ export const render = (canvas: HTMLCanvasElement, width: number, height: number,
     }
   };
   requestAnimationFrame(step);
-};
+}

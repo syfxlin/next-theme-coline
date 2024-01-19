@@ -2,12 +2,12 @@
 import React, { ReactNode } from "react";
 import { useTheme } from "next-themes";
 import { Button } from "../../ui/button";
-import * as styles from "./styles.css";
 import { t } from "../../../locales";
+import * as styles from "./styles.css";
 
-export type ThemeProps = {
+export interface ThemeProps {
   icon: ReactNode;
-};
+}
 
 export const Theme: React.FC<ThemeProps> = ({ icon }) => {
   const { theme, resolvedTheme, setTheme } = useTheme();

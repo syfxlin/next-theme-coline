@@ -1,9 +1,9 @@
 import React from "react";
 import { utils } from "@syfxlin/reks";
-import { reader } from "./reader";
 import { IS_DEV } from "../env/public";
-import { slugger } from "./slugger";
 import { resolve } from "../utils/vender";
+import { reader } from "./reader";
+import { slugger } from "./slugger";
 import {
   ArticleData,
   AuthorData,
@@ -23,32 +23,26 @@ import {
 
 const seo: SingletonResult<SeoData> = React.cache(async () => {
   const info = await reader.singletons.seo.read({ resolveLinkedFiles: true });
-  if (!info) {
-    throw new TypeError("No seo data configured.");
-  }
   return {
-    link: info.link,
-    logo: info.logo,
-    title: info.title,
-    subtitle: info.subtitle,
-    description: info.description,
-    birthday: new Date(info.birthday as string),
-    keywords: info.keywords,
+    link: info?.link ?? "http://localhost:3000",
+    logo: info?.logo ?? "https://raw.githubusercontent.com/syfxlin/blog/master/public/image/config/seo/logo.400x400.jpg",
+    title: info?.title ?? "Coline",
+    subtitle: info?.subtitle ?? "轻快、简洁、优雅的 Next.js 模板",
+    description: info?.description ?? "Coline（connect, line）是一个基于 Next.js App Router 开发的博客模板，建立在轻快与简洁的设计理念上，摒弃花里胡哨的界面，专注于内容创作。",
+    birthday: new Date(info?.birthday ?? Date.now()),
+    keywords: info?.keywords ?? ["Coline", "Blog", "Next.js", "Next.js Theme"],
   };
 });
 
 const author: SingletonResult<AuthorData> = React.cache(async () => {
   const info = await reader.singletons.author.read({ resolveLinkedFiles: true });
-  if (!info) {
-    throw new TypeError("No author data configured.");
-  }
   return {
-    fullname: `${info.firstname} ${info.lastname}`,
-    username: info.username,
-    firstname: info.firstname,
-    lastname: info.lastname,
-    avatar: info.avatar,
-    description: info.description,
+    fullname: info ? `${info.firstname} ${info.lastname}` : "Coline",
+    username: info?.username ?? "coline",
+    firstname: info?.firstname ?? "Coline",
+    lastname: info?.lastname ?? "Coline",
+    avatar: info?.avatar ?? "https://raw.githubusercontent.com/syfxlin/blog/master/public/image/config/seo/logo.400x400.jpg",
+    description: info?.description ?? "轻快、简洁、优雅的 Next.js 模板",
   };
 });
 
@@ -212,7 +206,6 @@ const posts: CollectionResult<ArticleData, PageData<ArticleData>> = React.cache(
   };
 });
 
-// prettier-ignore
 const categories: CollectionResult<GroupData<ArticleData>, Array<GroupPageData<ArticleData>>> = React.cache(async () => {
   const query = await posts();
 
@@ -249,7 +242,6 @@ const categories: CollectionResult<GroupData<ArticleData>, Array<GroupPageData<A
   };
 });
 
-// prettier-ignore
 const tags: CollectionResult<GroupData<ArticleData>, Array<GroupPageData<ArticleData>>> = React.cache(async () => {
   const query = await posts();
 
@@ -286,7 +278,6 @@ const tags: CollectionResult<GroupData<ArticleData>, Array<GroupPageData<Article
   };
 });
 
-// prettier-ignore
 const archives: CollectionResult<GroupData<ArticleData>, Array<GroupPageData<ArticleData>>> = React.cache(async () => {
   const query = await posts();
 

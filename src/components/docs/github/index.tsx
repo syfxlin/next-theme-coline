@@ -1,6 +1,6 @@
 import React from "react";
-import { GithubInner } from "./inner";
 import { GithubAdapter, GithubRequest } from "../../../adapters/github-adapter";
+import { GithubInner } from "./inner";
 
 const adapter = new GithubAdapter();
 

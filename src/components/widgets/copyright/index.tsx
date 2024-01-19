@@ -1,14 +1,14 @@
-import * as styles from "./styles.css";
 import React from "react";
 import { Link } from "../../ui/link";
 import { date, resolve } from "../../../utils/vender";
 import { ArticleList } from "../../../contents/types";
 import { fetcher } from "../../../contents";
 import { t } from "../../../locales";
+import * as styles from "./styles.css";
 
-export type CopyrightProps = {
+export interface CopyrightProps {
   data: ArticleList;
-};
+}
 
 export const Copyright: React.FC<CopyrightProps> = async (props) => {
   const [seo, author, license] = await Promise.all([fetcher.seo(), fetcher.author(), fetcher.license()]);

@@ -1,5 +1,5 @@
-import { theme } from "../../../theme/theme.css";
 import { styled } from "@syfxlin/reve";
+import { theme } from "../../../theme/theme.css";
 
 export const article = styled.css`
   appearance: none;

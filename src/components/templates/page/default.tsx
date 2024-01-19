@@ -8,7 +8,7 @@ import { MetaInfo } from "../../layouts/meta-info";
 import { Copyright } from "../../widgets/copyright";
 import { t } from "../../../locales";
 
-export type TemplatePageProps = {
+export interface TemplatePageProps {
   data: ArticleData;
   prev?: {
     name: string;
@@ -18,7 +18,7 @@ export type TemplatePageProps = {
     name: string;
     link: string;
   };
-};
+}
 
 export const TemplatePage: React.FC<TemplatePageProps> = async ({ data, prev, next }) => {
   return (
@@ -29,7 +29,7 @@ export const TemplatePage: React.FC<TemplatePageProps> = async ({ data, prev, ne
       artalk={true}
       headings={data.body.headings}
       pagination={{ prev, next }}
-      before={
+      before={(
         <>
           {data.thumbnail && (
             <AspectRatio ratio={16 / 9}>
@@ -37,7 +37,7 @@ export const TemplatePage: React.FC<TemplatePageProps> = async ({ data, prev, ne
             </AspectRatio>
           )}
         </>
-      }
+      )}
     >
       <Renderer document={data.body.document} />
       {data.layout === "post" && <Copyright data={data} />}
