@@ -1,0 +1,21 @@
+name: Sync Repo
+on:
+  workflow_dispatch:
+jobs:
+  sync:
+    name: Sync
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Sync
+        run: |
+          cd .. && git clone https://github.com/syfxlin/blog.git && cd blog
+          rm -rf depker.config.ts
+          rm -rf .git      && cp -rf ../next-theme-coline/.git      .
+          rm -rf .github   && cp -rf ../next-theme-coline/.github   .
+          rm -rf public    && cp -rf ../next-theme-coline/public    .
+          rm -rf README.md && cp -rf ../next-theme-coline/README.md .
+          git add --force --ignore-errors .
+          git commit -m "chore(sync): Sync blog source code to next-theme-coline"
+          git push --force
