@@ -48,8 +48,8 @@ export const excerpt = styled.css`
 `;
 
 export const thumbnail = styled.css`
-  flex-basis: 30% !important;
-  margin-left: ${theme.spacing.calc(4)} !important;
+  flex-basis: 30%;
+  margin-left: ${theme.spacing.calc(4)};
 `;
 
 export const link = styled.css`
