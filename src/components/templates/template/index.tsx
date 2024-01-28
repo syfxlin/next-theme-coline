@@ -4,7 +4,7 @@ import { Header } from "../../layouts/header";
 import { Main } from "../../layouts/main";
 import { Title } from "../../layouts/title";
 import { Toc } from "../../widgets/toc";
-import { CursorPagination } from "../../ui/pagination";
+import { TwoPagination } from "../../ui/pagination";
 import { Artalk } from "../../widgets/artalk";
 import { Footer } from "../../layouts/footer";
 
@@ -39,7 +39,7 @@ export const Template: React.FC<TemplateProps> = async (props) => {
         {props.after}
         {props.headings && <Toc data={props.headings} />}
         {(props.pagination?.prev || props.pagination?.next) && (
-          <CursorPagination prev={props.pagination.prev} next={props.pagination.next} />
+          <TwoPagination prev={props.pagination.prev} next={props.pagination.next} />
         )}
         {props.artalk && <Artalk name={props.name} link={props.link} />}
       </Main>

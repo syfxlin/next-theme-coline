@@ -1,14 +1,25 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { ProjectsData } from "../../../contents/types";
 import { Grid } from "../../layouts/grid";
 import { LinkButton } from "../../ui/button";
 import { Iconify } from "../../ui/iconify";
 import { GithubAdapter } from "../../../adapters/github-adapter";
-import { Heading } from "../heading";
 import { stars } from "../../../utils/vender";
 import * as styles from "./styles.css";
 
 const adapter = new GithubAdapter();
+
+export interface HeadingProps {
+  children?: ReactNode;
+}
+
+export const Heading: React.FC<HeadingProps> = (props) => {
+  return (
+    <h2 className={styles.heading}>
+      {props.children}
+    </h2>
+  );
+};
 
 export interface IconsProps {
   link: string;

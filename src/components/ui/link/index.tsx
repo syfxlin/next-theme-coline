@@ -12,7 +12,7 @@ export type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & NLinkProps & {
 
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(({ tooltip, unstyled, href, ...props }, ref) => {
   if (typeof href === "string" && /^(https?:)?\/\/|^#|\.[\da-z]+$/i.test(href)) {
-    const element = <a {...props} className={cx(props.className, !unstyled && styles.link)} href={href} ref={ref} />;
+    const element = <a target="_blank" rel="nofollow noopener noreferrer" {...props} className={cx(props.className, !unstyled && styles.link)} href={href} ref={ref} />;
     return tooltip ?
         (
           <Tippy animation="shift-away" content={props["aria-label"]} {...(typeof tooltip === "boolean" ? {} : tooltip)}>

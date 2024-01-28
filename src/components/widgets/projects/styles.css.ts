@@ -1,6 +1,15 @@
 import { styled } from "@syfxlin/reve";
 import { theme } from "../../../theme/theme.css";
 
+export const heading = styled.css`
+  text-align: center;
+  color: ${theme.color.text.paragraph};
+  font-size: ${theme.fontSize.calc(1.2)};
+  font-weight: ${theme.fontWeight.semibold};
+  margin-top: ${theme.spacing.calc(10)};
+  margin-bottom: ${theme.spacing.calc(3)};
+`;
+
 export const link = styled.css`
   display: flex !important;
   text-align: start !important;

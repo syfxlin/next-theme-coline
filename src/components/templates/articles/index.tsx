@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Metadata } from "next";
 import { Header } from "../../layouts/header";
 import { Main } from "../../layouts/main";
@@ -11,11 +11,25 @@ import { ArticleInfo } from "../../layouts/article-info";
 import { Pagination } from "../../ui/pagination";
 import { Renderer } from "../../docs";
 import { t } from "../../../locales";
+import * as styles from "./styles.css";
+
+export interface HeadingProps {
+  children?: ReactNode;
+}
+
+export const Heading: React.FC<HeadingProps> = (props) => {
+  return (
+    <h2 className={styles.heading}>
+      {props.children}
+    </h2>
+  );
+};
 
 export type TemplateArticlesProps =
   | {
     display: "document";
     document?: DocumentData;
+    articles: ReadonlyArray<ArticleList>;
   }
   | {
     display: "articles";
@@ -48,17 +62,18 @@ export const TemplateArticles: React.FC<TemplateArticlesProps> = (props) => {
       <Main>
         <Hero />
         {props.display === "document" && (
-          <>
-            <section>
-              <Renderer document={props.document?.document} />
-            </section>
-          </>
+          <section>
+            <Renderer document={props.document?.document} position="top">
+              <Heading>{t("articles.heading")}</Heading>
+              {props.articles.map(item => <ArticleInfo key={`article-${item.link}`} data={item} />)}
+            </Renderer>
+          </section>
         )}
         {props.display === "articles" && (
           <>
             <section>
               {props.articles.items.map((item, index) => (
-                <ArticleInfo key={`article-${item.link}`} data={item} step={index} />
+                <ArticleInfo key={`article-${item.link}`} data={item} animation={index} />
               ))}
             </section>
             <Pagination links="/" index={props.articles.index} pages={props.articles.pages} />

@@ -24,14 +24,14 @@ export const more = styled.css`
   padding-right: ${theme.spacing.calc(1)};
 `;
 
-export const cursor_container = styled.css`
+export const two_container = styled.css`
   display: flex;
   margin: ${theme.spacing.calc(4)} 0;
   padding: 0;
   gap: ${theme.spacing.calc(2)};
 `;
 
-export const cursor_link = styled.css`
+export const two_link = styled.css`
   gap: ${theme.spacing.calc(1)} !important;
   padding: ${theme.spacing.calc(4)} !important;
   font-size: ${theme.fontSize.calc(1.2)} !important;

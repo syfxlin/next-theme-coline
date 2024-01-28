@@ -78,7 +78,7 @@ export const Pagination: React.FC<PaginationProps> = ({ index, pages, links, onL
   );
 };
 
-export interface CursorPaginationProps {
+export interface TwoPaginationProps {
   prev?: {
     name: string;
     link: string;
@@ -89,12 +89,12 @@ export interface CursorPaginationProps {
   };
 }
 
-export const CursorPagination: React.FC<CursorPaginationProps> = (props) => {
+export const TwoPagination: React.FC<TwoPaginationProps> = (props) => {
   return (
-    <section className={styles.cursor_container}>
+    <section className={styles.two_container}>
       {props.prev && (
         <LinkButton
-          className={styles.cursor_link}
+          className={styles.two_link}
           style={{ justifyContent: "flex-start" }}
           aria-label={t("pagination.prev")}
           href={props.prev.link}
@@ -104,7 +104,7 @@ export const CursorPagination: React.FC<CursorPaginationProps> = (props) => {
       )}
       {props.next && (
         <LinkButton
-          className={styles.cursor_link}
+          className={styles.two_link}
           style={{ justifyContent: "flex-end" }}
           aria-label={t("pagination.next")}
           href={props.next.link}

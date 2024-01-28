@@ -49,7 +49,7 @@ export const TemplateGroup: React.FC<TemplateGroupComponentProps> = (props) => {
         </Title>
         <section>
           {props.items.map((item, index) => (
-            <ArticleInfo key={`${props.type}-${item.link}`} data={item} step={index} />
+            <ArticleInfo key={`${props.type}-${item.link}`} data={item} animation={index} />
           ))}
         </section>
         <Pagination links={props.link} index={props.index} pages={props.pages} />

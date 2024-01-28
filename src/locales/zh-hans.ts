@@ -19,6 +19,7 @@ export default {
   "page.desc": "页面：{0}",
   "articles.name": "文章",
   "articles.desc": "文章：{0}",
+  "articles.heading": "最近创作",
 
   "links.name": "友邻",
   "links.desc": "{0} 友邻 × {1} 已失联友邻",

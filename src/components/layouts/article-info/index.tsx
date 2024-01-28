@@ -9,13 +9,13 @@ import { t } from "../../../locales";
 import * as styles from "./styles.css";
 
 export interface ArticleInfoProps {
-  step: number;
+  animation?: number;
   data: ArticleList;
 }
 
-export const ArticleInfo: React.FC<ArticleInfoProps> = ({ step, data }) => {
+export const ArticleInfo: React.FC<ArticleInfoProps> = ({ animation, data }) => {
   return (
-    <article className={cx("slide-enter", styles.article)} style={{ "--enter-step": step } as any}>
+    <article className={cx(typeof animation === "number" && "slide-enter", styles.article)} style={{ "--enter-step": animation } as any}>
       <section className={styles.section}>
         <Link href={data.link} aria-label={data.title} className={styles.title}>
           {data.title}

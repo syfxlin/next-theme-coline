@@ -12,14 +12,14 @@ interface Props {
 
 const query = React.cache(async (_index?: string): Promise<TemplateArticlesProps | undefined> => {
   try {
-    const home = await fetcher.home();
+    const [home, query] = await Promise.all([fetcher.home(), fetcher.posts()]);
     if (home.display === "document" && !_index) {
       return {
         display: "document",
         document: home.content,
+        articles: query.items.slice(0, 3),
       };
     } else {
-      const query = await fetcher.posts();
       const index = _index ? Number.parseInt(_index) : 1;
       const value = query.pages;
       if (!value || value.pages < index) {

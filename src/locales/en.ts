@@ -19,6 +19,7 @@ export default {
   "page.desc": "Page：{0}",
   "articles.name": "Article",
   "articles.desc": "Article：{0}",
+  "articles.heading": "Recent Articles",
 
   "links.name": "Friends",
   "links.desc": "{0} Friends × {1} Lost Friends",
