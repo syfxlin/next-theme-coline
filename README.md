@@ -101,6 +101,17 @@ pnpm dev
 pnpm build
 ```
 
+## Thanks
+
+Many thanks to the following sites for providing design ideas for this template.
+
+- [Anthony Fu](https://antfu.me/)
+- [Sukka's Blog](https://blog.skk.moe/)
+- [蟬時雨](https://www.chanshiyu.com/)
+- [hexo-theme-stellar](https://github.com/xaoxuu/hexo-theme-stellar)
+- [wordpress-theme-origami](https://github.com/syfxlin/origami)
+- and more...
+
 ## Maintainer
 
 **@syfxlin/next-theme-coline** is written and maintained with the help of [Otstar Lin](https://github.com/syfxlin) and the following [contributors](https://github.com/syfxlin/next-theme-coline/graphs/contributors).
