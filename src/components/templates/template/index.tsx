@@ -35,9 +35,13 @@ export const Template: React.FC<TemplateProps> = async (props) => {
       <Main>
         {props.before}
         <Title title={props.name}>{props.desc}</Title>
-        <article>{props.children}</article>
+        <section style={{ position: "relative" }}>
+          {props.headings && <Toc data={props.headings} />}
+          <article>
+            {props.children}
+          </article>
+        </section>
         {props.after}
-        {props.headings && <Toc data={props.headings} />}
         {(props.pagination?.prev || props.pagination?.next) && (
           <TwoPagination prev={props.pagination.prev} next={props.pagination.next} />
         )}

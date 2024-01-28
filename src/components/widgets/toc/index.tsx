@@ -1,10 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { cx } from "@syfxlin/reve";
+import { TocData } from "@syfxlin/reks";
 import { useIntersectionObserver } from "../../../hooks/use-intersection-observer";
-import { TocData } from "../../../contents/types";
 import { Link } from "../../ui/link";
-import { Iconify } from "../../ui/iconify/client";
 import * as styles from "./styles.css";
 
 export interface TocProps {
@@ -21,7 +20,7 @@ const Item: React.FC<TocProps & { active: string }> = ({ data, active }) => {
       {data.map(i => (
         <li key={`toc-${i.slug}`} id={`toc-${i.slug}`} className={styles.item}>
           <Link className={cx(i.slug === active && "active")} href={`#${i.slug}`} aria-label={i.name}>
-            {i.name}
+            - {i.name}
           </Link>
           {i.children && <Item data={i.children} active={active} />}
         </li>
@@ -37,7 +36,6 @@ export const Toc: React.FC<TocProps> = ({ data }) => {
 
   return (
     <aside className={styles.container}>
-      <Iconify icon={styles.icon} />
       <Item data={data} active={active} />
     </aside>
   );
