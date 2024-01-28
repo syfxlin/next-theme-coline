@@ -22,7 +22,7 @@ export const heading = styled.css`
     background: linear-gradient(${theme.color.text.primary} 30%, ${theme.color.text.primary} 70%);
     box-shadow: ${theme.color.text.primary} 0 ${theme.borderWidth.calc(1)} ${theme.borderWidth.calc(3)};
     border-radius: ${theme.borderWidth.calc(4)};
-    transition: all 0.25s ease 0s;
+    transition: all 0.25s ease 0s, color 0.3s, background-color 0.3s;
     z-index: 1;
   }
 `;

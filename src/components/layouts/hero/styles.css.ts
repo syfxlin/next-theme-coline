@@ -12,7 +12,7 @@ export const avatar = styled.css`
   height: ${theme.size.calc(25)} !important;
   border-radius: ${theme.borderRadius.half} !important;
   filter: ${theme.color.image.filter} !important;
-  transition: filter 0.3s !important;
+  transition: filter 0.3s, color 0.3s, background-color 0.3s !important;
 `;
 
 export const author = styled.css`

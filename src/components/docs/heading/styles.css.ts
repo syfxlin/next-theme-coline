@@ -20,13 +20,13 @@ export const container = styled.css`
     background: linear-gradient(${theme.color.text.primary} 30%, ${theme.color.text.primary} 70%);
     box-shadow: ${theme.color.text.primary} 0 ${theme.borderWidth.calc(1)} ${theme.borderWidth.calc(3)};
     border-radius: ${theme.borderWidth.calc(4)};
-    transition: all 0.25s ease 0s;
+    transition: all 0.25s ease 0s, color 0.3s, background-color 0.3s;
     z-index: 1;
   }
 
   > a {
     opacity: 0;
-    transition: opacity 0.3s !important;
+    transition: opacity 0.3s, color 0.3s, background-color 0.3s !important;
     text-decoration: none !important;
     border: none !important;
     position: absolute !important;
@@ -39,7 +39,7 @@ export const container = styled.css`
       color: ${theme.color.text.description};
       font-size: ${theme.fontSize.calc(0.5)};
       padding-left: ${theme.spacing.calc(1)};
-      transition: opacity 0.3s;
+      transition: opacity 0.3s, color 0.3s, background-color 0.3s;
     }
   }
 

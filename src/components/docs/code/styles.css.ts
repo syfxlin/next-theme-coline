@@ -22,7 +22,7 @@ export const container = styled.css`
     right: 0;
     top: 0;
     z-index: 1;
-    transition: opacity 0.3s;
+    transition: opacity 0.3s, color 0.3s, background-color 0.3s;
   }
 
   &:hover::before {

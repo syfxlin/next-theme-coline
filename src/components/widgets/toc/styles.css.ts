@@ -23,7 +23,7 @@ export const container = styled.css`
     opacity: 0.5;
     overflow-y: auto;
     overflow-x: hidden;
-    transition: opacity 0.6s;
+    transition: opacity 0.6s, color 0.3s, background-color 0.3s;
   }
 
   &:hover {
@@ -61,7 +61,7 @@ export const item = styled.css`
     margin: 0 ${theme.spacing.calc(2.5)};
     color: ${theme.color.text.description};
     border: none;
-    transition: color 0.3s;
+    transition: color 0.3s, color 0.3s, background-color 0.3s;
 
     &.active,
     &:hover,

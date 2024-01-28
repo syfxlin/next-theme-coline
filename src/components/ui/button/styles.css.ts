@@ -20,10 +20,7 @@ export const button = styled.css`
   color: ${theme.color.text.primary};
   gap: ${theme.spacing.calc(1)};
   cursor: pointer;
-  transition:
-    color 0.3s,
-    background-color 0.3s,
-    box-shadow 0.3s;
+  transition: color 0.3s, background-color 0.3s, box-shadow 0.3s;
 
   &:hover,
   &.active {

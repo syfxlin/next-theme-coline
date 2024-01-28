@@ -3,9 +3,7 @@ import { theme } from "../../../theme/theme.css";
 import { iconify } from "../../ui/iconify/query";
 
 export const root = styled.css`
-  transition-property: visibility;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
+  transition: visibility 0.3s ease, color 0.3s, background-color 0.3s;
 `;
 
 export const background = styled.css`
@@ -18,9 +16,7 @@ export const background = styled.css`
   left: 0;
   right: 0;
   z-index: 9;
-  transition-property: opacity;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
+  transition: opacity 0.3s ease, color 0.3s, background-color 0.3s;
 
   &::after {
     content: "";
@@ -49,9 +45,7 @@ export const container = styled.css`
   padding-bottom: ${theme.spacing.calc(10)};
   pointer-events: none;
 
-  transition-property: opacity;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
+  transition: opacity 0.3s ease, color 0.3s, background-color 0.3s;
   transform-origin: center center;
 `;
 

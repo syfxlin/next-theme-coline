@@ -6,7 +6,7 @@ export const link = styled.css`
   position: relative;
   color: ${theme.color.text.primary};
   border-bottom: ${theme.borderWidth.calc(1)} ${theme.borderStyle.default} ${theme.color.background.focus};
-  transition: border 0.3s;
+  transition: border 0.3s, color 0.3s, background-color 0.3s;
 
   &.active,
   &:hover,

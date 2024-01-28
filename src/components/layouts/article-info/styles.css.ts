@@ -13,10 +13,7 @@ export const article = styled.css`
   margin: ${theme.spacing.calc(2)} ${theme.spacing.calc(-5)};
   border-radius: ${theme.borderRadius.calc(0.8)};
   color: ${theme.color.text.primary};
-  transition:
-    color 0.3s,
-    background-color 0.3s,
-    box-shadow 0.3s;
+  transition: color 0.3s, background-color 0.3s, box-shadow 0.3s;
 
   &:hover {
     background-color: ${theme.color.background.hover};
