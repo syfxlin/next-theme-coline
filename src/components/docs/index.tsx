@@ -2,7 +2,6 @@
 import React, { ReactNode } from "react";
 import { DocumentRenderer } from "@keystatic/core/renderer";
 import { DocumentRendererProps } from "@keystatic/core/dist/declarations/src/renderer";
-import { cx } from "@syfxlin/reve";
 import { DocumentElement } from "@keystatic/core";
 import * as styles from "./styles.css";
 import { Code } from "./code";
@@ -56,7 +55,7 @@ export interface RendererProps {
 
 export const Renderer: React.FC<RendererProps> = React.memo(({ document, position, children }) => {
   return (
-    <section className={cx("slide-enter-content", styles.container)}>
+    <section className={styles.container}>
       {position === "none" && children}
       {position === "bottom" && children}
       {position !== "none" && document && (

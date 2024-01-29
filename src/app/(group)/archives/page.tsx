@@ -76,7 +76,7 @@ export default async function ArchivesPage() {
       desc={t("archives.desc", data.archives.length, data.categories.length, data.tags.length, data.articles.length)}
     >
       {data.categories.length !== 0 && (
-        <section className="slide-enter" style={{ "--enter-step": 0 } as any}>
+        <section>
           <Heading level={2}>
             {t("category.name")}
           </Heading>
@@ -92,7 +92,7 @@ export default async function ArchivesPage() {
         </section>
       )}
       {data.archives.length !== 0 && (
-        <section className="slide-enter" style={{ "--enter-step": 1 } as any}>
+        <section>
           <Heading level={2}>
             {t("archive.name")}
           </Heading>
@@ -108,7 +108,7 @@ export default async function ArchivesPage() {
         </section>
       )}
       {data.tags.length !== 0 && (
-        <section className="slide-enter" style={{ "--enter-step": 2 } as any}>
+        <section>
           <Heading level={2}>
             {t("tag.name")}
           </Heading>

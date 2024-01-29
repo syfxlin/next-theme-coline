@@ -8,4 +8,5 @@ export const container = styled.css`
   width: 100%;
   max-width: ${theme.fontSize.calc(45)};
   padding: 0 ${theme.spacing.calc(8)};
+  animation: fade-in 0.5s ease;
 `;

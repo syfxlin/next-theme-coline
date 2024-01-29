@@ -72,8 +72,8 @@ export const TemplateArticles: React.FC<TemplateArticlesProps> = (props) => {
         {props.display === "articles" && (
           <>
             <section>
-              {props.articles.items.map((item, index) => (
-                <ArticleInfo key={`article-${item.link}`} data={item} animation={index} />
+              {props.articles.items.map(item => (
+                <ArticleInfo key={`article-${item.link}`} data={item} />
               ))}
             </section>
             <Pagination links="/" index={props.articles.index} pages={props.articles.pages} />

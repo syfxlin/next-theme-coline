@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import { cx } from "@syfxlin/reve";
 import { MetaInfo } from "../meta-info";
 import { Image } from "../../ui/image";
 import { LinkButton } from "../../ui/button";
@@ -9,13 +8,12 @@ import { t } from "../../../locales";
 import * as styles from "./styles.css";
 
 export interface ArticleInfoProps {
-  animation?: number;
   data: ArticleList;
 }
 
-export const ArticleInfo: React.FC<ArticleInfoProps> = ({ animation, data }) => {
+export const ArticleInfo: React.FC<ArticleInfoProps> = ({ data }) => {
   return (
-    <article className={cx(typeof animation === "number" && "slide-enter", styles.article)} style={{ "--enter-step": animation } as any}>
+    <article className={styles.article}>
       <section className={styles.section}>
         <Link href={data.link} aria-label={data.title} className={styles.title}>
           {data.title}
