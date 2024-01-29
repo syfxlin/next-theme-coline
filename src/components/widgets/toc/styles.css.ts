@@ -51,23 +51,17 @@ export const list = styled.css`
 `;
 
 export const item = styled.css`
+  margin: 0 ${theme.spacing.calc(2.5)};
+  color: ${theme.color.text.description};
+  font-size: ${theme.fontSize.calc(0.9)};
+  text-align: start;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
+
   a {
     display: inline;
-    text-align: start;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow-x: hidden;
     font-size: ${theme.fontSize.calc(0.9)};
-    margin: 0 ${theme.spacing.calc(2.5)};
     color: ${theme.color.text.description};
-    border: none;
-    transition: color 0.3s, color 0.3s, background-color 0.3s;
-
-    &.active,
-    &:hover,
-    &:focus,
-    &:active {
-      color: ${theme.color.text.primary};
-    }
   }
 `;

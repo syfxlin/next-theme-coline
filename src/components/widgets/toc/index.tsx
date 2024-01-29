@@ -19,8 +19,9 @@ const Item: React.FC<TocProps & { active: string }> = ({ data, active }) => {
     <ul className={styles.list}>
       {data.map(i => (
         <li key={`toc-${i.slug}`} id={`toc-${i.slug}`} className={styles.item}>
+          {"- "}
           <Link className={cx(i.slug === active && "active")} href={`#${i.slug}`} aria-label={i.name}>
-            - {i.name}
+            {i.name}
           </Link>
           {i.children && <Item data={i.children} active={active} />}
         </li>

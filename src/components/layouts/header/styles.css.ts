@@ -4,22 +4,22 @@ import { theme } from "../../../theme/theme.css";
 export const container = styled.css`
   height: 80px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
 `;
 
-export const logo = styled.css`
-  display: flex !important;
-  overflow: hidden !important;
-  width: ${theme.fontSize.calc(2)} !important;
-  height: ${theme.fontSize.calc(2)} !important;
-  border-radius: ${theme.borderRadius.half} !important;
+export const back = styled.css`
+  svg {
+    display: flex !important;
+    width: ${theme.fontSize.calc(1.3)} !important;
+    height: ${theme.fontSize.calc(1.3)} !important;
+  }
 `;
 
 export const left = styled.css`
   display: flex !important;
   gap: ${theme.spacing.calc(1)} !important;
-  margin: 0 ${theme.spacing.calc(4)} !important;
+  margin: 0 ${theme.spacing.calc(5)} !important;
 `;
 
 export const right = styled.css`

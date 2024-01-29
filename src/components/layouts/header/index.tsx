@@ -4,6 +4,7 @@ import { fetcher } from "../../../contents";
 import { LinkButton } from "../../ui/button";
 import { Iconify } from "../../ui/iconify";
 import { Rss } from "./rss";
+import { Back } from "./back";
 import { Home } from "./home";
 import { Theme } from "./theme";
 import { Search } from "./search";
@@ -13,6 +14,9 @@ export const Header: React.FC = async () => {
   const header = await fetcher.header();
   return (
     <header className={styles.container}>
+      <div className={styles.left}>
+        <Back icon={<Iconify icon="ri:arrow-left-s-line" />} />
+      </div>
       <div className={styles.right}>
         <Home home={<Iconify icon="ri:home-5-line" />} blog={<Iconify icon="ri:article-line" />} />
         {header.main.map(item => (
