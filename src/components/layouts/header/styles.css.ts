@@ -4,7 +4,7 @@ import { theme } from "../../../theme/theme.css";
 export const container = styled.css`
   height: 80px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
 `;
 
