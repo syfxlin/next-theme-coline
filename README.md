@@ -21,6 +21,7 @@ Coline (**co**nnect, **line**) is a blog template based on the Next.js App Route
 ## Examples
 
 - [My Blog](https://blog.ixk.me)
+- [Coline Demo](https://next-theme-coline-syfxlin.vercel.app/)
 
 ## LightHouse
 
