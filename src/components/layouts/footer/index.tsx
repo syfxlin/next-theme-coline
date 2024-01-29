@@ -22,14 +22,18 @@ export const Footer: React.FC = async () => {
         Copyright © {seo.birthday.getFullYear()}-{new Date().getFullYear()} {author.fullname}
       </p>
       <p>
+        Theme{" "}
+        <Link unstyled href="https://github.com/syfxlin/next-theme-coline">
+          Coline
+        </Link>
+        {" "}by{" "}
+        <Link unstyled href="https://ixk.me">
+          Otstar Lin
+        </Link>
+        <Divider orientation="vertical" />
         Powered by{" "}
         <Link unstyled href="https://nextjs.org">
           Next.js
-        </Link>
-        <Divider orientation="vertical" />
-        Designed by{" "}
-        <Link unstyled href="https://ixk.me">
-          Otstar Lin
         </Link>
       </p>
     </footer>
