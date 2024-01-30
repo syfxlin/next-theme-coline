@@ -13,4 +13,10 @@ export const container = styled.css`
     --at-color-grey: ${theme.color.text.description};
     --at-color-meta: ${theme.color.text.description};
   }
+
+  .atk-main-editor,
+  .atk-list {
+    max-width: ${theme.breakpoint.sm};
+    margin: auto;
+  }
 `;
