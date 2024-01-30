@@ -59,7 +59,7 @@ export const right = styled.css`
 
 export const menu = styled.css`
   transition: transform 0.3s, color 0.3s, background-color 0.3s;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100px;
