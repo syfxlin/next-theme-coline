@@ -21,7 +21,7 @@ styled.global`
     letter-spacing: ${theme.letterSpacing.wide};
     scroll-behavior: smooth !important;
     word-break: break-word;
-    transition: color 0.3s, background-color 0.3s;
+    transition: color 0.3s, background-color 0.3s, transform 0.3s;
     -moz-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;

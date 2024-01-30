@@ -39,6 +39,7 @@ export default {
   "article.copyright.published.name": "发布于",
   "article.copyright.published.desc": "发布于：",
 
+  "header.menu": "菜单",
   "header.home": "首页",
   "header.icon": "图标",
   "header.blog": "创作",

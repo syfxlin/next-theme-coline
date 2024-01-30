@@ -30,7 +30,6 @@ export const heading = styled.css`
 export const document = styled.css`
   display: flex;
   gap: ${theme.spacing.calc(8)};
-  max-width: ${theme.fontSize.calc(80)} !important;
 
   > section {
     flex: 1;
@@ -44,7 +43,7 @@ export const document = styled.css`
     }
   }
 
-  @media screen and (max-width: ${theme.fontSize.calc(80)}) {
+  ${theme.media.lg} {
     display: block;
   }
 `;

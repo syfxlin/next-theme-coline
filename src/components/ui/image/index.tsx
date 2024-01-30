@@ -18,7 +18,7 @@ function parse(src: string, alt?: string) {
       width,
       height,
       sizes: Object.values(breakpoints)
-        .map(p => `(max-width: ${p}) 100vw`)
+        .map(p => `(max-width: ${p}px) 100vw`)
         .join(","),
     };
   } else {
@@ -29,7 +29,7 @@ function parse(src: string, alt?: string) {
       width: undefined,
       height: undefined,
       sizes: Object.values(breakpoints)
-        .map(p => `(max-width: ${p}) 100vw`)
+        .map(p => `(max-width: ${p}px) 100vw`)
         .join(","),
     };
   }

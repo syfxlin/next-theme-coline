@@ -3,9 +3,13 @@ import { cx } from "@syfxlin/reve";
 import * as styles from "./styles.css";
 
 export type MainProps = PropsWithChildren<{
-  className?: string;
+  size?: "sm" | "md" | "lg";
 }>;
 
-export const Main: React.FC<MainProps> = ({ children, className }) => {
-  return <main className={cx(styles.container, className)}>{children}</main>;
+export const Main: React.FC<MainProps> = ({ size, children }) => {
+  return (
+    <main className={cx(styles.container, styles[size ?? "sm"])}>
+      {children}
+    </main>
+  );
 };

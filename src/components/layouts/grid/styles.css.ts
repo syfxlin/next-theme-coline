@@ -6,20 +6,19 @@ export const container = styled.css`
   flex-wrap: wrap;
   justify-content: center;
   gap: ${theme.spacing.calc(2)};
-  margin: 0 ${theme.fontSize.calc(-15)};
 
-  @media screen and (max-width: ${theme.fontSize.calc(75)}) {
+  ${theme.media.lg} {
     margin: 0;
   }
 
   > * {
     width: calc((100% - ${theme.spacing.calc(4)}) / 3);
 
-    @media screen and (max-width: ${theme.fontSize.calc(80)}) {
+    ${theme.media.lg} {
       width: calc((100% - ${theme.spacing.calc(2)}) / 2);
     }
 
-    @media screen and (max-width: ${theme.fontSize.calc(50)}) {
+    ${theme.media.sm} {
       width: 100%;
     }
   }

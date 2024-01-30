@@ -15,7 +15,7 @@ export const Theme: React.FC<ThemeProps> = ({ icon }) => {
     <Button
       className={styles.view_icon}
       aria-label={t("theme.switch")}
-      tooltip={{ content: t("theme.mode", theme === "system" ? `${theme} (${resolvedTheme})` : theme) }}
+      tooltip={{ placement: "left", content: t("theme.mode", theme === "system" ? `${theme} (${resolvedTheme})` : theme) }}
       onClick={() => {
         if (theme === "system") {
           setTheme("light");

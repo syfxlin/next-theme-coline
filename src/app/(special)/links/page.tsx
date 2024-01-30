@@ -22,6 +22,7 @@ export default async function LinksPage() {
   return (
     <Template
       artalk
+      size="lg"
       link="/links"
       name={t("links.name")}
       desc={t("links.desc", data.links?.length ?? 0, data.lost_links?.length ?? 0)}

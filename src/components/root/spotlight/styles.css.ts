@@ -44,13 +44,14 @@ export const container = styled.css`
   padding-top: ${theme.spacing.calc(20)};
   padding-bottom: ${theme.spacing.calc(10)};
   pointer-events: none;
+  writing-mode: horizontal-tb;
 
   transition: opacity 0.3s ease, color 0.3s, background-color 0.3s;
   transform-origin: center center;
 `;
 
 export const header = styled.css`
-  max-width: ${theme.fontSize.calc(40)};
+  max-width: ${theme.breakpoint.xs};
   border-top-left-radius: ${theme.borderRadius.calc(1)};
   border-top-right-radius: ${theme.borderRadius.calc(1)};
   background-color: ${theme.color.background.full};
@@ -89,7 +90,7 @@ export const section = styled.css`
   border-bottom-right-radius: ${theme.borderRadius.calc(0.8)};
   background-color: ${theme.color.background.full};
   padding: ${theme.spacing.calc(1)} ${theme.spacing.calc(7)};
-  max-width: ${theme.fontSize.calc(40)};
+  max-width: ${theme.breakpoint.xs};
   width: 100%;
   overflow-y: auto;
   pointer-events: auto;

@@ -40,6 +40,7 @@ export default {
   "article.copyright.published.name": "Published",
   "article.copyright.published.desc": "Published：",
 
+  "header.menu": "Menu",
   "header.home": "Home",
   "header.icon": "Icon",
   "header.blog": "Blog",

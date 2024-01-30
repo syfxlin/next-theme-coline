@@ -13,7 +13,7 @@ export const Search: React.FC<SearchProps> = ({ icon }) => {
   const [active, setActive] = useState(false);
   return (
     <>
-      <Button tooltip aria-label={t("header.search")} onClick={() => setActive(p => !p)} className={styles.view_icon}>
+      <Button tooltip={{ placement: "left" }} aria-label={t("header.search")} onClick={() => setActive(p => !p)} className={styles.view_icon}>
         <span>{t("header.search")}</span>
         {icon}
       </Button>

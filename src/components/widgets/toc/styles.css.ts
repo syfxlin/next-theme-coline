@@ -7,11 +7,11 @@ export const container = styled.css`
   top: 0;
   right: ${theme.fontSize.calc(-1)};
   padding: ${theme.spacing.calc(1)};
-  width: ${theme.fontSize.calc(18)};
+  width: 250px;
   height: 100%;
   transform: translateX(100%);
 
-  @media screen and (max-width: ${theme.fontSize.calc(36 + 50)}) {
+  ${theme.media.lg} {
     display: none;
   }
 

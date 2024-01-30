@@ -48,19 +48,29 @@ export const theme = createReveTheme({
   static: {
     // breakpoint
     breakpoint: {
-      xs: `${breakpoints.xs}`,
-      sm: `${breakpoints.sm}`,
-      md: `${breakpoints.md}`,
-      lg: `${breakpoints.lg}`,
-      xl: `${breakpoints.xl}`,
+      xs: `${breakpoints.xs}px`,
+      sm: `${breakpoints.sm}px`,
+      md: `${breakpoints.md}px`,
+      lg: `${breakpoints.lg}px`,
+      xl: `${breakpoints.xl}px`,
+      hxs: `${breakpoints.xs / 16 * 9}px`,
+      hsm: `${breakpoints.sm / 16 * 9}px`,
+      hmd: `${breakpoints.md / 16 * 9}px`,
+      hlg: `${breakpoints.lg / 16 * 9}px`,
+      hxl: `${breakpoints.xl / 16 * 9}px`,
     },
     // media query
     media: {
-      xs: `@media screen and (max-width: ${breakpoints.xs})`,
-      sm: `@media screen and (max-width: ${breakpoints.sm})`,
-      md: `@media screen and (max-width: ${breakpoints.md})`,
-      lg: `@media screen and (max-width: ${breakpoints.lg})`,
-      xl: `@media screen and (max-width: ${breakpoints.xl})`,
+      xs: `@media screen and (max-width: ${breakpoints.xs}px)`,
+      sm: `@media screen and (max-width: ${breakpoints.sm}px)`,
+      md: `@media screen and (max-width: ${breakpoints.md}px)`,
+      lg: `@media screen and (max-width: ${breakpoints.lg}px)`,
+      xl: `@media screen and (max-width: ${breakpoints.xl}px)`,
+      hxs: `@media screen and (max-height: ${breakpoints.xs / 16 * 9}px)`,
+      hsm: `@media screen and (max-height: ${breakpoints.sm / 16 * 9}px)`,
+      hmd: `@media screen and (max-height: ${breakpoints.md / 16 * 9}px)`,
+      hlg: `@media screen and (max-height: ${breakpoints.lg / 16 * 9}px)`,
+      hxl: `@media screen and (max-height: ${breakpoints.xl / 16 * 9}px)`,
     },
     // font family
     fontFamily: {

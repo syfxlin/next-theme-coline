@@ -39,6 +39,7 @@ export default {
   "article.copyright.published.name": "發布於",
   "article.copyright.published.desc": "發布於：",
 
+  "header.menu": "選單",
   "header.home": "首頁",
   "header.icon": "圖示",
   "header.blog": "創作",

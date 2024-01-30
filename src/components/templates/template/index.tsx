@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, ReactNode } from "react";
 import { TocData } from "@syfxlin/reks";
 import { Header } from "../../layouts/header";
-import { Main } from "../../layouts/main";
+import { Main, MainProps } from "../../layouts/main";
 import { Title } from "../../layouts/title";
 import { Toc } from "../../widgets/toc";
 import { TwoPagination } from "../../ui/pagination";
@@ -9,6 +9,7 @@ import { Artalk } from "../../widgets/artalk";
 import { Footer } from "../../layouts/footer";
 
 export type TemplateProps = PropsWithChildren<{
+  size?: MainProps["size"];
   name: string;
   link: string;
   desc?: ReactNode;
@@ -32,7 +33,7 @@ export const Template: React.FC<TemplateProps> = async (props) => {
   return (
     <>
       <Header />
-      <Main>
+      <Main size={props.size}>
         {props.before}
         <Title title={props.name}>{props.desc}</Title>
         <section style={{ position: "relative" }}>

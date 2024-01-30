@@ -22,6 +22,7 @@ export default async function ProjectsPage() {
   return (
     <Template
       artalk
+      size="lg"
       link="/projects"
       name={t("projects.name")}
       desc={t("projects.desc", data.categories?.length ?? 0, data.categories?.reduce((a, i) => a + i.projects.length, 0) ?? 0)}

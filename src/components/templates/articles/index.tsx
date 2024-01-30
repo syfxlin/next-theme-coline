@@ -60,15 +60,17 @@ export const TemplateArticles: React.FC<TemplateArticlesProps> = (props) => {
     <>
       <Header />
       {props.display === "document" && (
-        <Main className={styles.document}>
-          <section>
-            <Hero />
-            <Renderer document={props.document?.document} position="top" />
-          </section>
-          <section>
-            <Heading>{t("articles.heading")}</Heading>
-            {props.articles.map(item => <ArticleInfo key={`article-${item.link}`} data={item} />)}
-          </section>
+        <Main size="lg">
+          <div className={styles.document}>
+            <section>
+              <Hero />
+              <Renderer document={props.document?.document} position="top" />
+            </section>
+            <section>
+              <Heading>{t("articles.heading")}</Heading>
+              {props.articles.map(item => <ArticleInfo key={`article-${item.link}`} data={item} />)}
+            </section>
+          </div>
         </Main>
       )}
       {props.display === "articles" && (
