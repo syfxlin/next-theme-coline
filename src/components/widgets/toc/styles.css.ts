@@ -11,7 +11,7 @@ export const container = styled.css`
   height: 100%;
   transform: translateX(100%);
 
-  @media screen and (max-width: ${theme.fontSize.calc(36 + 45)}) {
+  @media screen and (max-width: ${theme.fontSize.calc(36 + 50)}) {
     display: none;
   }
 

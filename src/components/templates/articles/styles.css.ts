@@ -26,3 +26,25 @@ export const heading = styled.css`
     z-index: 1;
   }
 `;
+
+export const document = styled.css`
+  display: flex;
+  gap: ${theme.spacing.calc(8)};
+  max-width: ${theme.fontSize.calc(80)} !important;
+
+  > section {
+    flex: 1;
+
+    &:first-child {
+      flex-basis: 170%;
+    }
+    
+    &:last-child {
+      flex-basis: 100%;
+    }
+  }
+
+  @media screen and (max-width: ${theme.fontSize.calc(80)}) {
+    display: block;
+  }
+`;

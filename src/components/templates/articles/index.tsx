@@ -59,27 +59,29 @@ export const TemplateArticles: React.FC<TemplateArticlesProps> = (props) => {
   return (
     <>
       <Header />
-      <Main>
-        <Hero />
-        {props.display === "document" && (
+      {props.display === "document" && (
+        <Main className={styles.document}>
           <section>
-            <Renderer document={props.document?.document} position="top">
-              <Heading>{t("articles.heading")}</Heading>
-              {props.articles.map(item => <ArticleInfo key={`article-${item.link}`} data={item} />)}
-            </Renderer>
+            <Hero />
+            <Renderer document={props.document?.document} position="top" />
           </section>
-        )}
-        {props.display === "articles" && (
-          <>
-            <section>
-              {props.articles.items.map(item => (
-                <ArticleInfo key={`article-${item.link}`} data={item} />
-              ))}
-            </section>
-            <Pagination links="/" index={props.articles.index} pages={props.articles.pages} />
-          </>
-        )}
-      </Main>
+          <section>
+            <Heading>{t("articles.heading")}</Heading>
+            {props.articles.map(item => <ArticleInfo key={`article-${item.link}`} data={item} />)}
+          </section>
+        </Main>
+      )}
+      {props.display === "articles" && (
+        <Main>
+          <Hero />
+          <section>
+            {props.articles.items.map(item => (
+              <ArticleInfo key={`article-${item.link}`} data={item} />
+            ))}
+          </section>
+          <Pagination links="/" index={props.articles.index} pages={props.articles.pages} />
+        </Main>
+      )}
       <Footer />
     </>
   );

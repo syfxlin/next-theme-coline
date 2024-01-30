@@ -15,11 +15,11 @@ export const container = styled.css`
   > * {
     width: calc((100% - ${theme.spacing.calc(4)}) / 3);
 
-    @media screen and (max-width: ${theme.fontSize.calc(75)}) {
+    @media screen and (max-width: ${theme.fontSize.calc(80)}) {
       width: calc((100% - ${theme.spacing.calc(2)}) / 2);
     }
 
-    @media screen and (max-width: ${theme.fontSize.calc(45)}) {
+    @media screen and (max-width: ${theme.fontSize.calc(50)}) {
       width: 100%;
     }
   }
