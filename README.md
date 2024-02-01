@@ -25,9 +25,9 @@ Coline (**co**nnect, **line**) is a blog template based on the Next.js App Route
 
 ## LightHouse
 
-![Desktop Benchmark](https://github.com/syfxlin/static/raw/master/next-theme-coline/desktop-benchmark.2880x1505.png)
+![Desktop Benchmark](https://github.com/syfxlin/static/raw/master/next-theme-coline/desktop-benchmark.1977x1173.png)
 
-![Mobile Benchmark](https://github.com/syfxlin/static/raw/master/next-theme-coline/mobile-benchmark.2880x1505.png)
+![Mobile Benchmark](https://github.com/syfxlin/static/raw/master/next-theme-coline/mobile-benchmark.1977x1124.png)
 
 ## Installation
 
