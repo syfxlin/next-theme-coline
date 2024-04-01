@@ -77,7 +77,7 @@ export default async function ArchivesPage() {
     >
       {data.categories.length !== 0 && (
         <section>
-          <Heading level={2}>
+          <Heading name="category" slug="category" link="#category" level={2}>
             {t("category.name")}
           </Heading>
           <List type="unordered" direction="vertical">
@@ -93,7 +93,7 @@ export default async function ArchivesPage() {
       )}
       {data.archives.length !== 0 && (
         <section>
-          <Heading level={2}>
+          <Heading name="archive" slug="archive" link="#archive" level={2}>
             {t("archive.name")}
           </Heading>
           <List type="unordered" direction="vertical">
@@ -109,7 +109,7 @@ export default async function ArchivesPage() {
       )}
       {data.tags.length !== 0 && (
         <section>
-          <Heading level={2}>
+          <Heading name="tag" slug="tag" link="#tag" level={2}>
             {t("tag.name")}
           </Heading>
           <List type="unordered" direction="horizontal">

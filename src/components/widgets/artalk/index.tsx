@@ -19,9 +19,15 @@ export const Artalk: React.FC<Props> = ({ name, link }) => {
   useEffect(() => {
     import("artalk").then((mod) => {
       if (element.current) {
+        let node = element.current.querySelector("#artalk") as HTMLElement | undefined;
+        if (!node) {
+          node = document.createElement("div");
+          node.id = "artalk";
+          element.current.append(node);
+        }
         // eslint-disable-next-line new-cap
         artalk.current = new mod.default({
-          el: element.current,
+          el: node,
           pageTitle: name,
           pageKey: link,
           darkMode: resolvedTheme === "dark",
