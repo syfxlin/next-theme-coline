@@ -7,7 +7,7 @@ import { breakpoints } from "../../../theme/tokens";
 import * as styles from "./styles.css";
 
 function parse(src: string, alt?: string) {
-  const exec = /\.(\d+)x(\d+)(\.\w+)$/.exec(src);
+  const exec = /\.(\d+)x(\d+)\.\w+$/.exec(src);
   if (exec) {
     const width = Number.parseInt(exec[1]);
     const height = Number.parseInt(exec[2]);

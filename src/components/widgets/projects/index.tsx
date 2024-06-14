@@ -26,7 +26,7 @@ export interface IconsProps {
 }
 
 export const Icons: React.FC<IconsProps> = async (props) => {
-  const match = /https?:\/\/(?:www\.)?github\.com\/([^\/]+)\/([^\/]+)/.exec(props.link);
+  const match = /https?:\/\/(?:www\.)?github\.com\/([^/]+)\/([^/]+)/.exec(props.link);
   if (match) {
     try {
       const data = await adapter.component({ repo: `${match[1]}/${match[2]}` });

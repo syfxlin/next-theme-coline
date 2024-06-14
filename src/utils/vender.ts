@@ -46,7 +46,7 @@ export function resolve(...paths: (string | number | undefined | null)[]) {
   if (!ps.length) {
     return "/";
   }
-  if (/^(https?:)?\/\//i.test(ps[0])) {
+  if (/^(?:https?:)?\/\//i.test(ps[0])) {
     const prefix = `${ps[0].replace(/\/+$/g, "")}/`;
     const suffix = ps.slice(1).map(p => p.replace(/(^\/+|\/+$|\/{2,})/g, "")).join("/").replace(/(^\/+|\/+$|\/{2,})/g, "");
     return `${prefix}${suffix}`.toLowerCase();

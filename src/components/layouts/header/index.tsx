@@ -1,7 +1,6 @@
 import React from "react";
 import { cx } from "@syfxlin/reve";
 import { fetcher } from "../../../contents";
-import { LinkButton } from "../../ui/button";
 import { Iconify } from "../../ui/iconify";
 import { Image } from "../../ui/image";
 import { t } from "../../../locales";
@@ -10,6 +9,7 @@ import { Search } from "./search";
 import * as styles from "./styles.css";
 import { Blog } from "./blog";
 import { Menu } from "./menu";
+import { Link } from "./link";
 
 export const Header: React.FC = async () => {
   const [seo, header] = await Promise.all([fetcher.seo(), fetcher.header()]);
@@ -18,14 +18,14 @@ export const Header: React.FC = async () => {
       <Menu icon={<Iconify icon="ri:menu-line" />} />
       <header className={styles.container}>
         <div className={styles.left}>
-          <LinkButton aria-label={t("header.home")} href="/">
+          <Link aria-label={t("header.home")} href="/">
             <Image className={styles.icon} src={seo.logo} alt={t("header.icon")} />
-          </LinkButton>
+          </Link>
         </div>
         <div className={styles.right}>
           <Blog icon={<Iconify icon="ri:article-line" />} />
           {header.main.map(item => (
-            <LinkButton
+            <Link
               tooltip={{ placement: "left" }}
               key={`nav-${item.link}`}
               href={item.link}
@@ -40,7 +40,7 @@ export const Header: React.FC = async () => {
             >
               <span><span>「</span>{item.title}<span>」</span></span>
               <Iconify icon={item.icon} />
-            </LinkButton>
+            </Link>
           ))}
           <Theme icon={<Iconify icon="ri:sun-line" />} />
           <Search icon={<Iconify icon="ri:search-line" />} />

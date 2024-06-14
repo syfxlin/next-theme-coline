@@ -43,6 +43,8 @@ export const container = styled.css`
   align-items: center;
   padding-top: ${theme.spacing.calc(20)};
   padding-bottom: ${theme.spacing.calc(10)};
+  padding-left: ${theme.spacing.calc(4)};
+  padding-right: ${theme.spacing.calc(4)};
   pointer-events: none;
   writing-mode: horizontal-tb;
 

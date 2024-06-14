@@ -13,10 +13,10 @@ export type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & NLinkProps & {
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(({ tooltip, unstyled, href, ...props }, ref) => {
   let element: ReactElement | undefined;
   if (typeof href === "string") {
-    if (/^(https?:)?\/\/|\.[\da-z]+$/i.test(href)) {
+    if (/^(?:https?:)?\/\/|\.[\da-z]+$/i.test(href)) {
       element = <a target="_blank" rel="nofollow noopener noreferrer" {...props} className={cx(props.className, !unstyled && styles.link)} href={href} ref={ref} />;
     }
-    if (/^#/i.test(href)) {
+    if (href.startsWith("#")) {
       element = <a {...props} className={cx(props.className, !unstyled && styles.link)} href={href} ref={ref} />;
     }
   }

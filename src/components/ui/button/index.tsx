@@ -29,7 +29,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(({ tooltip, uns
 
 export const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
   ({ tooltip, unstyled, href, ...props }, ref) => {
-    if (typeof href === "string" && /^(https?:)?\/\/|^#|\.[\da-z]+$/i.test(href)) {
+    if (typeof href === "string" && /^(?:https?:)?\/\/|^#|\.[\da-z]+$/i.test(href)) {
       const element = (
         <a {...props} className={cx(props.className, !unstyled && styles.button)} href={href} ref={ref} />
       );

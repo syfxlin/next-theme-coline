@@ -30,7 +30,7 @@ export class ScraperAdapter extends Adapter<ScraperRequest, ScraperResponse> {
   async query(params: ScraperRequest): Promise<ScraperResponse> {
     try {
       const data: ScraperResponse = { link: params.link };
-      if (/^(https?:)?\/\//i.test(params.link)) {
+      if (/^(?:https?:)?\/\//i.test(params.link)) {
         const query = await scraper(params.link);
         if (!query.error) {
           data.site = query.result.ogSiteName;

@@ -1,7 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import useSWR from "swr";
+import { createPortal } from "react-dom";
 import { useDebounce } from "react-use";
+import { ClientOnly } from "../../ui/client-only/ClientOnly";
 import { Button } from "../../ui/button";
 import { Loading } from "../../ui/loading";
 import { ArticleInfo } from "../../layouts/article-info";
@@ -38,40 +40,48 @@ export const Spotlight: React.FC<SpotlightProps> = (props) => {
   const query = useSWR(debounce ? ["/api/search", page, debounce] : null, fetcher);
 
   return (
-    <section className={styles.root} style={{ visibility: props.active ? "visible" : "hidden" }}>
-      <div
-        className={styles.background}
-        style={{ opacity: props.active ? 1 : 0 }}
-        onClick={() => props.setActive(false)}
-      />
-      <div className={styles.container} style={{ opacity: props.active ? 1 : 0 }}>
-        <div className={styles.header}>
-          <div className={styles.icon}>
-            <Iconify icon={styles.icon_search} />
-          </div>
-          <input
-            className={styles.input}
-            type="text"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder={t("spotlight.input")}
+    <ClientOnly>
+      {() => createPortal(
+        <section className={styles.root} style={{ visibility: props.active ? "visible" : "hidden" }}>
+          <div
+            className={styles.background}
+            style={{ opacity: props.active ? 1 : 0 }}
+            onClick={() => props.setActive(false)}
           />
-          <Button aria-label={t("spotlight.close")} onClick={() => props.setActive(false)}>
-            <Iconify icon={styles.icon_close} />
-          </Button>
-        </div>
-        {(query.isLoading || query.data) && (
-          <div className={styles.section}>
-            {query.isLoading && <Loading />}
-            {query.data?.items.map(item => (
-              <ArticleInfo key={`search-${item.link}`} data={item} />
-            ))}
-            {query.data && (
-              <Pagination index={page} pages={Math.ceil(query.data.total / 10)} onPage={page => setPage(page)} />
+          <div className={styles.container} style={{ opacity: props.active ? 1 : 0 }}>
+            <div className={styles.header}>
+              <div className={styles.icon}>
+                <Iconify icon={styles.icon_search} />
+              </div>
+              <input
+                className={styles.input}
+                type="text"
+                value={search}
+                placeholder={t("spotlight.input")}
+                onChange={(e) => {
+                  setPage(1);
+                  setSearch(e.target.value);
+                }}
+              />
+              <Button aria-label={t("spotlight.close")} onClick={() => props.setActive(false)}>
+                <Iconify icon={styles.icon_close} />
+              </Button>
+            </div>
+            {(query.isLoading || query.data) && (
+              <div className={styles.section}>
+                {query.isLoading && <Loading />}
+                {query.data?.items.map(item => (
+                  <ArticleInfo key={`search-${item.link}`} data={item} />
+                ))}
+                {query.data && (
+                  <Pagination index={page} pages={Math.ceil(query.data.total / 10)} onPage={page => setPage(page)} />
+                )}
+              </div>
             )}
           </div>
-        )}
-      </div>
-    </section>
+        </section>,
+        document.body,
+      )}
+    </ClientOnly>
   );
 };
