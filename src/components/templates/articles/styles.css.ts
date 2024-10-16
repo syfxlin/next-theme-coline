@@ -47,3 +47,14 @@ export const document = styled.css`
     display: block;
   }
 `;
+
+export const more = styled.css`
+  width: 100% !important;
+  font-size: ${theme.fontSize.calc(1)} !important;
+  line-height: ${theme.lineHeight.calc(1)} !important;
+
+  > .iconify {
+    width: ${theme.fontSize.calc(1.2)};
+    height: ${theme.fontSize.calc(1.2)};
+  }
+`;

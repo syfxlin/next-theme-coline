@@ -11,6 +11,8 @@ import { ArticleInfo } from "../../layouts/article-info";
 import { Pagination } from "../../ui/pagination";
 import { Renderer } from "../../docs";
 import { t } from "../../../locales";
+import { LinkButton } from "../../ui/button";
+import { Iconify } from "../../ui/iconify";
 import * as styles from "./styles.css";
 
 export interface HeadingProps {
@@ -69,6 +71,11 @@ export const TemplateArticles: React.FC<TemplateArticlesProps> = (props) => {
             <section>
               <Heading>{t("articles.heading")}</Heading>
               {props.articles.map(item => <ArticleInfo key={`article-${item.link}`} data={item} />)}
+              <LinkButton className={styles.more} aria-label={t("articles.more")} href="/page/1" tooltip={false}>
+                <Iconify icon="ri:arrow-right-double-line" />
+                {t("articles.more")}
+                <Iconify icon="ri:arrow-left-double-line" />
+              </LinkButton>
             </section>
           </div>
         </Main>
